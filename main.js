@@ -45,9 +45,9 @@ const translations = {
         contactIntro: "We value your feedback and are here to assist you. If you have any questions, suggestions, or issues, please do not hesitate to get in touch with us.",
         contactEmailTitle: "Email",
         contactEmailText: "For general inquiries, support, or feedback, please email us at:",
-        contactEmailAddress: "contact@sportsbettinganalysis.com",
+        contactEmailAddress: "mgbgoal@naver.com",
         contactBusinessTitle: "Business Inquiries",
-        contactBusinessText: "For partnership opportunities or other business-related matters, please contact us at business@sportsbettinganalysis.com.",
+        contactBusinessText: "For partnership opportunities or other business-related matters, please contact us at mgbgoal@naver.com.",
 
         // --- Privacy Page ---
         privacyTitle: "Privacy Policy",
@@ -104,9 +104,9 @@ const translations = {
         contactIntro: "저희는 여러분의 피드백을 소중하게 생각하며, 도움을 드리기 위해 여기에 있습니다. 질문, 제안 또는 문제가 있는 경우 주저하지 말고 저희에게 연락하십시오.",
         contactEmailTitle: "이메일",
         contactEmailText: "일반적인 문의, 지원 또는 피드백은 다음 이메일로 보내주십시오.",
-        contactEmailAddress: "contact@sportsbettinganalysis.com",
+        contactEmailAddress: "mgbgoal@naver.com",
         contactBusinessTitle: "비즈니스 문의",
-        contactBusinessText: "파트너십 기회 또는 기타 비즈니스 관련 문의는 business@sportsbettinganalysis.com으로 연락주십시오.",
+        contactBusinessText: "파트너십 기회 또는 기타 비즈니스 관련 문의는 mgbgoal@naver.com으로 연락주십시오.",
 
         // --- Privacy Page ---
         privacyTitle: "개인정보처리방침",
@@ -163,9 +163,9 @@ const translations = {
         contactIntro: "ご意見をお待ちしております。ご質問、ご提案、問題がございましたら、お気軽にお問い合わせください。",
         contactEmailTitle: "Eメール",
         contactEmailText: "一般的なお問い合わせ、サポート、フィードバックについては、こちらのメールアドレスまでご連絡ください。",
-        contactEmailAddress: "contact@sportsbettinganalysis.com",
+        contactEmailAddress: "mgbgoal@naver.com",
         contactBusinessTitle: "ビジネスに関するお問い合わせ",
-        contactBusinessText: "パートナーシップの機会やその他のビジネス関連事項については、business@sportsbettinganalysis.comまでお問い合わせください。",
+        contactBusinessText: "パートナーシップの機会やその他のビジネス関連事項については、mgbgoal@naver.comまでお問い合わせください。",
 
         // --- Privacy Page ---
         privacyTitle: "プライバシーポリシー",
@@ -222,9 +222,9 @@ const translations = {
         contactIntro: "我们重视您的反馈，并在此为您提供帮助。如果您有任何问题、建议或疑问，请随时与我们联系。",
         contactEmailTitle: "电子邮件",
         contactEmailText: "有关一般查询、支持或反馈，请发送电子邮件至：",
-        contactEmailAddress: "contact@sportsbettinganalysis.com",
+        contactEmailAddress: "mgbgoal@naver.com",
         contactBusinessTitle: "商务咨询",
-        contactBusinessText: "有关合作机会或其他业务相关事宜，请通过 business@sportsbettinganalysis.com 与我们联系。",
+        contactBusinessText: "有关合作机会或其他业务相关事宜，请通过 mgbgoal@naver.com 与我们联系。",
 
         // --- Privacy Page ---
         privacyTitle: "隐私政策",
