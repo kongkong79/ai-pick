@@ -3,26 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Us</title>
+    <title data-i18n-key="aboutTitle">About Us</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>About Us</h1>
-        <p>Welcome to <strong>Sports Betting Analysis</strong>, your trusted source for AI-driven sports analytics. Our mission is to provide sports enthusiasts and bettors with high-quality, data-driven insights to help them make informed decisions.</p>
-        
-        <h2>Our Technology</h2>
-        <p>We leverage cutting-edge artificial intelligence and machine learning algorithms to analyze a vast amount of data from sports matches around the world. Our system evaluates historical performance, team statistics, player conditions, and betting odds to generate predictions with a focus on accuracy and profitability.</p>
-        <p>Our analysis filters for matches with a proven positive expected Return on Investment (ROI), a substantial sample size to ensure statistical significance, and a high AI hit rate. This ensures that you receive recommendations that are backed by robust data.</p>
-
-        <h2>Our Commitment</h2>
-        <p>We are committed to transparency and objectivity. The predictions on our site are generated automatically by our AI, free from human bias. We believe in empowering our users with tools and information, though we also advocate for responsible betting.</p>
-        <p>We are constantly refining our models and expanding our data sources to improve the quality of our predictions. Our premium subscription offers access to our most exclusive, high-confidence predictions, providing an even greater edge.</p>
-
-        <h2>Contact Us</h2>
-        <p>For any inquiries or feedback, please feel free to reach out to us at <a href="mailto:contact@sportsbettinganalysis.com">contact@sportsbettinganalysis.com</a>.</p>
-        
-        <a href="index.html">Back to Home</a>
+    <div class="top-controls">
+        <div id="language-switcher">
+            <button data-lang="en">English</button>
+            <button data-lang="ko">한국어</button>
+            <button data-lang="ja">日本語</button>
+            <button data-lang="zh">中文</button>
+        </div>
+        <button id="theme-toggle" data-i18n-key="toggleTheme">Toggle Theme</button>
     </div>
+
+    <header class="container">
+        <h1 data-i18n-key="aboutTitle">About Us</h1>
+        <p data-i18n-key="aboutSubtitle">Pioneering sports analysis with artificial intelligence.</p>
+        <nav>
+            <a href="index.html" data-i18n-key="navHome">Home</a>
+            <a href="about.html" data-i18n-key="navAbout">About Us</a>
+            <a href="contact.html" data-i18n-key="navContact">Contact</a>
+        </nav>
+    </header>
+
+    <main class="container page-content">
+        <section>
+            <h2 data-i18n-key="aboutSection1Title">Our Mission</h2>
+            <p data-i18n-key="aboutSection1Text">Our mission is to provide sports fans and betting enthusiasts with transparent, data-driven insights...</p>
+        </section>
+        <section>
+            <h2 data-i18n-key="aboutSection2Title">Our Technology</h2>
+            <p data-i18n-key="aboutSection2Text">We utilize a sophisticated AI that analyzes vast amounts of data...</p>
+        </section>
+        <section>
+            <h2 data-i18n-key="aboutSection3Title">Our Commitment to AdSense</h2>
+            <p data-i18n-key="aboutSection3Text">To keep our service free, we partner with Google AdSense...</p>
+        </section>
+        
+        <a href="index.html" data-i18n-key="backToHome" class="back-link">Back to Home</a>
+    </main>
+
+    <footer>
+        <div class="footer-links">
+            <a href="about.html" data-i18n-key="navAbout">About Us</a>
+            <a href="contact.html" data-i18n-key="navContact">Contact</a>
+            <a href="privacy.html" data-i18n-key="navPrivacy">Privacy Policy</a>
+        </div>
+        <p data-i18n-key="footerText">&copy; 2024 Sports Betting Analysis. All rights reserved.</p>
+    </footer>
+
+    <script src="main.js"></script>
 </body>
 </html>

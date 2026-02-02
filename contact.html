@@ -3,24 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us</title>
+    <title data-i18n-key="contactTitle">Contact Us</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Contact Us</h1>
-        <p>We value your feedback and are here to assist you. If you have any questions, suggestions, or issues, please do not hesitate to get in touch with us.</p>
-
-        <h2>Email</h2>
-        <p>For general inquiries, support, or feedback, please email us at:</p>
-        <p><a href="mailto:contact@sportsbettinganalysis.com"><strong>contact@sportsbettinganalysis.com</strong></a></p>
-        <p>We aim to respond to all inquiries within 48 hours.</p>
-
-        <h2>Business Inquiries</h2>
-        <p>For partnership opportunities or other business-related matters, please contact us at <a href="mailto:business@sportsbettinganalysis.com">business@sportsbettinganalysis.com</a>.</p>
-
-        <br>
-        <a href="index.html">Back to Home</a>
+    <div class="top-controls">
+        <div id="language-switcher">
+            <button data-lang="en">English</button>
+            <button data-lang="ko">한국어</button>
+            <button data-lang="ja">日本語</button>
+            <button data-lang="zh">中文</button>
+        </div>
+        <button id="theme-toggle" data-i18n-key="toggleTheme">Toggle Theme</button>
     </div>
+
+    <header class="container">
+        <h1 data-i18n-key="contactTitle">Contact Us</h1>
+        <p data-i18n-key="contactIntro">We value your feedback and are here to assist you...</p>
+        <nav>
+            <a href="index.html" data-i18n-key="navHome">Home</a>
+            <a href="about.html" data-i18n-key="navAbout">About Us</a>
+            <a href="contact.html" data-i18n-key="navContact">Contact</a>
+        </nav>
+    </header>
+
+    <main class="container page-content">
+        <section>
+            <h2 data-i18n-key="contactEmailTitle">Email</h2>
+            <p data-i18n-key="contactEmailText">For general inquiries, support, or feedback, please email us at:</p>
+            <p><a href="mailto:contact@sportsbettinganalysis.com"><strong data-i18n-key="contactEmailAddress">contact@sportsbettinganalysis.com</strong></a></p>
+        </section>
+        <section>
+            <h2 data-i18n-key="contactBusinessTitle">Business Inquiries</h2>
+            <p data-i18n-key="contactBusinessText">For partnership opportunities or other business-related matters, please contact us at business@sportsbettinganalysis.com.</p>
+        </section>
+        
+        <a href="index.html" data-i18n-key="backToHome" class="back-link">Back to Home</a>
+    </main>
+
+    <footer>
+        <div class="footer-links">
+            <a href="about.html" data-i18n-key="navAbout">About Us</a>
+            <a href="contact.html" data-i18n-key="navContact">Contact</a>
+            <a href="privacy.html" data-i18n-key="navPrivacy">Privacy Policy</a>
+        </div>
+        <p data-i18n-key="footerText">&copy; 2024 Sports Betting Analysis. All rights reserved.</p>
+    </footer>
+
+    <script src="main.js"></script>
 </body>
 </html>
