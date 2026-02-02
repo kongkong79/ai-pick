@@ -1,0 +1,9 @@
+# Dependencies
+node_modules/
+
+# Logs
+firebase-debug.log
+
+# IDE config
+.idea/
+.vscode/

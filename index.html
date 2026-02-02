@@ -8,18 +8,23 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
-    <div id="language-switcher">
-        <button data-lang="en">English</button>
-        <button data-lang="ko">한국어</button>
-        <button data-lang="ja">日本語</button>
-        <button data-lang="zh">中文</button>
+    <div class="top-controls">
+        <div id="language-switcher">
+            <button data-lang="en">English</button>
+            <button data-lang="ko">한국어</button>
+            <button data-lang="ja">日本語</button>
+            <button data-lang="zh">中文</button>
+        </div>
+        <button id="theme-toggle" data-i18n-key="toggleTheme">Toggle Theme</button>
     </div>
 
     <header class="container">
         <h1 data-i18n-key="headerTitle">Sports Betting Analysis</h1>
         <p data-i18n-key="headerSubtitle">We analyze daily winning percentages from overseas betting prediction sites.</p>
     </header>
-    ysis</h2>
+
+    <main class="container">
+        <h2 data-i18n-key="analysisTitle">Today's Betting Analysis</h2>
         <p id="filter-description" class="filter-description" data-i18n-key="filterDescription">Showing matches with ROI > 1, Sample Size > 10, and AI Hit Rate > 51%.</p>
         
         <div id="results-container">

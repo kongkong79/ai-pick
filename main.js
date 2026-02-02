@@ -16,7 +16,8 @@ const translations = {
         cardRoi: "Expected ROI",
         noResults: "No matches found matching the criteria.",
         premiumLockTitle: "Premium Prediction",
-        premiumLockMessage: "Subscribe to view predictions with over 80% hit rate."
+        premiumLockMessage: "Subscribe to view predictions with over 80% hit rate.",
+        toggleTheme: "Toggle Theme"
     },
     ko: {
         appTitle: "스포츠 베팅 분석",
@@ -35,7 +36,8 @@ const translations = {
         cardRoi: "예상 ROI",
         noResults: "조건에 맞는 경기가 없습니다.",
         premiumLockTitle: "프리미엄 예측",
-        premiumLockMessage: "적중률 80% 이상의 예측을 보려면 구독하세요."
+        premiumLockMessage: "적중률 80% 이상의 예측을 보려면 구독하세요.",
+        toggleTheme: "테마 변경"
     },
     ja: {
         appTitle: "スポーツベッティング分析",
@@ -54,7 +56,8 @@ const translations = {
         cardRoi: "予想ROI",
         noResults: "条件に一致する試合は見つかりませんでした。",
         premiumLockTitle: "プレミアム予測",
-        premiumLockMessage: "的中率80%以上の予測を購読して表示します。"
+        premiumLockMessage: "的中率80%以上の予測を購読して表示します。",
+        toggleTheme: "テーマを切り替え"
     },
     zh: {
         appTitle: "体育博彩分析",
@@ -73,11 +76,13 @@ const translations = {
         cardRoi: "预期ROI",
         noResults: "未找到符合条件的比赛。",
         premiumLockTitle: "高级预测",
-        premiumLockMessage: "订阅以查看命中率超过80%的预测。"
+        premiumLockMessage: "订阅以查看命中率超过80%的预测。",
+        toggleTheme: "切换主题"
     }
 };
 
 let currentLanguage = 'en';
+let currentTheme = 'light';
 
 function setLanguage(lang) {
     currentLanguage = lang;
@@ -87,6 +92,19 @@ function setLanguage(lang) {
         elem.innerHTML = translations[lang][key];
     });
     loadAndDisplayExcelData();
+}
+
+function toggleTheme() {
+    currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', currentTheme);
+    localStorage.setItem('theme', currentTheme);
+}
+
+function applyInitialTheme() {
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    currentTheme = savedTheme || (prefersDark ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', currentTheme);
 }
 
 class BettingResultCard extends HTMLElement {
@@ -145,14 +163,15 @@ class BettingResultCard extends HTMLElement {
         this.shadowRoot.innerHTML = `
             <style>
                 :host { display: block; }
-                .card { position: relative; background-color: var(--primary-color, #ffffff); border-radius: 8px; padding: 1.5rem; border-left: 5px solid var(--accent-color, #007bff); box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; }
+                .card { position: relative; background-color: var(--primary-color, #ffffff); border-radius: 8px; padding: 1.5rem; border-left: 5px solid var(--accent-color, #007bff); box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background-color 0.3s ease, border-color 0.3s ease; }
                 .card:hover { transform: translateY(-5px); box-shadow: 0 8px 12px rgba(0,0,0,0.15); }
-                h3, p { margin: 0; color: var(--text-color, #333); }
+                h3, p { margin: 0; color: var(--text-color, #333); transition: color 0.3s ease;}
                 h3 { font-size: 1.2rem; margin-bottom: 0.5rem; }
                 p { font-size: 1rem; margin-bottom: 0.3rem; line-height: 1.4; }
-                .details { margin-top: 0.75rem; border-top: 1px solid #dee2e6; padding-top: 0.75rem; }
+                .details { margin-top: 0.75rem; border-top: 1px solid var(--border-color, #dee2e6); padding-top: 0.75rem; transition: border-color 0.3s ease; }
                 .card.locked { border-left-color: var(--pending-color, #ffc107); }
                 .lock-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; z-index: 10; border-radius: 8px; }
+                [data-theme="dark"] .lock-overlay { background: rgba(0, 0, 0, 0.7); }
                 .lock-icon { font-size: 2.5rem; }
                 .blurred { filter: blur(5px); user-select: none; }
             </style>
@@ -230,6 +249,8 @@ async function loadAndDisplayExcelData() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    applyInitialTheme();
+
     document.getElementById('language-switcher').addEventListener('click', (e) => {
         if (e.target.tagName === 'BUTTON') {
             const lang = e.target.getAttribute('data-lang');
@@ -237,18 +258,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+
     document.getElementById('subscribe-button').addEventListener('click', () => {
         alert('Subscription feature is currently under development. Coming soon!');
     });
 
     setLanguage(currentLanguage);
 });
-
-const style = document.createElement('style');
-style.textContent = `
-    #language-switcher button { background-color: #eee; color: #333; border: 1px solid #ccc; padding: 0.5rem 1rem; margin: 0 0.25rem; border-radius: 5px; cursor: pointer; transition: background-color 0.3s; }
-    #language-switcher button:hover { background-color: #ddd; }
-    .filter-description { font-size: 0.9rem; color: #666; text-align: center; margin-bottom: 1rem; }
-    .no-results { text-align: center; color: var(--pending-color); font-size: 1.1rem; padding: 2rem; }
-`;
-document.head.appendChild(style);
