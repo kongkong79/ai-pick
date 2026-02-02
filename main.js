@@ -151,7 +151,7 @@ const translations = {
         aboutTitle: "概要",
         aboutSubtitle: "人工知能でスポーツ分析を開拓します。",
         aboutSection1Title: "私たちの使命",
-        aboutSection1Text: "私たちの使命は、スポーツファンとベッティング愛好家に、透明性があり、データに基づいた洞察を提供することです。AIの力を活用することで、スポーツベッティングの複雑さを解き明かし、信頼性が高く理解しやすい予測を提供できると信じています。私たちは最高水준の誠実さを維持し、ユーザーに価値のあるサービスを完全に無料で提供することをお約束します。",
+        aboutSection1Text: "私たちの使命は、スポーツファンとベッティング愛好家に、透明性があり、データに基づいた洞察を提供することです。AIの力を活用することで、スポーツベッティングの複雑さを解き明かし、信頼性が高く理解しやすい予測を提供できると信じています。私たちは最高水準の誠実さを維持し、ユーザーに価値のあるサービスを完全に無料で提供することをお約束します。",
         aboutSection2Title: "私たちの技術",
         aboutSection2Text: "私たちは、さまざまな海外のベッティング予測サイトからの膨大な量のデータを分析する高度なAIを利用しています。私たちのアルゴリズムは、毎日の統計を処理してパターンを特定し、今後の試合の勝率、的中率、および期待ROIを計算します。これにより、他では見られないユニークで洞察に満ちた予測を提供できます。私たちの技術は、精度を向上させるためにモデルを改良するにつれて、常に進化しています。",
         aboutSection3Title: "AdSenseへのお約束",
@@ -453,7 +453,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const subscribeButton = document.getElementById('subscribe-button');
     if (subscribeButton) {
         subscribeButton.addEventListener('click', () => {
-            alert('Subscription feature is currently under development. Coming soon!');
+            window.location.href = 'https://kongkong79.gumroad.com/l/ai-sports-vip';
         });
     }
 });
