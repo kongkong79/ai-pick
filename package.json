@@ -1,0 +1,17 @@
+{
+  "name": "sports-betting-analysis",
+  "version": "1.0.0",
+  "description": "A web page to analyze sports betting predictions.",
+  "main": "main.js",
+  "scripts": {
+    "start": "live-server"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  },
+  "dependencies": {
+    "xlsx": "^0.18.5"
+  }
+}
