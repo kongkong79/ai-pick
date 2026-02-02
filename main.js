@@ -2,8 +2,8 @@ const translations = {
     en: {
         appTitle: "Sports Betting Analysis",
         headerTitle: "Sports Betting Analysis",
-        headerSubtitle: "We analyze daily winning percentages from overseas betting prediction sites.",
-        resultsTitle: "Today's Match Analysis",
+        headerSubtitle: "Harness the power of AI for smarter sports betting. We provide free, data-driven predictions to help you make informed decisions.",
+        analysisTitle: "Today's Betting Analysis",
         filterDescription: "Showing matches with ROI > 1, Sample Size > 10, and AI Hit Rate > 51%.",
         premiumTitle: "Premium Subscription",
         premiumSubtitle: "Get higher win rate predictions. Access exclusive data from our team of expert analysts.",
@@ -17,13 +17,17 @@ const translations = {
         noResults: "No matches found matching the criteria.",
         premiumLockTitle: "Premium Prediction",
         premiumLockMessage: "Subscribe to view predictions with over 80% hit rate.",
-        toggleTheme: "Toggle Theme"
+        toggleTheme: "Toggle Theme",
+        navHome: "Home",
+        navAbout: "About Us",
+        navContact: "Contact",
+        navPrivacy: "Privacy Policy"
     },
     ko: {
         appTitle: "스포츠 베팅 분석",
         headerTitle: "스포츠 베팅 분석",
-        headerSubtitle: "해외 베팅 예측 사이트의 승률을 매일 분석하여 제공합니다.",
-        resultsTitle: "오늘의 경기 분석 결과",
+        headerSubtitle: "AI의 힘으로 더 스마트한 스포츠 베팅을 경험하세요. 정보에 기반한 결정을 내릴 수 있도록 데이터 기반 예측을 무료로 제공합니다.",
+        analysisTitle: "오늘의 베팅 분석",
         filterDescription: "ROI > 1, 표본수 > 10, AI 적중 확률 > 51%인 경기만 표시합니다.",
         premiumTitle: "프리미엄 구독",
         premiumSubtitle: "더 높은 승률의 예측 정보를 받아보세요. 전문 분석가 팀이 제공하는 독점 데이터에 액세스할 수 있습니다.",
@@ -37,13 +41,17 @@ const translations = {
         noResults: "조건에 맞는 경기가 없습니다.",
         premiumLockTitle: "프리미엄 예측",
         premiumLockMessage: "적중률 80% 이상의 예측을 보려면 구독하세요.",
-        toggleTheme: "테마 변경"
+        toggleTheme: "테마 변경",
+        navHome: "홈",
+        navAbout: "소개",
+        navContact: "문의하기",
+        navPrivacy: "개인정보처리방침"
     },
     ja: {
         appTitle: "スポーツベッティング分析",
         headerTitle: "スポーツベッティング分析",
-        headerSubtitle: "海外のベッティング予測サイトの勝率を毎日分析して提供します。",
-        resultsTitle: "本日の試合分析結果",
+        headerSubtitle: "AIの力で、よりスマートなスポーツベッティングを。情報に基づいた意思決定を支援するために、データ駆動型の予測を無料で提供します。",
+        analysisTitle: "今日のベッティング分析",
         filterDescription: "ROI > 1, サンプル数 > 10, AI的中確率 > 51%の試合のみ表示します。",
         premiumTitle: "プレミアム購読",
         premiumSubtitle: "より高い勝率の予測情報を入手してください。専門アナリストチームからの独占データにアクセスできます。",
@@ -57,13 +65,17 @@ const translations = {
         noResults: "条件に一致する試合は見つかりませんでした。",
         premiumLockTitle: "プレミアム予測",
         premiumLockMessage: "的中率80%以上の予測を購読して表示します。",
-        toggleTheme: "テーマを切り替え"
+        toggleTheme: "テーマを切り替え",
+        navHome: "ホーム",
+        navAbout: "概要",
+        navContact: "お問い合わせ",
+        navPrivacy: "プライバシーポリシー"
     },
     zh: {
         appTitle: "体育博彩分析",
         headerTitle: "体育博彩分析",
-        headerSubtitle: "我们每天分析海外博彩预测网站的获胜百分比。",
-        resultsTitle: "今日比赛分析结果",
+        headerSubtitle: "利用AI的力量进行更智能的体育博彩。我们免费提供数据驱动的预测，以帮助您做出明智的决策。",
+        analysisTitle: "今日博彩分析",
         filterDescription: "仅显示 ROI > 1、样本量 > 10 且 AI 命中率 > 51% 的比赛。",
         premiumTitle: "高级订阅",
         premiumSubtitle: "获取更高胜率的预测。访问我们专家分析师团队的独家数据。",
@@ -77,7 +89,11 @@ const translations = {
         noResults: "未找到符合条件的比赛。",
         premiumLockTitle: "高级预测",
         premiumLockMessage: "订阅以查看命中率超过80%的预测。",
-        toggleTheme: "切换主题"
+        toggleTheme: "切换主题",
+        navHome: "首页",
+        navAbout: "关于我们",
+        navContact: "联系我们",
+        navPrivacy: "隐私政策"
     }
 };
 
@@ -89,7 +105,9 @@ function setLanguage(lang) {
     document.documentElement.lang = lang;
     document.querySelectorAll('[data-i18n-key]').forEach(elem => {
         const key = elem.getAttribute('data-i18n-key');
-        elem.innerHTML = translations[lang][key];
+        if (translations[lang] && translations[lang][key]) {
+            elem.innerHTML = translations[lang][key];
+        }
     });
     loadAndDisplayExcelData();
 }
@@ -115,7 +133,7 @@ class BettingResultCard extends HTMLElement {
 
     connectedCallback() {
         const isLocked = this.hasAttribute('locked');
-        const t = translations[currentLanguage];
+        const t = translations[currentLanguage] || translations.en;
 
         const time = this.getAttribute('time');
         const homeTeam = this.getAttribute('home-team');
@@ -186,7 +204,7 @@ async function loadAndDisplayExcelData() {
     const container = document.getElementById('results-container');
     const filterDesc = document.getElementById('filter-description');
     container.innerHTML = '';
-    const t = translations[currentLanguage];
+    const t = translations[currentLanguage] || translations.en;
     if(filterDesc) filterDesc.innerHTML = t.filterDescription;
 
     try {
@@ -251,6 +269,9 @@ async function loadAndDisplayExcelData() {
 document.addEventListener('DOMContentLoaded', () => {
     applyInitialTheme();
 
+    const initialLang = navigator.language.split('-')[0];
+    setLanguage(translations[initialLang] ? initialLang : 'en');
+
     document.getElementById('language-switcher').addEventListener('click', (e) => {
         if (e.target.tagName === 'BUTTON') {
             const lang = e.target.getAttribute('data-lang');
@@ -263,6 +284,4 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('subscribe-button').addEventListener('click', () => {
         alert('Subscription feature is currently under development. Coming soon!');
     });
-
-    setLanguage(currentLanguage);
 });
