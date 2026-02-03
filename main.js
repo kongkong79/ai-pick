@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
             headerTitle: "Sports Betting Analysis",
             headerSubtitle: "Harness the power of AI for smarter sports betting. We provide free, data-driven predictions to help you make informed decisions.",
             analysisTitle: "Today's Betting Analysis",
-            filterDescription: "Showing matches with ROI > 1, Sample Size > 10, and AI Hit Rate > 51%.",
+            filterDescription: "Showing free-tier matches. Subscribe to VIP for full access to all predictions.",
             premiumTitle: "Premium Subscription",
             subscribeButton: "Subscribe Now",
             navHome: "Home", navAbout: "About", navContact: "Contact", navPrivacy: "Privacy", navVip: "VIP",
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
             headerTitle: "스포츠 베팅 분석",
             headerSubtitle: "AI의 힘으로 더 현명한 스포츠 베팅을 경험하세요. 데이터 기반 예측을 무료로 제공합니다.",
             analysisTitle: "오늘의 베팅 분석",
-            filterDescription: "ROI > 1, 샘플 수 > 10, AI 적중률 > 51% 경기 표시 중",
+            filterDescription: "무료 등급 경기를 표시하고 있습니다. 모든 예측에 대한 전체 액세스를 원하시면 VIP를 구독하세요.",
             premiumTitle: "프리미엄 구독",
             subscribeButton: "지금 구독하기",
             navHome: "홈", navAbout: "소개", navContact: "문의", navPrivacy: "개인정보", navVip: "VIP",
@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
             headerTitle: "スポーツベッティング分析",
             headerSubtitle: "AIの力で、より賢いスポーツベッティングを。データに基づいた予測を無料で提供します。",
             analysisTitle: "今日のベッティング分析",
-            filterDescription: "ROI > 1, サンプル数 > 10, AIヒット率 > 51% の試合を表示中",
+            filterDescription: "無料ティアの試合を表示しています。すべての予測へのフルアクセスはVIPを購読してください。",
             premiumTitle: "プレミアムサブスクリプション",
             subscribeButton: "今すぐ購読",
             navHome: "ホーム", navAbout: "概要", navContact: "お問い合わせ", navPrivacy: "プライバシー", navVip: "VIP",
@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
             headerTitle: "体育博彩分析",
             headerSubtitle: "利用AI的力量进行更智能的体育博彩。我们免费提供数据驱动的预测。",
             analysisTitle: "今日博彩分析",
-            filterDescription: "显示 ROI > 1, 样本量 > 10, AI 命中率 > 51% 的比赛",
+            filterDescription: "正在显示免费级别的比赛。订阅VIP以完全访问所有预测。",
             premiumTitle: "高级订阅",
             subscribeButton: "立即订阅",
             navHome: "首页", navAbout: "关于", navContact: "联系", navPrivacy: "隐私", navVip: "VIP",
@@ -87,18 +87,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Main Initialization Logic ---
     async function initialize() {
-        // 1. Check for VIP status
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.has('access_code') && urlParams.get('access_code') === 'MGB_ADMIN') {
             sessionStorage.setItem('isVip', 'true');
         }
         const isVip = sessionStorage.getItem('isVip') === 'true';
 
-        // 2. Setup UI controls
         setupThemeToggle();
         setupLanguageSwitcher();
 
-        // 3. Load and display data
         if (!resultsContainer) return;
 
         resultsContainer.innerHTML = `<p data-i18n-key="loading">${translations.en.loading}</p>`;
@@ -127,15 +124,26 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        data.forEach(item => {
-            const isFree = item['Expected ROI'] > 1 && item['Sample Count'] > 10 && item['Hit rate'] > 51;
-            if (isVip || isFree) {
-                createFullCard(item);
-            } else {
-                createLockedCard();
-            }
-        });
-        setLanguage(currentLanguage); // Apply translations after rendering cards
+        // Define the criteria for a premium match that should be locked for normal users.
+        const isPremiumMatch = item => item['Hit rate'] >= 75 && item['Expected ROI'] >= 1;
+
+        if (isVip) {
+            // VIP User: Show all matches, fully unlocked.
+            data.forEach(item => createFullCard(item));
+        } else {
+            // Normal User: Show free matches, and lock premium matches.
+            data.forEach(item => {
+                if (isPremiumMatch(item)) {
+                    // This is a premium match, so LOCK it.
+                    createLockedCard();
+                } else {
+                    // This is a standard match, so show it for free.
+                    createFullCard(item);
+                }
+            });
+        }
+
+        setLanguage(currentLanguage); // Apply translations after rendering all cards
     }
 
     // --- Card Creation ---
