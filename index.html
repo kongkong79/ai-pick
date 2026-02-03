@@ -1,77 +1,76 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="google-adsense-account" content="ca-pub-4466358200851184">
     <title data-i18n-key="appTitle">Sports Betting Analysis</title>
     <link rel="stylesheet" href="style.css">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4466358200851184"
-     crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-TV2YRZP330"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-TV2YRZP330');
-    </script>
-    <script type="text/javascript">
-        (function(c,l,a,r,i,t,y){
-            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-        })(window, document, "clarity", "script", "vaybfoor26");
-    </script>
+    <link rel="icon" href="https://placehold.co/16x16/007bff/white?text=MGB" type="image/x-icon">
 </head>
 <body>
-    <div class="top-controls">
-        <div id="language-switcher">
-            <button data-lang="en">English</button>
-            <button data-lang="ko">한국어</button>
-            <button data-lang="ja">日本語</button>
-            <button data-lang="zh">中文</button>
+    <header>
+        <div class="container">
+            <a href="index.html" class="logo-link">
+                <img src="https://placehold.co/150x50/007bff/white?text=MGB+Analysis" alt="Logo" class="logo-img">
+                <h1 data-i18n-key="appTitle" style="display: none;">MGB Analysis</h1>
+            </a>
+            <nav>
+                <a href="index.html" data-i18n-key="navHome" class="nav-link active">Home</a>
+                <a href="about.html" data-i18n-key="navAbout" class="nav-link">About</a>
+                <a href="contact.html" data-i18n-key="navContact" class="nav-link">Contact</a>
+                <a href="privacy.html" data-i18n-key="navPrivacy" class="nav-link">Privacy</a>
+                <a href="vip.html" class="nav-link vip-link" data-i18n-key="navVip">VIP</a>
+            </nav>
+            <div class="header-controls">
+                <div id="language-switcher">
+                    <button data-lang="en" title="English">EN</button>
+                    <button data-lang="ko" title="Korean">KO</button>
+                    <button data-lang="ja" title="Japanese">JA</button>
+                    <button data-lang="zh" title="Chinese">CN</button>
+                </div>
+                <button id="theme-toggle" aria-label="Toggle Theme">
+                    <svg id="theme-icon-light" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                    <svg id="theme-icon-dark" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                </button>
+            </div>
         </div>
-        <button id="theme-toggle" data-i18n-key="toggleTheme">Toggle Theme</button>
-    </div>
-
-    <header class="container">
-        <h1 data-i18n-key="headerTitle">Sports Betting Analysis</h1>
-        <p data-i18n-key="headerSubtitle">Harness the power of AI for smarter sports betting. We provide free, data-driven predictions to help you make informed decisions.</p>
-        <nav>
-            <a href="index.html" data-i18n-key="navHome">Home</a>
-            <a href="about.html" data-i18n-key="navAbout">About Us</a>
-            <a href="contact.html" data-i18n-key="navContact">Contact</a>
-        </nav>
     </header>
 
     <main class="container">
-        <h2 data-i18n-key="analysisTitle">Today's Betting Analysis</h2>
-        <p id="filter-description" class="filter-description" data-i18n-key="filterDescription">Showing matches with ROI > 1, Sample Size > 10, and AI Hit Rate > 51%.</p>
-        
-        <div id="results-container">
-            <!-- Betting result cards will be inserted here by JavaScript -->
-        </div>
+        <section class="hero-section">
+            <h2 data-i18n-key="headerTitle">Sports Betting Analysis</h2>
+            <p data-i18n-key="headerSubtitle">Harness the power of AI for smarter sports betting. We provide free, data-driven predictions to help you make informed decisions.</p>
+        </section>
+
+        <section id="analysis-section">
+            <h3 data-i18n-key="analysisTitle">Today's Betting Analysis</h3>
+            <p class="filter-description" data-i18n-key="filterDescription">Showing matches with ROI > 1, Sample Size > 10, and AI Hit Rate > 51%.</p>
+            <div id="results-container" class="results-grid">
+                <!-- Betting result cards will be loaded here -->
+            </div>
+        </section>
+
+        <section id="premium-section" class="premium-section">
+            <div class="premium-content">
+                <h3 data-i18n-key="premiumTitle">Premium Subscription</h3>
+                <p data-i18n-key="premiumSubtitle">Get higher win rate predictions. Access exclusive data from our team of expert analysts.</p>
+                <p data-i18n-key="freeTrial">7-day free trial of our VIP service.</p>
+                <a href="https://kongkong79.gumroad.com/l/ai-sports-vip" target="_blank" class="btn-subscribe" data-i18n-key="subscribeButton">Subscribe Now</a>
+            </div>
+        </section>
     </main>
 
-    <div class="premium-section">
-        <h2 data-i18n-key="premiumTitle">Premium Subscription</h2>
-        <p data-i18n-key="premiumSubtitle">Get higher win rate predictions. Access exclusive data from our team of expert analysts.</p>
-        <p data-i18n-key="freeTrial">7-day free trial of our VIP service.</p> 
-        <button id="subscribe-button" data-i18n-key="subscribeButton">Subscribe Now</button>
-    </div>
-
     <footer>
-        <div class="footer-links">
-            <a href="about.html" data-i18n-key="navAbout">About Us</a>
-            <a href="contact.html" data-i18n-key="navContact">Contact</a>
-            <a href="privacy.html" data-i18n-key="navPrivacy">Privacy Policy</a>
+        <div class="container">
+            <div class="footer-links">
+                <a href="about.html" data-i18n-key="navAbout">About</a>
+                <a href="contact.html" data-i18n-key="navContact">Contact</a>
+                <a href="privacy.html" data-i18n-key="navPrivacy">Privacy Policy</a>
+            </div>
+            <p data-i18n-key="footerText">&copy; 2024 Sports Betting Analysis. All rights reserved.</p>
         </div>
-        <p data-i18n-key="footerText">&copy; 2024 Sports Betting Analysis. All rights reserved.</p>
     </footer>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="main.js"></script>
 </body>
 </html>
