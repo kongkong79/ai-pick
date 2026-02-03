@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIP Access - Sports Betting Analysis</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="index.html" class="logo-link">
+                 <img src="https://placehold.co/150x50/007bff/white?text=MGB+Analysis" alt="Logo" class="logo-img">
+                 <h1>VIP Access</h1>
+            </a>
+            <nav>
+                <a href="index.html" class="nav-link">Home</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div id="vip-content" style="display: none;">
+            <h2>VIP Exclusive Data</h2>
+            <p>Welcome, Admin. Here is the complete, unfiltered data.</p>
+            <div class="table-controls">
+                <button id="sort-by-hit-rate">Sort by Hit Rate</button>
+                <button id="sort-by-roi">Sort by ROI</button>
+            </div>
+            <div class="table-container">
+                <table id="vip-table">
+                    <thead>
+                        <tr>
+                            <th>Match</th>
+                            <th>AI Prediction</th>
+                            <th>Odds</th>
+                            <th>Hit Rate (%)</th>
+                            <th>Expected ROI</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Data will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="access-denied">
+            <h2>Access Denied</h2>
+            <p>This page is for VIP members only. Please subscribe to gain access.</p>
+            <a href="https://kongkong79.gumroad.com/l/ai-sports-vip" class="btn-subscribe" target="_blank">Subscribe Now</a>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+             <p>&copy; 2024 Sports Betting Analysis. All rights reserved.</p>
+        </div>
+    </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="vip.js?v=5"></script>
+</body>
+</html>
