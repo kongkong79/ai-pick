@@ -8,9 +8,9 @@ document.addEventListener('DOMContentLoaded', () => {
         en: {
             appTitle: "Sports Betting Analysis",
             headerTitle: "Sports Betting Analysis",
-            headerSubtitle: "Harness the power of AI for smarter sports betting. We provide free, data-driven predictions to help you make informed decisions.",
+            headerSubtitle: "Harness the power of AI for smarter sports betting.",
             analysisTitle: "Today's Betting Analysis",
-            filterDescription: "Showing free-tier matches. Subscribe to VIP for full access to all predictions.",
+            filterDescription: "Showing matches with ROI > 1, Sample Size > 10, and Hit Rate > 51%. Matches with 80%+ hit rate are for VIPs.",
             premiumTitle: "Premium Subscription",
             subscribeButton: "Subscribe Now",
             navHome: "Home", navAbout: "About", navContact: "Contact", navPrivacy: "Privacy", navVip: "VIP",
@@ -18,16 +18,16 @@ document.addEventListener('DOMContentLoaded', () => {
             aiPrediction: "AI Prediction:", odds: "Odds", hitRate: "Hit Rate", tableRoi: "ROI",
             loading: "Loading match data, please wait...",
             error: "Error loading data. Please try again later.",
-            noMatches: "No free matches today. Subscribe for full access.",
+            noMatches: "No matches meet the filter criteria today.",
             lockedPrediction: "VIP Exclusive Prediction",
-            lockedMessage: "This prediction is for VIP members only.",
+            lockedMessage: "This prediction (Hit Rate >= 80%) is for VIPs only.",
         },
         ko: {
             appTitle: "스포츠 베팅 분석",
             headerTitle: "스포츠 베팅 분석",
-            headerSubtitle: "AI의 힘으로 더 현명한 스포츠 베팅을 경험하세요. 데이터 기반 예측을 무료로 제공합니다.",
+            headerSubtitle: "AI의 힘으로 더 현명한 스포츠 베팅을 경험하세요.",
             analysisTitle: "오늘의 베팅 분석",
-            filterDescription: "무료 등급 경기를 표시하고 있습니다. 모든 예측에 대한 전체 액세스를 원하시면 VIP를 구독하세요.",
+            filterDescription: "ROI > 1, 표본수 > 10, 적중률 > 51% 경기만 표시됩니다. 적중률 80% 이상 경기는 VIP 전용입니다.",
             premiumTitle: "프리미엄 구독",
             subscribeButton: "지금 구독하기",
             navHome: "홈", navAbout: "소개", navContact: "문의", navPrivacy: "개인정보", navVip: "VIP",
@@ -35,16 +35,16 @@ document.addEventListener('DOMContentLoaded', () => {
             aiPrediction: "AI 예측:", odds: "배당률", hitRate: "적중률", tableRoi: "수익률",
             loading: "경기 데이터를 불러오는 중입니다...",
             error: "데이터 로딩 오류. 나중에 다시 시도해주세요.",
-            noMatches: "오늘의 무료 경기가 없습니다. 전체 액세스를 위해 구독하세요.",
+            noMatches: "오늘 필터 기준을 충족하는 경기가 없습니다.",
             lockedPrediction: "VIP 전용 예측",
-            lockedMessage: "이 예측은 VIP 회원 전용입니다.",
+            lockedMessage: "이 예측(적중률 80% 이상)은 VIP 회원 전용입니다.",
         },
         ja: {
             appTitle: "スポーツベッティング分析",
             headerTitle: "スポーツベッティング分析",
-            headerSubtitle: "AIの力で、より賢いスポーツベッティングを。データに基づいた予測を無料で提供します。",
+            headerSubtitle: "AIの力で、より賢いスポーツベッティングを。",
             analysisTitle: "今日のベッティング分析",
-            filterDescription: "無料ティアの試合を表示しています。すべての予測へのフルアクセスはVIPを購読してください。",
+            filterDescription: "ROI > 1, サンプル数 > 10, ヒット率 > 51% の試合のみ表示。ヒット率80%以上はVIP専用です。",
             premiumTitle: "プレミアムサブスクリプション",
             subscribeButton: "今すぐ購読",
             navHome: "ホーム", navAbout: "概要", navContact: "お問い合わせ", navPrivacy: "プライバシー", navVip: "VIP",
@@ -52,16 +52,16 @@ document.addEventListener('DOMContentLoaded', () => {
             aiPrediction: "AI予測:", odds: "オッズ", hitRate: "ヒット率", tableRoi: "ROI",
             loading: "試合データを読み込んでいます...",
             error: "データ読み込みエラー。後でもう一度お試しください。",
-            noMatches: "今日の無料試合はありません。フルアクセスはご購読ください。",
+            noMatches: "今日、フィルター基準を満たす試合はありません。",
             lockedPrediction: "VIP限定予測",
-            lockedMessage: "この予測はVIPメンバー専用です。",
+            lockedMessage: "この予測（ヒット率80%以上）はVIPメンバー専用です。",
         },
         zh: {
             appTitle: "体育博彩分析",
             headerTitle: "体育博彩分析",
-            headerSubtitle: "利用AI的力量进行更智能的体育博彩。我们免费提供数据驱动的预测。",
+            headerSubtitle: "利用AI的力量进行更智能的体育博彩。",
             analysisTitle: "今日博彩分析",
-            filterDescription: "正在显示免费级别的比赛。订阅VIP以完全访问所有预测。",
+            filterDescription: "仅显示 ROI > 1, 样本量 > 10, 命中率 > 51% 的比赛。命中率80%以上的比赛仅供VIP会员使用。",
             premiumTitle: "高级订阅",
             subscribeButton: "立即订阅",
             navHome: "首页", navAbout: "关于", navContact: "联系", navPrivacy: "隐私", navVip: "VIP",
@@ -69,9 +69,9 @@ document.addEventListener('DOMContentLoaded', () => {
             aiPrediction: "AI预测:", odds: "赔率", hitRate: "命中率", tableRoi: "投资回报率",
             loading: "正在加载比赛数据...",
             error: "数据加载出错。请稍后重试。",
-            noMatches: "今天没有免费比赛。订阅以获得完全访问权限。",
+            noMatches: "今天没有符合筛选条件的比赛。",
             lockedPrediction: "VIP独家预测",
-            lockedMessage: "此预测仅供VIP会员使用。",
+            lockedMessage: "此预测（命中率>=80%）仅供VIP会员使用。",
         }
     };
     let currentLanguage = 'en';
@@ -85,7 +85,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- Main Initialization Logic ---
     async function initialize() {
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.has('access_code') && urlParams.get('access_code') === 'MGB_ADMIN') {
@@ -98,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!resultsContainer) return;
 
-        resultsContainer.innerHTML = `<p data-i18n-key="loading">${translations.en.loading}</p>`;
+        resultsContainer.innerHTML = `<p data-i18n-key="loading"></p>`;
         setLanguage(localStorage.getItem('language') || 'en');
 
         try {
@@ -111,30 +110,38 @@ document.addEventListener('DOMContentLoaded', () => {
             displayResults(jsonData, isVip);
         } catch (error) {
             console.error('Error during initialization:', error);
-            resultsContainer.innerHTML = `<p data-i18n-key="error" style="color: red;">${translations[currentLanguage].error}</p>`;
+            resultsContainer.innerHTML = `<p data-i18n-key="error" style="color: red;"></p>`;
             setLanguage(currentLanguage);
         }
     }
 
     function displayResults(data, isVip) {
         resultsContainer.innerHTML = '';
-        if (!data || data.length === 0) {
+
+        // 1. Apply the base filter for EVERYONE.
+        const baseFilteredData = data.filter(item => 
+            item['Expected ROI'] > 1 &&
+            item['Sample Count'] > 10 &&
+            item['Hit rate'] > 51
+        );
+
+        if (baseFilteredData.length === 0) {
             resultsContainer.innerHTML = `<p data-i18n-key="noMatches"></p>`;
             setLanguage(currentLanguage);
             return;
         }
 
-        // Define the criteria for a premium match that should be locked for normal users.
-        const isPremiumMatch = item => item['Hit rate'] >= 75 && item['Expected ROI'] >= 1;
+        // 2. Define the VIP criteria (for matches that passed the base filter).
+        const isPremiumMatch = item => item['Hit rate'] >= 80;
 
         if (isVip) {
-            // VIP User: Show all matches, fully unlocked.
-            data.forEach(item => createFullCard(item));
+            // VIP User: Show all matches from the base-filtered list.
+            baseFilteredData.forEach(item => createFullCard(item));
         } else {
-            // Normal User: Show free matches, and lock premium matches.
-            data.forEach(item => {
+            // Normal User: Show non-premium matches and lock premium ones.
+            baseFilteredData.forEach(item => {
                 if (isPremiumMatch(item)) {
-                    // This is a premium match, so LOCK it.
+                    // This is a premium match for VIPs, so LOCK it.
                     createLockedCard();
                 } else {
                     // This is a standard match, so show it for free.
@@ -146,7 +153,6 @@ document.addEventListener('DOMContentLoaded', () => {
         setLanguage(currentLanguage); // Apply translations after rendering all cards
     }
 
-    // --- Card Creation ---
     function createFullCard(item) {
         const league = item['League'] ? `<span class="match-league">${item['League']}</span>` : '';
         const card = document.createElement('div');
@@ -183,7 +189,6 @@ document.addEventListener('DOMContentLoaded', () => {
         resultsContainer.appendChild(card);
     }
 
-    // --- UI Control Setup ---
     function setupThemeToggle() {
         const themeToggle = document.getElementById('theme-toggle');
         const lightIcon = document.getElementById('theme-icon-light');
@@ -215,6 +220,5 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- Start Application ---
     initialize();
 });
