@@ -11,7 +11,7 @@
     <header>
         <div class="container">
             <a href="index.html" class="logo-link" id="logo-link">
-                <img src="https://placehold.co/150x50/007bff/white?text=admin" alt="Logo" class="logo-img">
+                 <img src="https://placehold.co/150x50/007bff/white?text=admin" alt="Logo" class="logo-img">
             </a>
             <nav>
                 <a href="index.html" data-i18n-key="navHome" class="nav-link active">Home</a>
@@ -22,12 +22,12 @@
             </nav>
             <div class="header-controls">
                 <div id="language-switcher">
-                    <button data-lang="en" title="English">EN</button>
-                    <button data-lang="ko" title="Korean">KO</button>
-                    <button data-lang="ja" title="Japanese">JA</button>
-                    <button data-lang="zh" title="Chinese">CN</button>
+                    <button data-lang="en">EN</button>
+                    <button data-lang="ko">KO</button>
+                    <button data-lang="ja">JA</button>
+                    <button data-lang="zh">CN</button>
                 </div>
-                <button id="theme-toggle" aria-label="Toggle Theme">
+                <button id="theme-toggle">
                     <svg id="theme-icon-light" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
                     <svg id="theme-icon-dark" style="display: none;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
                 </button>
@@ -36,15 +36,17 @@
     </header>
 
     <main class="container">
-        <section class="hero-section">
+        <section class="hero">
             <h1 data-i18n-key="headerTitle">Sports Betting Analysis</h1>
             <p data-i18n-key="headerSubtitle">Harness the power of AI for smarter sports betting.</p>
         </section>
 
-        <section id="analysis-section">
+        <section>
             <h2 data-i18n-key="analysisTitle">Today's Betting Analysis</h2>
-            <p data-i18n-key="filterDescription">Showing matches with ROI > 1, Sample Size > 10, and Hit Rate > 51%. Matches with 80%+ hit rate are for VIPs.</p>
-            <div id="results-container" class="results-grid"></div>
+            <p class="filter-description" data-i18n-key="filterDescription">Showing matches with ROI > 1, Sample Size > 10, and Hit Rate > 51%. Matches with 80%+ hit rate are for VIPs.</p>
+            <div id="results-container">
+                <!-- Results will be loaded here by JavaScript -->
+            </div>
         </section>
     </main>
 
@@ -53,7 +55,6 @@
             <p data-i18n-key="footerText">&copy; 2024 Sports Betting Analysis. All rights reserved.</p>
         </div>
     </footer>
-
-    <script src="main.js?v=7"></script>
+    <script src="main.js?v=12"></script>
 </body>
 </html>

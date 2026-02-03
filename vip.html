@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIP Access - Sports Betting Analysis</title>
+    <title data-i18n-key="appTitle">VIP Access - Sports Betting Analysis</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
@@ -37,26 +37,26 @@
 
     <main class="container">
         <section id="access-denied" style="display: none; text-align: center;">
-            <h2>Access Denied</h2>
-            <p>This is a VIP-only page. Please subscribe to gain access.</p>
-            <a href="https://kongkong79.gumroad.com/l/ai-sports-vip" class="btn-subscribe-card" target="_blank">Subscribe Now</a>
+            <h2 data-i18n-key="vipDeniedTitle">Access Denied</h2>
+            <p data-i18n-key="vipDeniedText">This is a VIP-only page. Please subscribe to gain access.</p>
+            <a href="https://kongkong79.gumroad.com/l/ai-sports-vip" class="btn-subscribe-card" target="_blank" data-i18n-key="subscribeButton">Subscribe Now</a>
         </section>
 
         <section id="vip-content" style="display: none;">
-            <h2>VIP Match Analysis</h2>
-            <p>Full access to all AI predictions. Sort by hit rate or ROI for deeper analysis.</p>
+            <h2 data-i18n-key="vipContentTitle">VIP Match Analysis</h2>
+            <p data-i18n-key="vipContentSubtitle">Full access to all AI predictions. A 1-week free trial is provided upon first subscription.</p>
             <div class="sort-controls">
-                <button id="sort-by-hit-rate">Sort by Hit Rate</button>
-                <button id="sort-by-roi">Sort by ROI</button>
+                <button id="sort-by-hit-rate" data-i18n-key="vipSortHitRate">Sort by Hit Rate</button>
+                <button id="sort-by-roi" data-i18n-key="vipSortROI">Sort by ROI</button>
             </div>
             <table id="vip-table">
                 <thead>
                     <tr>
-                        <th>Match</th>
-                        <th>AI Prediction</th>
-                        <th>Odds</th>
-                        <th>Hit Rate</th>
-                        <th>ROI</th>
+                        <th data-i18n-key="vipHeaderMatch">Match</th>
+                        <th data-i18n-key="vipHeaderPrediction">AI Prediction</th>
+                        <th data-i18n-key="vipHeaderOdds">Odds</th>
+                        <th data-i18n-key="vipHeaderHitRate">Hit Rate</th>
+                        <th data-i18n-key="vipHeaderROI">ROI</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -71,7 +71,7 @@
             <p data-i18n-key="footerText">&copy; 2024 Sports Betting Analysis. All rights reserved.</p>
         </div>
     </footer>
-    <script src="main.js?v=7"></script>
-    <script src="vip.js?v=7"></script>
+    <script src="main.js?v=12"></script>
+    <script src="vip.js?v=12"></script>
 </body>
 </html>
