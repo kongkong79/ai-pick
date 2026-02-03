@@ -1,8 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // --- UI Elements ---
     const resultsContainer = document.getElementById('results-container');
     const filePath = 'sports_data.xlsx';
 
-    // --- TRANSLATION DATA & FUNCTIONS ---
+    // --- I18N Translation Data ---
     const translations = {
         en: {
             appTitle: "Sports Betting Analysis",
@@ -11,50 +12,66 @@ document.addEventListener('DOMContentLoaded', () => {
             analysisTitle: "Today's Betting Analysis",
             filterDescription: "Showing matches with ROI > 1, Sample Size > 10, and AI Hit Rate > 51%.",
             premiumTitle: "Premium Subscription",
-            premiumSubtitle: "Get higher win rate predictions. Access exclusive data from our team of expert analysts.",
-            freeTrial: "7-day free trial of our VIP service.",
             subscribeButton: "Subscribe Now",
-            navHome: "Home",
-            navAbout: "About",
-            navContact: "Contact",
-            navPrivacy: "Privacy",
-            navVip: "VIP",
+            navHome: "Home", navAbout: "About", navContact: "Contact", navPrivacy: "Privacy", navVip: "VIP",
             footerText: "© 2024 Sports Betting Analysis. All rights reserved.",
-            aiPrediction: "AI Prediction:",
-            odds: "Odds",
-            hitRate: "Hit Rate",
-            tableRoi: "ROI",
-            loading: "Loading data...",
+            aiPrediction: "AI Prediction:", odds: "Odds", hitRate: "Hit Rate", tableRoi: "ROI",
+            loading: "Loading match data, please wait...",
             error: "Error loading data. Please try again later.",
-            noMatches: "No matches meet the free criteria today. Check back later or subscribe to VIP for more predictions.",
+            noMatches: "No free matches today. Subscribe for full access.",
             lockedPrediction: "VIP Exclusive Prediction",
-            lockedMessage: "This prediction is available for VIP members only.",
+            lockedMessage: "This prediction is for VIP members only.",
         },
         ko: {
             appTitle: "스포츠 베팅 분석",
             headerTitle: "스포츠 베팅 분석",
-            headerSubtitle: "AI의 힘을 활용하여 더 현명한 스포츠 베팅을 경험하세요. 데이터 기반 예측을 무료로 제공하여 정보에 입각한 결정을 내릴 수 있도록 돕습니다.",
+            headerSubtitle: "AI의 힘으로 더 현명한 스포츠 베팅을 경험하세요. 데이터 기반 예측을 무료로 제공합니다.",
             analysisTitle: "오늘의 베팅 분석",
-            filterDescription: "ROI > 1, 샘플 수 > 10, AI 적중률 > 51%인 경기만 표시합니다.",
+            filterDescription: "ROI > 1, 샘플 수 > 10, AI 적중률 > 51% 경기 표시 중",
             premiumTitle: "프리미엄 구독",
-            premiumSubtitle: "더 높은 승률의 예측을 받아보세요. 전문 분석가 팀의 독점 데이터에 액세스할 수 있습니다.",
-            freeTrial: "7일 무료 VIP 서비스 체험.",
             subscribeButton: "지금 구독하기",
-            navHome: "홈",
-            navAbout: "소개",
-            navContact: "문의",
-            navPrivacy: "개인정보",
-            navVip: "VIP",
+            navHome: "홈", navAbout: "소개", navContact: "문의", navPrivacy: "개인정보", navVip: "VIP",
             footerText: "© 2024 스포츠 베팅 분석. 모든 권리 보유.",
-            aiPrediction: "AI 예측:",
-            odds: "배당률",
-            hitRate: "적중률",
-            tableRoi: "수익률",
-            loading: "데이터를 불러오는 중입니다...",
-            error: "데이터를 불러오는 데 실패했습니다. 나중에 다시 시도해주세요.",
-            noMatches: "오늘 무료 기준을 충족하는 경기가 없습니다. 나중에 다시 확인하거나 VIP를 구독하여 더 많은 예측을 확인하세요.",
+            aiPrediction: "AI 예측:", odds: "배당률", hitRate: "적중률", tableRoi: "수익률",
+            loading: "경기 데이터를 불러오는 중입니다...",
+            error: "데이터 로딩 오류. 나중에 다시 시도해주세요.",
+            noMatches: "오늘의 무료 경기가 없습니다. 전체 액세스를 위해 구독하세요.",
             lockedPrediction: "VIP 전용 예측",
-            lockedMessage: "이 예측은 VIP 회원에게만 제공됩니다.",
+            lockedMessage: "이 예측은 VIP 회원 전용입니다.",
+        },
+        ja: {
+            appTitle: "スポーツベッティング分析",
+            headerTitle: "スポーツベッティング分析",
+            headerSubtitle: "AIの力で、より賢いスポーツベッティングを。データに基づいた予測を無料で提供します。",
+            analysisTitle: "今日のベッティング分析",
+            filterDescription: "ROI > 1, サンプル数 > 10, AIヒット率 > 51% の試合を表示中",
+            premiumTitle: "プレミアムサブスクリプション",
+            subscribeButton: "今すぐ購読",
+            navHome: "ホーム", navAbout: "概要", navContact: "お問い合わせ", navPrivacy: "プライバシー", navVip: "VIP",
+            footerText: "© 2024 スポーツベッティング分析. 全著作権所有.",
+            aiPrediction: "AI予測:", odds: "オッズ", hitRate: "ヒット率", tableRoi: "ROI",
+            loading: "試合データを読み込んでいます...",
+            error: "データ読み込みエラー。後でもう一度お試しください。",
+            noMatches: "今日の無料試合はありません。フルアクセスはご購読ください。",
+            lockedPrediction: "VIP限定予測",
+            lockedMessage: "この予測はVIPメンバー専用です。",
+        },
+        zh: {
+            appTitle: "体育博彩分析",
+            headerTitle: "体育博彩分析",
+            headerSubtitle: "利用AI的力量进行更智能的体育博彩。我们免费提供数据驱动的预测。",
+            analysisTitle: "今日博彩分析",
+            filterDescription: "显示 ROI > 1, 样本量 > 10, AI 命中率 > 51% 的比赛",
+            premiumTitle: "高级订阅",
+            subscribeButton: "立即订阅",
+            navHome: "首页", navAbout: "关于", navContact: "联系", navPrivacy: "隐私", navVip: "VIP",
+            footerText: "© 2024 体育博彩分析. 版权所有.",
+            aiPrediction: "AI预测:", odds: "赔率", hitRate: "命中率", tableRoi: "投资回报率",
+            loading: "正在加载比赛数据...",
+            error: "数据加载出错。请稍后重试。",
+            noMatches: "今天没有免费比赛。订阅以获得完全访问权限。",
+            lockedPrediction: "VIP独家预测",
+            lockedMessage: "此预测仅供VIP会员使用。",
         }
     };
     let currentLanguage = 'en';
@@ -63,90 +80,81 @@ document.addEventListener('DOMContentLoaded', () => {
         currentLanguage = lang;
         document.querySelectorAll('[data-i18n-key]').forEach(element => {
             const key = element.getAttribute('data-i18n-key');
-            if (translations[lang] && translations[lang][key]) {
-                element.textContent = translations[lang][key];
-            }
+            const translation = translations[lang]?.[key] || translations['en'][key];
+            if (translation) element.textContent = translation;
         });
     }
 
-    // --- INITIALIZATION (THE MAIN LOGIC) ---
+    // --- Main Initialization Logic ---
     async function initialize() {
+        // 1. Check for VIP status
         const urlParams = new URLSearchParams(window.location.search);
-        const isVip = urlParams.get('access_code') === 'MGB_ADMIN';
+        if (urlParams.has('access_code') && urlParams.get('access_code') === 'MGB_ADMIN') {
+            sessionStorage.setItem('isVip', 'true');
+        }
+        const isVip = sessionStorage.getItem('isVip') === 'true';
 
-        // Setup UI Controls
+        // 2. Setup UI controls
         setupThemeToggle();
         setupLanguageSwitcher();
 
-        if (!resultsContainer) {
-            console.error('Fatal Error: results-container not found.');
-            return;
-        }
+        // 3. Load and display data
+        if (!resultsContainer) return;
 
-        resultsContainer.innerHTML = `<p data-i18n-key="loading">${translations[currentLanguage].loading}</p>`;
-        setLanguage(currentLanguage);
+        resultsContainer.innerHTML = `<p data-i18n-key="loading">${translations.en.loading}</p>`;
+        setLanguage(localStorage.getItem('language') || 'en');
 
         try {
             const response = await fetch(filePath);
             if (!response.ok) throw new Error('Failed to load sports_data.xlsx');
-            
-            const arrayBuffer = await response.arrayBuffer();
-            const workbook = XLSX.read(new Uint8Array(arrayBuffer), { type: 'array' });
-            const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-            const jsonData = XLSX.utils.sheet_to_json(worksheet);
+
+            const workbook = XLSX.read(await response.arrayBuffer(), { type: 'array' });
+            const jsonData = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
 
             displayResults(jsonData, isVip);
-
         } catch (error) {
             console.error('Error during initialization:', error);
-            resultsContainer.innerHTML = `<p style="color: red;">${error.message}</p>`;
+            resultsContainer.innerHTML = `<p data-i18n-key="error" style="color: red;">${translations[currentLanguage].error}</p>`;
+            setLanguage(currentLanguage);
         }
     }
 
-    function displayResults(data, isVipAccess) {
+    function displayResults(data, isVip) {
         resultsContainer.innerHTML = '';
-
         if (!data || data.length === 0) {
-            resultsContainer.innerHTML = `<p data-i18n-key="noMatches">${translations[currentLanguage].noMatches}</p>`;
+            resultsContainer.innerHTML = `<p data-i18n-key="noMatches"></p>`;
             setLanguage(currentLanguage);
             return;
         }
 
-        if (isVipAccess) {
-            // VIP: Show all cards unlocked.
-            data.forEach(item => createFullCard(item));
-        } else {
-            // Normal User: Show free and a few locked cards.
-            const freeMatches = data.filter(item => item['Expected ROI'] > 1 && item['Sample Count'] > 10 && item['Hit rate'] > 51);
-            const premiumMatches = data.filter(item => !(item['Expected ROI'] > 1 && item['Sample Count'] > 10 && item['Hit rate'] > 51));
-
-            freeMatches.forEach(item => createFullCard(item));
-            premiumMatches.slice(0, 3).forEach(() => createLockedCard());
-
-            if (freeMatches.length === 0) {
-                resultsContainer.innerHTML = ''; // Clear first
-                premiumMatches.forEach(() => createLockedCard());
+        data.forEach(item => {
+            const isFree = item['Expected ROI'] > 1 && item['Sample Count'] > 10 && item['Hit rate'] > 51;
+            if (isVip || isFree) {
+                createFullCard(item);
+            } else {
+                createLockedCard();
             }
-        }
-        setLanguage(currentLanguage);
+        });
+        setLanguage(currentLanguage); // Apply translations after rendering cards
     }
 
-    // --- CARD CREATION FUNCTIONS ---
+    // --- Card Creation ---
     function createFullCard(item) {
+        const league = item['League'] ? `<span class="match-league">${item['League']}</span>` : '';
         const card = document.createElement('div');
         card.className = 'result-card';
         card.innerHTML = `
             <div class="card-header">
-                <span class="match-time">${item['Time'] || 'N/A'}</span>
-                <span class="match-league">${item['League'] || 'N/A'}</span>
+                <span class="match-time">${item['Time'] || ''}</span>
+                ${league}
             </div>
             <div class="card-content">
                 <h4>${item['Home Team'] || 'N/A'} vs ${item['Away Team'] || 'N/A'}</h4>
-                <p class="prediction"><span data-i18n-key="aiPrediction"></span> <strong>${item['AI Recommendation'] || 'N/A'}</strong></p>
+                <p class="prediction"><span data-i18n-key="aiPrediction"></span>: <strong>${item['AI Recommendation'] || 'N/A'}</strong></p>
                 <div class="stats-grid">
-                    <div><span data-i18n-key="odds"></span><p>${(parseFloat(item['Home Odds']) || 0).toFixed(2)}</p></div>
-                    <div><span data-i18n-key="hitRate"></span><p>${(parseFloat(item['Hit rate']) || 0).toFixed(2)}%</p></div>
-                    <div><span data-i18n-key="tableRoi"></span><p>${(parseFloat(item['Expected ROI']) || 0).toFixed(2)}</p></div>
+                    <div><span data-i18n-key="odds"></span><p>${(item['Home Odds'] || 0).toFixed(2)}</p></div>
+                    <div><span data-i18n-key="hitRate"></span><p>${(item['Hit rate'] || 0).toFixed(2)}%</p></div>
+                    <div><span data-i18n-key="tableRoi"></span><p>${(item['Expected ROI'] || 0).toFixed(2)}</p></div>
                 </div>
             </div>
         `;
@@ -167,22 +175,23 @@ document.addEventListener('DOMContentLoaded', () => {
         resultsContainer.appendChild(card);
     }
 
-    // --- UI CONTROL SETUP ---
+    // --- UI Control Setup ---
     function setupThemeToggle() {
         const themeToggle = document.getElementById('theme-toggle');
         const lightIcon = document.getElementById('theme-icon-light');
         const darkIcon = document.getElementById('theme-icon-dark');
+        const savedTheme = localStorage.getItem('theme') || 'light';
+
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        lightIcon.style.display = savedTheme === 'dark' ? 'none' : 'block';
+        darkIcon.style.display = savedTheme === 'dark' ? 'block' : 'none';
+
         themeToggle.addEventListener('click', () => {
-            let theme = document.documentElement.getAttribute('data-theme');
-            if (theme === 'dark') {
-                document.documentElement.setAttribute('data-theme', 'light');
-                lightIcon.style.display = 'block';
-                darkIcon.style.display = 'none';
-            } else {
-                document.documentElement.setAttribute('data-theme', 'dark');
-                lightIcon.style.display = 'none';
-                darkIcon.style.display = 'block';
-            }
+            let theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            lightIcon.style.display = theme === 'dark' ? 'none' : 'block';
+            darkIcon.style.display = theme === 'dark' ? 'block' : 'none';
         });
     }
 
@@ -190,11 +199,14 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('language-switcher').addEventListener('click', (event) => {
             if (event.target.tagName === 'BUTTON') {
                 const lang = event.target.getAttribute('data-lang');
-                if (lang) setLanguage(lang);
+                if (lang) {
+                    setLanguage(lang);
+                    localStorage.setItem('language', lang);
+                }
             }
         });
     }
 
-    // --- START EVERYTHING ---
+    // --- Start Application ---
     initialize();
 });
