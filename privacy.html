@@ -9,36 +9,44 @@
 <body>
     <header>
         <div class="container">
-            <a href="index.html" class="logo-link">
+            <a href="index.html" class="logo-link" id="logo-link">
                  <img src="https://placehold.co/150x50/007bff/white?text=MGB+Analysis" alt="Logo" class="logo-img">
             </a>
             <nav>
-                <a href="index.html" class="nav-link">Home</a>
-                <a href="about.html" class="nav-link">About</a>
-                <a href="contact.html" class="nav-link">Contact</a>
-                <a href="privacy.html" class="nav-link active">Privacy</a>
-                <a href="vip.html" class="nav-link vip-link">VIP</a>
+                <a href="index.html" data-i18n-key="navHome" class="nav-link">Home</a>
+                <a href="about.html" data-i18n-key="navAbout" class="nav-link">About</a>
+                <a href="contact.html" data-i18n-key="navContact" class="nav-link">Contact</a>
+                <a href="privacy.html" data-i18n-key="navPrivacy" class="nav-link active">Privacy</a>
+                <a href="vip.html" class="nav-link vip-link" data-i18n-key="navVip">VIP</a>
             </nav>
+            <div class="header-controls">
+                <div id="language-switcher">
+                    <button data-lang="en">EN</button>
+                    <button data-lang="ko">KO</button>
+                    <button data-lang="ja">JA</button>
+                    <button data-lang="zh">CN</button>
+                </div>
+                <button id="theme-toggle">
+                    <svg id="theme-icon-light" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                    <svg id="theme-icon-dark" style="display: none;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                </button>
+            </div>
         </div>
     </header>
 
     <main class="container">
         <section>
             <h2>Privacy Policy</h2>
-            <p>Your privacy is important to us. This policy explains what information we collect and how we use it.</p>
-            
-            <h3>Information We Collect</h3>
-            <p>We may collect personal information that you provide to us, such as your name and email address when you contact us or subscribe to our service. We also collect anonymous data regarding website usage to improve our services.</p>
-
-            <h3>How We Use Information</h3>
-            <p>Your information is used to provide and improve our services, communicate with you, and process your requests. We do not sell or share your personal information with third parties, except as required by law.</p>
+            <p>We are committed to protecting your privacy. We do not collect any personal data from our users. All analysis is performed anonymously.</p>
+            <p>The VIP access status is stored locally in your browser's session storage and is not transmitted to our servers.</p>
         </section>
     </main>
 
     <footer>
         <div class="container">
-            <p>&copy; 2024 Sports Betting Analysis. All rights reserved.</p>
+            <p data-i18n-key="footerText">&copy; 2024 Sports Betting Analysis. All rights reserved.</p>
         </div>
     </footer>
+    <script src="main.js?v=7"></script>
 </body>
 </html>

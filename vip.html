@@ -5,62 +5,73 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VIP Access - Sports Betting Analysis</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
     <header>
         <div class="container">
-            <a href="index.html" class="logo-link">
+            <a href="index.html" class="logo-link" id="logo-link">
                  <img src="https://placehold.co/150x50/007bff/white?text=MGB+Analysis" alt="Logo" class="logo-img">
             </a>
             <nav>
-                <a href="index.html" class="nav-link">Home</a>
-                <a href="about.html" class="nav-link">About</a>
-                <a href="contact.html" class="nav-link">Contact</a>
-                <a href="privacy.html" class="nav-link">Privacy</a>
-                <a href="vip.html" class="nav-link vip-link active">VIP</a>
+                <a href="index.html" data-i18n-key="navHome" class="nav-link">Home</a>
+                <a href="about.html" data-i18n-key="navAbout" class="nav-link">About</a>
+                <a href="contact.html" data-i18n-key="navContact" class="nav-link">Contact</a>
+                <a href="privacy.html" data-i18n-key="navPrivacy" class="nav-link">Privacy</a>
+                <a href="vip.html" class="nav-link vip-link active" data-i18n-key="navVip">VIP</a>
             </nav>
+            <div class="header-controls">
+                <div id="language-switcher">
+                    <button data-lang="en">EN</button>
+                    <button data-lang="ko">KO</button>
+                    <button data-lang="ja">JA</button>
+                    <button data-lang="zh">CN</button>
+                </div>
+                <button id="theme-toggle">
+                    <svg id="theme-icon-light" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                    <svg id="theme-icon-dark" style="display: none;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                </button>
+            </div>
         </div>
     </header>
 
     <main class="container">
-        <div id="vip-content" style="display: none;">
-            <h2>VIP Exclusive Data</h2>
-            <p>Welcome, Admin. Here is the complete, unfiltered data.</p>
-            <div class="table-controls">
+        <section id="access-denied" style="display: none; text-align: center;">
+            <h2>Access Denied</h2>
+            <p>This is a VIP-only page. Please subscribe to gain access.</p>
+            <a href="https://kongkong79.gumroad.com/l/ai-sports-vip" class="btn-subscribe-card" target="_blank">Subscribe Now</a>
+        </section>
+
+        <section id="vip-content" style="display: none;">
+            <h2>VIP Match Analysis</h2>
+            <p>Full access to all AI predictions. Sort by hit rate or ROI for deeper analysis.</p>
+            <div class="sort-controls">
                 <button id="sort-by-hit-rate">Sort by Hit Rate</button>
                 <button id="sort-by-roi">Sort by ROI</button>
             </div>
-            <div class="table-container">
-                <table id="vip-table">
-                    <thead>
-                        <tr>
-                            <th>Match</th>
-                            <th>AI Prediction</th>
-                            <th>Odds</th>
-                            <th>Hit Rate (%)</th>
-                            <th>Expected ROI</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Data will be loaded here -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <div id="access-denied">
-            <h2>Access Denied</h2>
-            <p>This page is for VIP members only. Please subscribe to gain access.</p>
-            <a href="https://kongkong79.gumroad.com/l/ai-sports-vip" class="btn-subscribe" target="_blank">Subscribe Now</a>
-        </div>
+            <table id="vip-table">
+                <thead>
+                    <tr>
+                        <th>Match</th>
+                        <th>AI Prediction</th>
+                        <th>Odds</th>
+                        <th>Hit Rate</th>
+                        <th>ROI</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Data will be loaded here -->
+                </tbody>
+            </table>
+        </section>
     </main>
 
     <footer>
         <div class="container">
-             <p>&copy; 2024 Sports Betting Analysis. All rights reserved.</p>
+            <p data-i18n-key="footerText">&copy; 2024 Sports Betting Analysis. All rights reserved.</p>
         </div>
     </footer>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <script src="vip.js?v=6"></script>
+    <script src="main.js?v=7"></script>
+    <script src="vip.js?v=7"></script>
 </body>
 </html>

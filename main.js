@@ -21,6 +21,9 @@ document.addEventListener('DOMContentLoaded', () => {
             noMatches: "No matches meet the filter criteria today.",
             lockedPrediction: "VIP Exclusive Prediction",
             lockedMessage: "This prediction (Hit Rate >= 80%) is for VIPs only.",
+            adminPrompt: "Enter admin password:",
+            adminSuccess: "Admin access granted. Refreshing page.",
+            adminFailure: "Incorrect password.",
         },
         ko: {
             appTitle: "스포츠 베팅 분석",
@@ -38,6 +41,9 @@ document.addEventListener('DOMContentLoaded', () => {
             noMatches: "오늘 필터 기준을 충족하는 경기가 없습니다.",
             lockedPrediction: "VIP 전용 예측",
             lockedMessage: "이 예측(적중률 80% 이상)은 VIP 회원 전용입니다.",
+            adminPrompt: "관리자 암호를 입력하세요:",
+            adminSuccess: "관리자 접속 승인. 페이지를 새로고침합니다.",
+            adminFailure: "암호가 틀렸습니다.",
         },
         ja: {
             appTitle: "スポーツベッティング分析",
@@ -55,6 +61,9 @@ document.addEventListener('DOMContentLoaded', () => {
             noMatches: "今日、フィルター基準を満たす試合はありません。",
             lockedPrediction: "VIP限定予測",
             lockedMessage: "この予測（ヒット率80%以上）はVIPメンバー専用です。",
+            adminPrompt: "管理者パスワードを入力してください：",
+            adminSuccess: "管理者アクセスが許可されました。ページを更新します。",
+            adminFailure: "パスワードが正しくありません。",
         },
         zh: {
             appTitle: "体育博彩分析",
@@ -72,6 +81,9 @@ document.addEventListener('DOMContentLoaded', () => {
             noMatches: "今天没有符合筛选条件的比赛。",
             lockedPrediction: "VIP独家预测",
             lockedMessage: "此预测（命中率>=80%）仅供VIP会员使用。",
+            adminPrompt: "请输入管理员密码：",
+            adminSuccess: "管理员访问权限已授予。正在刷新页面。",
+            adminFailure: "密码不正确。",
         }
     };
     let currentLanguage = 'en';
@@ -86,18 +98,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function initialize() {
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.has('access_code') && urlParams.get('access_code') === 'MGB_ADMIN') {
-            sessionStorage.setItem('isVip', 'true');
-        }
         const isVip = sessionStorage.getItem('isVip') === 'true';
 
         setupThemeToggle();
         setupLanguageSwitcher();
+        setupAdminLogin(); // Setup the new admin login feature
 
         if (!resultsContainer) return;
 
-        resultsContainer.innerHTML = `<p data-i18n-key="loading"></p>`;
+        resultsContainer.innerHTML = `<p data-i18n-key="loading">${translations.en.loading}</p>`;
         setLanguage(localStorage.getItem('language') || 'en');
 
         try {
@@ -110,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
             displayResults(jsonData, isVip);
         } catch (error) {
             console.error('Error during initialization:', error);
-            resultsContainer.innerHTML = `<p data-i18n-key="error" style="color: red;"></p>`;
+            resultsContainer.innerHTML = `<p data-i18n-key="error" style="color: red;">${translations[currentLanguage].error}</p>`;
             setLanguage(currentLanguage);
         }
     }
@@ -118,7 +127,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function displayResults(data, isVip) {
         resultsContainer.innerHTML = '';
 
-        // 1. Apply the base filter for EVERYONE.
         const baseFilteredData = data.filter(item => 
             item['Expected ROI'] > 1 &&
             item['Sample Count'] > 10 &&
@@ -131,26 +139,21 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // 2. Define the VIP criteria (for matches that passed the base filter).
         const isPremiumMatch = item => item['Hit rate'] >= 80;
 
         if (isVip) {
-            // VIP User: Show all matches from the base-filtered list.
             baseFilteredData.forEach(item => createFullCard(item));
         } else {
-            // Normal User: Show non-premium matches and lock premium ones.
             baseFilteredData.forEach(item => {
                 if (isPremiumMatch(item)) {
-                    // This is a premium match for VIPs, so LOCK it.
                     createLockedCard();
                 } else {
-                    // This is a standard match, so show it for free.
                     createFullCard(item);
                 }
             });
         }
 
-        setLanguage(currentLanguage); // Apply translations after rendering all cards
+        setLanguage(currentLanguage);
     }
 
     function createFullCard(item) {
@@ -217,6 +220,35 @@ document.addEventListener('DOMContentLoaded', () => {
                     localStorage.setItem('language', lang);
                 }
             }
+        });
+    }
+
+    function setupAdminLogin() {
+        const logoLink = document.getElementById('logo-link');
+        let clickCount = 0;
+        let clickTimer = null;
+
+        logoLink.addEventListener('click', (event) => {
+            event.preventDefault(); // Prevent navigating to index.html
+            clickCount++;
+
+            if (clickTimer) {
+                clearTimeout(clickTimer);
+            }
+
+            clickTimer = setTimeout(() => {
+                if (clickCount >= 5) {
+                    const password = prompt(translations[currentLanguage].adminPrompt);
+                    if (password === 'MGB_ADMIN_2024') {
+                        alert(translations[currentLanguage].adminSuccess);
+                        sessionStorage.setItem('isVip', 'true');
+                        window.location.reload();
+                    } else {
+                        alert(translations[currentLanguage].adminFailure);
+                    }
+                }
+                clickCount = 0; // Reset after check
+            }, 500); // 500ms window to count clicks
         });
     }
 
