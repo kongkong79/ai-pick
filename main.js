@@ -376,7 +376,7 @@ async function loadAndDisplayExcelData() {
     container.innerHTML = ''; // Clear previous results
 
     try {
-        const response = await fetch('./20260203.xlsx');
+        const response = await fetch('./sports_data.xlsx');
         const arrayBuffer = await response.arrayBuffer();
         const data = new Uint8Array(arrayBuffer);
         const workbook = XLSX.read(data, { type: 'array' });
