@@ -54,12 +54,22 @@ header .container {
 
 .logo-link {
     display: inline-block;
+    padding: 5px; /* Add some padding for easier clicking */
 }
 
 .logo-img {
     height: 40px;
+    width: 40px;
+    border-radius: 50%; /* Make it a circle */
+    object-fit: cover; /* Ensure the image covers the area */
     display: block;
+    transition: transform 0.2s ease-in-out;
 }
+
+.logo-link:hover .logo-img {
+    transform: scale(1.1); /* Slight zoom on hover */
+}
+
 
 nav {
     display: flex;
@@ -236,3 +246,5 @@ footer {
     border-top: 1px solid var(--border-color);
     color: #6c757d;
 }
+
+/* v14 */
