@@ -14,7 +14,7 @@ const translations = {
         noMatches: "No matches meet the filter criteria today.",
         lockedPrediction: "VIP Exclusive Prediction",
         lockedMessage: "This prediction (Hit Rate >= 80%) is for VIPs only.",
-        subscribeButton: "Subscribe Now",
+        subscribeButton: "Subscribe Now (7-day free trial)",
         adminPrompt: "Enter admin password:",
         adminSuccess: "Admin access granted. Refreshing page.",
         adminFailure: "Incorrect password.",
@@ -55,7 +55,7 @@ const translations = {
         noMatches: "오늘 필터 기준을 충족하는 경기가 없습니다.",
         lockedPrediction: "VIP 전용 예측",
         lockedMessage: "이 예측(적중률 80% 이상)은 VIP 회원 전용입니다.",
-        subscribeButton: "지금 구독하기",
+        subscribeButton: "지금 구독하기 (7일간 무료)",
         adminPrompt: "관리자 암호를 입력하세요:",
         adminSuccess: "관리자 접속 승인. 페이지를 새로고침합니다.",
         adminFailure: "암호가 틀렸습니다.",
@@ -96,7 +96,7 @@ const translations = {
         noMatches: "今日、フィルター基準を満たす試合はありません。",
         lockedPrediction: "VIP限定予測",
         lockedMessage: "この予測（ヒット率80%以上）はVIPメンバー専用です。",
-        subscribeButton: "今すぐ購読",
+        subscribeButton: "今すぐ購読 (7日間無料トライアル)",
         adminPrompt: "管理者パスワードを入力してください：",
         adminSuccess: "管理者アクセスが許可されました。ページを更新します。",
         adminFailure: "パスワードが正しくありません。",
@@ -137,7 +137,7 @@ const translations = {
         noMatches: "今天没有符合筛选条件的比赛。",
         lockedPrediction: "VIP独家预测",
         lockedMessage: "此预测（命中率>=80%）仅供VIP会员使用。",
-        subscribeButton: "立即订阅",
+        subscribeButton: "立即订阅 (7天免费试用)",
         adminPrompt: "请输入管理员密码：",
         adminSuccess: "管理员访问权限已授予。正在刷新页面。",
         adminFailure: "密码不正确。",
@@ -353,4 +353,4 @@ function createLockedCard() {
     resultsContainer.appendChild(card);
 }
 
-// v12
+// v13
