@@ -1,81 +1,22 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const accessDeniedSection = document.getElementById('access-denied');
-    const vipContentSection = document.getElementById('vip-content');
-    const vipTableBody = document.querySelector('#vip-table tbody');
 
-    const isVip = sessionStorage.getItem('isVip') === 'true';
+    // 1. ALL FUNCTION DEFINITIONS
 
-    if (isVip) {
-        accessDeniedSection.style.display = 'none';
-        vipContentSection.style.display = 'block';
-        loadVipData();
-    } else {
-        accessDeniedSection.style.display = 'block';
-        vipContentSection.style.display = 'none';
-        setLanguage(localStorage.getItem('language') || 'en');
-    }
-
-    async function loadVipData() {
+    // Handles language switching by loading the correct translation file
+    async function loadTranslations(lang) {
         try {
-            const response = await fetch('sports_data.xlsx');
-            const arrayBuffer = await response.arrayBuffer();
-            const data = new Uint8Array(arrayBuffer);
-            const workbook = XLSX.read(data, { type: 'array' });
-            const firstSheetName = workbook.SheetNames[0];
-            const worksheet = workbook.Sheets[firstSheetName];
-            const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-
-            let results = jsonData.slice(1).map(row => {
-                let hitRate = parseFloat(row[4]); // Column E is Hit Rate
-                if (hitRate > 1.0) {
-                    hitRate = hitRate / 100;
-                }
-                return {
-                    match: row[1],
-                    prediction: row[2],
-                    odds: parseFloat(row[3]),
-                    hitRate: hitRate,
-                    roi: parseFloat(row[5]),
-                    sampleSize: parseInt(row[6], 10)
-                };
-            }).filter(item => item.match && !isNaN(item.hitRate)); // Filter out invalid rows
-
-            displayData(results); // Initial display
-
-            // Add sorting functionality
-            document.getElementById('sort-by-hit-rate').addEventListener('click', () => {
-                const sortedByHitRate = [...results].sort((a, b) => b.hitRate - a.hitRate);
-                displayData(sortedByHitRate);
-            });
-
-            document.getElementById('sort-by-roi').addEventListener('click', () => {
-                const sortedByRoi = [...results].sort((a, b) => b.roi - a.roi);
-                displayData(sortedByRoi);
-            });
-
+            const response = await fetch(`locales/${lang}.json?v=3`); // Version bump to ensure fresh file
+            if (!response.ok) throw new Error(`Translation file for ${lang} not found`);
+            return await response.json();
         } catch (error) {
-            console.error('Error loading VIP data:', error);
-            vipTableBody.innerHTML = `<tr><td colspan="5">Failed to load data.</td></tr>`;
+            console.error(error);
+            // Fallback to English if the requested language is not found
+            const response = await fetch(`locales/en.json?v=3`);
+            return await response.json();
         }
     }
 
-    function displayData(data) {
-        vipTableBody.innerHTML = '';
-        data.forEach(item => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${item.match}</td>
-                <td>${item.prediction}</td>
-                <td>${item.odds.toFixed(2)}</td>
-                <td>${(item.hitRate * 100).toFixed(2)}%</td>
-                <td>${item.roi.toFixed(2)}</td>
-            `;
-            vipTableBody.appendChild(row);
-        });
-        setLanguage(localStorage.getItem('language') || 'en');
-    }
-    
-    //This function needs to be available for displayData to work
+    // Applies translations to all elements with a data-i18n-key attribute
     async function setLanguage(lang) {
         const translations = await loadTranslations(lang);
         document.querySelectorAll('[data-i18n-key]').forEach(element => {
@@ -87,14 +28,87 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('language', lang);
     }
 
-    async function loadTranslations(lang) {
+    // Renders the provided data into the VIP table
+    function displayData(data) {
+        const vipTableBody = document.querySelector('#vip-table tbody');
+        if (!vipTableBody) return;
+        vipTableBody.innerHTML = ''; // Clear previous data
+        data.forEach(item => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${item.match}</td>
+                <td>${item.prediction}</td>
+                <td>${item.odds.toFixed(2)}</td>
+                <td>${(item.hitRate * 100).toFixed(2)}%</td>
+                <td>${item.roi.toFixed(2)}</td>
+            `;
+            vipTableBody.appendChild(row);
+        });
+        // Re-apply language after rendering new content
+        setLanguage(localStorage.getItem('language') || 'en');
+    }
+
+    // Fetches and processes the Excel data for VIP users
+    async function loadVipData() {
+        const vipTableBody = document.querySelector('#vip-table tbody');
         try {
-            const response = await fetch(`locales/${lang}.json`);
-            if (!response.ok) throw new Error('failed to load');
-            return await response.json();
+            const response = await fetch('sports_data.xlsx');
+            if (!response.ok) throw new Error('Excel file not found');
+
+            const arrayBuffer = await response.arrayBuffer();
+            const data = new Uint8Array(arrayBuffer);
+            const workbook = XLSX.read(data, { type: 'array' });
+            const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+            const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+            // Process and clean the data
+            let results = jsonData.slice(1).map(row => {
+                let hitRate = parseFloat(row[4]); // Column E
+                if (hitRate > 1.0) hitRate /= 100; // Normalize percentage
+                return {
+                    match: row[1],        // Column B
+                    prediction: row[2], // Column C
+                    odds: parseFloat(row[3]),   // Column D
+                    hitRate: hitRate,
+                    roi: parseFloat(row[5]),      // Column F
+                    sampleSize: parseInt(row[6], 10) // Column G
+                };
+            }).filter(item => item.match && !isNaN(item.hitRate)); // Filter out any invalid or empty rows
+
+            // Initial display and sort functionality
+            displayData(results);
+
+            document.getElementById('sort-by-hit-rate').addEventListener('click', () => {
+                displayData([...results].sort((a, b) => b.hitRate - a.hitRate));
+            });
+
+            document.getElementById('sort-by-roi').addEventListener('click', () => {
+                displayData([...results].sort((a, b) => b.roi - a.roi));
+            });
+
         } catch (error) {
-            const response = await fetch(`locales/en.json`);
-            return await response.json();
+            console.error('Error loading VIP data:', error);
+            if(vipTableBody) vipTableBody.innerHTML = `<tr><td colspan="5">Failed to load data.</td></tr>`;
         }
+    }
+
+
+    // 2. EXECUTION LOGIC
+
+    const accessDeniedSection = document.getElementById('access-denied');
+    const vipContentSection = document.getElementById('vip-content');
+    const isVip = sessionStorage.getItem('isVip') === 'true';
+
+    if (isVip) {
+        // If user is VIP, show content and load data
+        if(accessDeniedSection) accessDeniedSection.style.display = 'none';
+        if(vipContentSection) vipContentSection.style.display = 'block';
+        loadVipData();
+    } else {
+        // If user is not VIP, show access denied message
+        if(accessDeniedSection) accessDeniedSection.style.display = 'block';
+        if(vipContentSection) vipContentSection.style.display = 'none';
+        // Set language for the "access denied" message
+        setLanguage(localStorage.getItem('language') || 'en');
     }
 });
