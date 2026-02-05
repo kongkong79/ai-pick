@@ -1,0 +1,18 @@
+{
+    "appTitle": "体育博彩分析",
+    "navHome": "首页",
+    "navAbout": "关于",
+    "navContact": "联系我们",
+    "navPrivacy": "隐私政策",
+    "navVip": "VIP",
+    "headerTitle": "体育博彩分析系统",
+    "headerSubtitle": "利用AI的力量进行更智能的投注。",
+    "analysisTitle": "今日赛事分析",
+    "filterDescription": "显示投资回报率(ROI) > 1 且样本量 > 10 的赛事。",
+    "vipExclusive": "VIP 独家",
+    "vipOnlyMessage": "胜率 80%+ 的预测仅限 VIP 查看。",
+    "subscribeNow": "立即解锁",
+    "footerText": "© 2024 体育博彩分析. 版权所有。",
+    "loading": "正在加载...",
+    "noMatches": "未找到符合条件的赛事。"
+}

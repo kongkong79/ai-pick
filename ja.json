@@ -1,0 +1,18 @@
+{
+    "appTitle": "スポーツベッティング分析",
+    "navHome": "ホーム",
+    "navAbout": "について",
+    "navContact": "お問い合わせ",
+    "navPrivacy": "プライバシー",
+    "navVip": "VIP",
+    "headerTitle": "スポーツベッティング分析",
+    "headerSubtitle": "AIの力でよりスマートなベッティングを。",
+    "analysisTitle": "本日の試合分析",
+    "filterDescription": "ROI 1.0以上、サンプル数10以上の試合を表示しています。",
+    "vipExclusive": "VIP限定予想",
+    "vipOnlyMessage": "勝率80%以上のデータはVIP専用です。",
+    "subscribeNow": "今すぐ見る",
+    "footerText": "© 2024 スポーツベッティング分析. All rights reserved.",
+    "loading": "読み込み中...",
+    "noMatches": "条件に一致する試合が見つかりません。"
+}
