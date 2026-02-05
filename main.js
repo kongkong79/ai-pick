@@ -1,32 +1,36 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- 1. 설정 및 상태 ---
+    // --- 1. 설정 및 상태 관리 ---
     const ADMIN_PASSWORD = 'MGB_ADMIN_2024';
     let logoClickCount = 0;
     let logoClickTimer = null;
 
-    // --- 2. 언어 변환 핵심 함수 (가장 먼저 정의) ---
+    // --- 2. 언어 변환 함수 (최우선 정의) ---
     function applyLanguage(lang) {
         if (!lang) return;
         
-        console.log("Applying Language:", lang);
-        
-        // 1. translations.js의 전역 함수 호출 시도
+        // translations.js에 정의된 window.applyTranslations 호출
         if (typeof window.applyTranslations === 'function') {
             window.applyTranslations(lang);
         } else if (typeof applyTranslations === 'function') {
             applyTranslations(lang);
         } else {
-            console.error("translations.js를 찾을 수 없거나 applyTranslations 함수가 없습니다.");
+            console.error("translations.js를 찾을 수 없습니다.");
         }
-        
-        // 2. 버튼 활성화 상태 표시 (UI 피드백)
+
+        // 버튼 활성 상태 UI 업데이트
         document.querySelectorAll('[data-lang]').forEach(btn => {
-            btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+            if (btn.getAttribute('data-lang') === lang) {
+                btn.style.fontWeight = 'bold';
+                btn.style.textDecoration = 'underline';
+            } else {
+                btn.style.fontWeight = 'normal';
+                btn.style.textDecoration = 'none';
+            }
         });
     }
 
-    // --- 3. 초기화 (테마 및 언어 즉시 적용) ---
-    function initApp() {
+    // --- 3. 초기화 (테마 및 언어 적용) ---
+    function init() {
         // 테마 복구
         const savedTheme = localStorage.getItem('theme') || 'light';
         document.documentElement.setAttribute('data-theme', savedTheme);
@@ -45,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const analysisList = document.getElementById('analysis-list');
         if (!analysisList) return;
 
-        analysisList.innerHTML = '<div style="text-align:center; padding:20px;">Loading...</div>';
+        analysisList.innerHTML = '<div style="text-align:center; padding:20px;">Loading Data...</div>';
 
         try {
             const response = await fetch('sports_data.xlsx?v=' + new Date().getTime());
@@ -56,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const allMatches = jsonData.slice(1).map(row => {
                 let hitRate = 0;
-                let rawHit = row[5]; 
+                let rawHit = row[5]; // Hit rate
                 if (typeof rawHit === 'string') {
                     hitRate = parseFloat(rawHit.replace('%', '')) / 100;
                 } else {
@@ -66,14 +70,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 return {
                     time: row[0],
                     match: `${row[1]} vs ${row[2]}`,
-                    prediction: row[4],
+                    prediction: row[4], // AI Recommendation
                     odds: parseFloat(row[3]) || 0,
                     hitRate: hitRate || 0,
-                    roi: parseFloat(row[10]) || 0,
-                    sampleSize: parseInt(row[11]) || 0
+                    roi: parseFloat(row[10]) || 0, // K열 ROI
+                    sampleSize: parseInt(row[11]) || 0 // L열 Sample
                 };
             });
 
+            // 필터링: PICK이 존재하고, ROI 1.0 이상, 표본 10 이상
             const filteredMatches = allMatches.filter(item => {
                 const hasValidPick = item.prediction && item.prediction !== '-' && item.prediction.trim() !== '';
                 return hasValidPick && item.roi >= 1.0 && item.sampleSize >= 10;
@@ -82,16 +87,16 @@ document.addEventListener('DOMContentLoaded', () => {
             analysisList.innerHTML = '';
 
             if (filteredMatches.length === 0) {
-                analysisList.innerHTML = `<p data-i18n-key="noMatches" style="text-align:center; padding:40px;">No matches found.</p>`;
+                analysisList.innerHTML = `<p data-i18n-key="noMatches" style="text-align:center; padding:40px;">No matches found matching criteria.</p>`;
             } else {
                 filteredMatches.forEach(item => {
                     analysisList.appendChild(createMatchCard(item));
                 });
             }
         } catch (error) {
-            console.error('Data Error:', error);
+            console.error('Data loading error:', error);
         } finally {
-            // 데이터 로드 후 한 번 더 번역 적용
+            // 데이터 로드 후 번역 다시 입히기
             applyLanguage(localStorage.getItem('language') || 'en');
         }
     }
@@ -106,8 +111,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div style="text-align:center; padding:15px;">
                     <div style="font-size: 2rem; margin-bottom: 10px;">🔒</div>
                     <h3 data-i18n-key="vipExclusive">VIP Exclusive</h3>
-                    <p data-i18n-key="vipOnlyMessage" style="font-size:0.85rem; color:#666;">High Win Rate (80%+)</p>
-                    <a href="vip.html" class="subscribe-button" data-i18n-key="subscribeNow">Unlock</a>
+                    <p data-i18n-key="vipOnlyMessage" style="font-size:0.85rem; color:#888;">High Win Rate (80%+)</p>
+                    <a href="vip.html" class="subscribe-button" data-i18n-key="subscribeNow" style="display:inline-block; margin-top:10px; padding:8px 16px; background:#2563eb; color:#fff; border-radius:5px; text-decoration:none;">Unlock</a>
                 </div>
             `;
         } else {
@@ -116,17 +121,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     <strong style="font-size:1.05rem;">${item.match}</strong>
                     <span style="font-size:0.85rem; color:#888;">${item.time}</span>
                 </div>
-                <div style="background:rgba(128,128,128,0.08); padding:12px; border-radius:8px;">
+                <div style="background:rgba(128,128,128,0.1); padding:12px; border-radius:8px;">
                     <p style="margin:4px 0;"><strong>Pick:</strong> <span style="color:#2563eb;">${item.prediction}</span></p>
                     <p style="margin:4px 0;"><strong>Odds:</strong> ${item.odds.toFixed(2)} | <strong>Hit Rate:</strong> ${(item.hitRate * 100).toFixed(0)}%</p>
-                    <p style="margin:4px 0; font-size:0.8rem; color:#666;">ROI: ${item.roi} | Sample: ${item.sampleSize}</p>
+                    <p style="margin:4px 0; font-size:0.8rem; color:#888;">ROI: ${item.roi} | Sample: ${item.sampleSize}</p>
                 </div>
             `;
         }
         return card;
     }
 
-    // --- 5. 이벤트 리스너 설정 ---
+    // --- 5. 이벤트 연결 ---
     function setupEventListeners() {
         // [테마]
         document.getElementById('theme-toggle')?.addEventListener('click', () => {
@@ -136,12 +141,12 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('theme', newTheme);
         });
 
-        // [언어] - 클릭 이벤트 가로채기 (이벤트 위임)
+        // [언어] - 가장 확실한 이벤트 위임 방식
         document.addEventListener('click', (e) => {
             const btn = e.target.closest('[data-lang]');
             if (btn) {
                 const lang = btn.getAttribute('data-lang');
-                console.log("Language Button Clicked:", lang);
+                console.log("Language clicked:", lang);
                 localStorage.setItem('language', lang);
                 applyLanguage(lang);
             }
@@ -164,5 +169,5 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    initApp();
+    init();
 });
