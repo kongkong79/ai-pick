@@ -1,23 +1,22 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // 1. ALL FUNCTION DEFINITIONS
-
-    // Language management
+    // Function to set language strings (essential for dynamic content)
     async function setLanguage(lang) {
         try {
-            const response = await fetch(`locales/${lang}.json?v=10`);
+            const response = await fetch(`locales/${lang}.json?v=102`);
+            if (!response.ok) return;
             const translations = await response.json();
             document.querySelectorAll('[data-i18n-key]').forEach(element => {
                 const key = element.getAttribute('data-i18n-key');
                 if (translations[key]) {
-                    if (element.tagName === 'INPUT' && element.type !== 'submit') {
-                        element.placeholder = translations[key];
+                    const el = element;
+                    if (el.tagName === 'INPUT' && el.type !== 'submit') {
+                        el.placeholder = translations[key];
                     } else {
-                        element.innerHTML = translations[key];
+                        el.innerHTML = translations[key];
                     }
                 }
             });
-            localStorage.setItem('language', lang);
         } catch (error) {
             console.error('Error setting language:', error);
         }
@@ -26,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Renders data into the VIP table
     function displayData(data) {
         const vipTableBody = document.querySelector('#vip-table tbody');
+        if (!vipTableBody) return;
         vipTableBody.innerHTML = '';
         data.forEach(item => {
             const row = document.createElement('tr');
@@ -38,8 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             vipTableBody.appendChild(row);
         });
-        // After rendering, re-apply the current language to the new content
-        setLanguage(localStorage.getItem('language') || 'en');
+        const lang = localStorage.getItem('language') || 'en';
+        setLanguage(lang);
     }
 
     // Fetches, processes, and displays all data for VIPs
@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
             results.sort((a, b) => b.hitRate - a.hitRate);
             displayData(results);
 
-            // Add sorting event listeners
+            // Make sorting buttons functional
             document.getElementById('sort-by-hit-rate').addEventListener('click', () => {
                 displayData([...results].sort((a, b) => b.hitRate - a.hitRate));
             });
@@ -77,24 +77,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (error) {
             console.error('Error loading VIP data:', error);
-            document.querySelector('#vip-table tbody').innerHTML = `<tr><td colspan="5">Failed to load data.</td></tr>`;
+            const vipTableBody = document.querySelector('#vip-table tbody');
+            if(vipTableBody) vipTableBody.innerHTML = `<tr><td colspan="5" data-i18n-key="errorLoading">Failed to load data.</td></tr>`;
+            const lang = localStorage.getItem('language') || 'en';
+            setLanguage(lang);
         }
     }
 
-    // Shows the main VIP content area
+    // Shows the main VIP content area and loads data
     function showVipContent() {
         document.getElementById('access-denied').style.display = 'none';
         document.getElementById('vip-content').style.display = 'block';
         loadVipData();
     }
 
+    // --- Main Execution Logic ---
+    const lang = localStorage.getItem('language') || 'en';
+    setLanguage(lang);
 
-    // 2. EXECUTION LOGIC
-
-    // Initialize language first
-    setLanguage(localStorage.getItem('language') || 'en');
-
-    // Check for VIP status from sessionStorage
+    // Check if user is already logged in from this session
     if (sessionStorage.getItem('isVip') === 'true') {
         showVipContent();
     } else {
@@ -102,19 +103,20 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('vip-content').style.display = 'none';
     }
 
-    // Handle VIP login form
+    // Handle the VIP login form submission
     const loginForm = document.getElementById('vip-login-form');
     loginForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        const password = document.getElementById('password').value;
+        const passwordInput = document.getElementById('password');
         const errorMessage = document.getElementById('error-message');
         
-        // The password remains '7777'
-        if (password === '7777') {
+        // The password remains '7777' for now
+        if (passwordInput.value === '7777') {
             sessionStorage.setItem('isVip', 'true');
             showVipContent();
         } else {
             errorMessage.style.display = 'block';
+            setLanguage(localStorage.getItem('language') || 'en');
         }
     });
 });
