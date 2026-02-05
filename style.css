@@ -70,7 +70,6 @@ header .container {
     transform: scale(1.1); /* Slight zoom on hover */
 }
 
-
 nav {
     display: flex;
     gap: 1.5rem; 
@@ -238,6 +237,74 @@ main {
     background: var(--primary-hover);
 }
 
+/* --- VIP Page Specifics --- */
+.download-section {
+    background-color: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1.5rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 12px var(--shadow-color);
+}
+
+.download-section h3 {
+    margin-top: 0;
+}
+
+.btn-download {
+    display: inline-block;
+    background-color: #28a745; /* Green color for download */
+    color: white !important;
+    padding: 12px 25px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.btn-download:hover {
+    background-color: #218838; /* Darker green on hover */
+}
+
+.sort-controls {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.sort-controls button {
+    background: none;
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+    padding: 8px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin: 0 5px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.sort-controls button:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+#vip-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+#vip-table th, #vip-table td {
+    border: 1px solid var(--border-color);
+    padding: 12px;
+    text-align: left;
+}
+
+#vip-table th {
+    background-color: var(--background-color);
+}
+
+
 /* --- Other --- */
 footer {
     text-align: center;
@@ -247,4 +314,4 @@ footer {
     color: #6c757d;
 }
 
-/* v14 */
+/* v15 */

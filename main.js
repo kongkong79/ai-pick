@@ -32,6 +32,8 @@ const translations = {
         vipDeniedText: "This is a VIP-only page. Please subscribe to gain access.",
         vipContentTitle: "VIP Match Analysis",
         vipContentSubtitle: "Full access to all AI predictions. A 1-week free trial is provided upon first subscription.",
+        vipDownloadTitle: "Download Full Analysis Report",
+        vipDownloadButton: "Download Excel File",
         vipSortHitRate: "Sort by Hit Rate",
         vipSortROI: "Sort by ROI",
         vipHeaderMatch: "Match",
@@ -73,6 +75,8 @@ const translations = {
         vipDeniedText: "이 페이지는 VIP 전용입니다. 접속하려면 구독해주세요.",
         vipContentTitle: "VIP 경기 분석",
         vipContentSubtitle: "모든 AI 예측에 대한 전체 액세스 권한. 최초 구독 시 1주일 무료 체험이 제공됩니다.",
+        vipDownloadTitle: "전체 분석 리포트 다운로드",
+        vipDownloadButton: "엑셀 파일 다운로드",
         vipSortHitRate: "적중률 순으로 정렬",
         vipSortROI: "ROI 순으로 정렬",
         vipHeaderMatch: "경기",
@@ -114,6 +118,8 @@ const translations = {
         vipDeniedText: "これはVIP専用ページです。アクセスするには購読してください。",
         vipContentTitle: "VIPマッチ分析",
         vipContentSubtitle: "すべてのAI予測へのフルアクセス。初回購読時には1週間の無料トライアルが提供されます。",
+        vipDownloadTitle: "完全な分析レポートのダウンロード",
+        vipDownloadButton: "Excelファイルをダウンロード",
         vipSortHitRate: "ヒット率で並べ替え",
         vipSortROI: "ROIで並べ替え",
         vipHeaderMatch: "マッチ",
@@ -155,6 +161,8 @@ const translations = {
         vipDeniedText: "这是一个仅限VIP的页面。请订阅以获取访问权限。",
         vipContentTitle: "VIP比赛分析",
         vipContentSubtitle: "完全访问所有AI预测。首次订阅可享受为期1-周的免费试用。",
+        vipDownloadTitle: "下载完整分析报告",
+        vipDownloadButton: "下载Excel文件",
         vipSortHitRate: "按命中率排序",
         vipSortROI: "按ROI排序",
         vipHeaderMatch: "比赛",
@@ -353,4 +361,4 @@ function createLockedCard() {
     resultsContainer.appendChild(card);
 }
 
-// v13
+// v15
