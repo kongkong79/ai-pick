@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-i18n-key="appTitle">Sports Betting Analysis</title>
-    <link rel="stylesheet" href="style.css?v=10">
+    <link rel="stylesheet" href="style.css?v=101"> <!-- Force CSS Reload -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
     <header>
         <div class="container">
-            <a href="#" class="logo-link" id="logo-link">
-                 <img src="https://i.imgur.com/b2d1VJQ.png" alt="Logo" class="logo-img">
+            <a href="index.html" class="logo-link" id="logo-link">
+                 <img src="https://i.imgur.com/K8sL5cW.png" alt="DML Logo" class="logo-img">
             </a>
             <nav>
                 <a href="index.html" data-i18n-key="navHome" class="nav-link active">Home</a>
@@ -39,14 +39,17 @@
         <section class="hero">
             <h1 data-i18n-key="headerTitle">Sports Betting Analysis</h1>
             <p data-i18n-key="headerSubtitle">Harness the power of AI for smarter sports betting.</p>
-             <a href="sports_data.xlsx" download class="download-button" data-i18n-key="downloadExcel">Download Excel File</a>
         </section>
 
-        <div id="loading-indicator" style="display: none;" data-i18n-key="loading">Loading match data...</div>
+        <section class="analysis-section">
+            <h2 data-i18n-key="analysisTitle">Today's Betting Analysis</h2>
+            <p class="filter-description" data-i18n-key="filterDescription">Showing matches with ROI > 1, Sample Size > 10, and Hit Rate > 51%. Matches with 80%+ hit rate are for VIPs.</p>
+            <div id="loading-indicator" style="display: none;" data-i18n-key="loading">Loading...</div>
+            <div id="analysis-list">
+                <!-- Data will be loaded here by main.js -->
+            </div>
+        </section>
 
-        <div id="results-container" class="results-grid">
-            <!-- Match data will be loaded here as cards -->
-        </div>
     </main>
 
     <footer>
@@ -54,6 +57,6 @@
             <p data-i18n-key="footerText">&copy; 2024 Sports Betting Analysis. All rights reserved.</p>
         </div>
     </footer>
-    <script src="main.js?v=10"></script>
+    <script src="main.js?v=101"></script> <!-- Force JS Reload -->
 </body>
 </html>
