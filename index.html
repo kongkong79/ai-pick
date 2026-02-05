@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-i18n-key="appTitle">Sports Betting Analysis</title>
-    <link rel="stylesheet" href="style.css?v=105">
+    <link rel="stylesheet" href="style.css?v=106">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
@@ -24,9 +24,7 @@
                 <div id="language-switcher">
                     <button data-lang="en">EN</button><button data-lang="ko">KO</button><button data-lang="ja">JA</button><button data-lang="zh">CN</button>
                 </div>
-                <button id="theme-toggle">
-                    <!-- Theme icons will be managed by JS -->
-                </button>
+                <button id="theme-toggle"></button>
             </div>
         </div>
     </header>
@@ -52,7 +50,9 @@
         </div>
     </footer>
     
-    <script src="main.js?v=105"></script>
-    <script src="translations.js?v=105"></script>
+    <!-- *** CORRECTED SCRIPT ORDER *** -->
+    <script src="translations.js?v=106"></script> 
+    <script src="main.js?v=106"></script>
+    <script src="translations.js?v=107"></script>
 </body>
 </html>
