@@ -36,7 +36,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return await response.json();
         } catch (error) {
             console.error(error);
-            // Fallback to English
             const response = await fetch(`locales/en.json`);
             return await response.json();
         }
@@ -67,15 +66,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const savedLang = localStorage.getItem('language') || 'en';
     setLanguage(savedLang);
 
-    // DATA
+    // DATA - RAW DEBUGGING
     const loadingIndicator = document.getElementById('loading-indicator');
     const analysisTableBody = document.getElementById('analysis-table-body');
 
-    async function fetchAndDisplayData() {
-        if (!analysisTableBody) return; // Only run on pages with the table
+    async function fetchAndDisplayRawData() {
+        if (!analysisTableBody) return;
 
         loadingIndicator.style.display = 'block';
-        analysisTableBody.innerHTML = ''; // Clear previous results
+        analysisTableBody.innerHTML = '';
 
         try {
             const response = await fetch('sports_data.xlsx');
@@ -87,74 +86,31 @@ document.addEventListener('DOMContentLoaded', () => {
             const workbook = XLSX.read(data, { type: 'array' });
             const firstSheetName = workbook.SheetNames[0];
             const worksheet = workbook.Sheets[firstSheetName];
-            const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+            const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: "(empty)" });
 
-            const results = jsonData.slice(1).map(row => {
-                let hitRate = parseFloat(row[4]); // Column E is Hit Rate
-                // Handle if hit rate is in percentage format (e.g., 95.5) vs decimal (0.955)
-                if (hitRate > 1.0) {
-                    hitRate = hitRate / 100;
-                }
-
-                return {
-                    match: row[1], // Column B is Match
-                    prediction: row[2], // Column C is Prediction
-                    odds: parseFloat(row[3]), // Column D is Odds
-                    hitRate: hitRate,
-                    roi: parseFloat(row[5]), // Column F is ROI
-                    sampleSize: parseInt(row[6], 10) // Column G is Sample Size
-                };
-            }).filter(item => item.match); // Ensure rows with no match name are skipped
-
-
-            const filteredResults = results.filter(item => 
-                item.roi > 1 && item.sampleSize > 10 && item.hitRate > 0.51
-            );
-
-            if (filteredResults.length === 0) {
-                analysisTableBody.innerHTML = `<tr><td colspan="5" data-i18n-key="noMatches">No matches found for today.</td></tr>`;
-                setLanguage(localStorage.getItem('language') || 'en');
+            if (jsonData.length <= 1) {
+                analysisTableBody.innerHTML = `<tr><td colspan="7">No data found in the Excel file.</td></tr>`;
                 return;
             }
 
-            filteredResults.forEach(item => {
-                const row = document.createElement('tr');
-                
-                if (item.hitRate >= 0.80) {
-                    row.classList.add('vip-row');
-                    row.innerHTML = `
-                        <td>${item.match}</td>
-                        <td colspan="4" class="vip-locked-cell">
-                            <div class="vip-lock-container">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                                <span data-i18n-key="vipExclusive">VIP Exclusive Prediction</span>
-                                <a href="vip.html" class="btn-subscribe" data-i18n-key="subscribeButtonShort">Subscribe</a>
-                            </div>
-                        </td>
-                    `;
-                } else {
-                     row.innerHTML = `
-                        <td>${item.match}</td>
-                        <td>${item.prediction}</td>
-                        <td>${!isNaN(item.odds) ? item.odds.toFixed(2) : 'N/A'}</td>
-                        <td>${!isNaN(item.hitRate) ? (item.hitRate * 100).toFixed(2) + '%' : 'N/A'}</td>
-                        <td>${!isNaN(item.roi) ? item.roi.toFixed(2) : 'N/A'}</td>
-                    `;
+            // Skip header row and display all other rows as-is
+            jsonData.slice(1).forEach(row => {
+                const tableRow = document.createElement('tr');
+                let rowHTML = '';
+                for (let i = 0; i < 7; i++) { // Display first 7 columns
+                     rowHTML += `<td>${row[i] !== undefined ? row[i] : '(undefined)'}</td>`;
                 }
-                analysisTableBody.appendChild(row);
+                tableRow.innerHTML = rowHTML;
+                analysisTableBody.appendChild(tableRow);
             });
-            
-            setLanguage(localStorage.getItem('language') || 'en');
 
         } catch (error) { 
             console.error('Error fetching or processing data:', error);
-            analysisTableBody.innerHTML = `<tr><td colspan="5" data-i18n-key="errorLoading">Error loading data. Please try again later.</td></tr>`;
-            setLanguage(localStorage.getItem('language') || 'en');
+            analysisTableBody.innerHTML = `<tr><td colspan="7">Error loading data. Please check the console for details.</td></tr>`;
         } finally {
              loadingIndicator.style.display = 'none';
         }
     }
 
-    fetchAndDisplayData();
-
+    fetchAndDisplayRawData();
 });
