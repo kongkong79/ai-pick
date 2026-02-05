@@ -1,50 +1,33 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- 1. 설정 및 상태 관리 ---
+    // --- 1. 설정 및 상태 ---
     const ADMIN_PASSWORD = 'MGB_ADMIN_2024';
     let logoClickCount = 0;
     let logoClickTimer = null;
 
-    // --- 2. 언어 변환 함수 (최우선 정의) ---
-    function applyLanguage(lang) {
-        if (!lang) return;
-        
-        // translations.js에 정의된 window.applyTranslations 호출
-        if (typeof window.applyTranslations === 'function') {
-            window.applyTranslations(lang);
-        } else if (typeof applyTranslations === 'function') {
-            applyTranslations(lang);
+    // --- 2. 초기화 실행 ---
+    async function initApp() {
+        // 저장된 테마/언어 불러오기
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        const savedLang = localStorage.getItem('language') || 'en';
+
+        // 테마 적용 (translations.js의 setTheme 호출)
+        if (window.setTheme) {
+            window.setTheme(savedTheme);
         } else {
-            console.error("translations.js를 찾을 수 없습니다.");
+            document.documentElement.setAttribute('data-theme', savedTheme);
         }
 
-        // 버튼 활성 상태 UI 업데이트
-        document.querySelectorAll('[data-lang]').forEach(btn => {
-            if (btn.getAttribute('data-lang') === lang) {
-                btn.style.fontWeight = 'bold';
-                btn.style.textDecoration = 'underline';
-            } else {
-                btn.style.fontWeight = 'normal';
-                btn.style.textDecoration = 'none';
-            }
-        });
-    }
+        // 언어 적용 (비동기 완료 대기)
+        await applyLang(savedLang);
 
-    // --- 3. 초기화 (테마 및 언어 적용) ---
-    function init() {
-        // 테마 복구
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        document.documentElement.setAttribute('data-theme', savedTheme);
-
-        // 언어 복구
-        const savedLang = localStorage.getItem('language') || 'en';
-        applyLanguage(savedLang);
-
-        // 데이터 로드 및 이벤트 리스너 연결
-        fetchDataAndRender();
+        // 데이터 로드
+        await fetchDataAndRender();
+        
+        // 버튼 이벤트 연결
         setupEventListeners();
     }
 
-    // --- 4. 데이터 로드 및 렌더링 ---
+    // --- 3. 데이터 로드 및 렌더링 ---
     async function fetchDataAndRender() {
         const analysisList = document.getElementById('analysis-list');
         if (!analysisList) return;
@@ -58,9 +41,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const worksheet = workbook.Sheets[workbook.SheetNames[0]];
             const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
+            // 엑셀 컬럼 매핑 (보내주신 데이터 구조 기준)
             const allMatches = jsonData.slice(1).map(row => {
                 let hitRate = 0;
-                let rawHit = row[5]; // Hit rate
+                let rawHit = row[5]; // Hit rate 열
                 if (typeof rawHit === 'string') {
                     hitRate = parseFloat(rawHit.replace('%', '')) / 100;
                 } else {
@@ -70,15 +54,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 return {
                     time: row[0],
                     match: `${row[1]} vs ${row[2]}`,
-                    prediction: row[4], // AI Recommendation
+                    prediction: row[4], // AI Recommendation (PICK)
                     odds: parseFloat(row[3]) || 0,
                     hitRate: hitRate || 0,
-                    roi: parseFloat(row[10]) || 0, // K열 ROI
-                    sampleSize: parseInt(row[11]) || 0 // L열 Sample
+                    roi: parseFloat(row[10]) || 0,
+                    sampleSize: parseInt(row[11]) || 0
                 };
             });
 
-            // 필터링: PICK이 존재하고, ROI 1.0 이상, 표본 10 이상
+            // 필터링: PICK이 유효하고 ROI >= 1.0, Sample >= 10
             const filteredMatches = allMatches.filter(item => {
                 const hasValidPick = item.prediction && item.prediction !== '-' && item.prediction.trim() !== '';
                 return hasValidPick && item.roi >= 1.0 && item.sampleSize >= 10;
@@ -93,11 +77,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     analysisList.appendChild(createMatchCard(item));
                 });
             }
+            
+            // 데이터 출력 후 동적으로 생성된 텍스트들을 위해 번역 재적용
+            await applyLang(localStorage.getItem('language') || 'en');
+
         } catch (error) {
             console.error('Data loading error:', error);
-        } finally {
-            // 데이터 로드 후 번역 다시 입히기
-            applyLanguage(localStorage.getItem('language') || 'en');
+            analysisList.innerHTML = `<p style="text-align:center; color:red;">Excel file error.</p>`;
         }
     }
 
@@ -131,28 +117,33 @@ document.addEventListener('DOMContentLoaded', () => {
         return card;
     }
 
-    // --- 5. 이벤트 연결 ---
-    function setupEventListeners() {
-        // [테마]
-        document.getElementById('theme-toggle')?.addEventListener('click', () => {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-        });
+    // --- 4. 이벤트 및 보조 함수 ---
 
-        // [언어] - 가장 확실한 이벤트 위임 방식
-        document.addEventListener('click', (e) => {
-            const btn = e.target.closest('[data-lang]');
-            if (btn) {
-                const lang = btn.getAttribute('data-lang');
-                console.log("Language clicked:", lang);
-                localStorage.setItem('language', lang);
-                applyLanguage(lang);
+    async function applyLang(lang) {
+        if (window.applyTranslations) {
+            await window.applyTranslations(lang);
+        }
+    }
+
+    function setupEventListeners() {
+        // 테마 토글 (translations.js의 toggleTheme 호출)
+        document.getElementById('theme-toggle')?.addEventListener('click', () => {
+            if (window.toggleTheme) {
+                window.toggleTheme();
             }
         });
 
-        // [로고] 관리자 접속
+        // 언어 버튼 (이벤트 위임)
+        document.addEventListener('click', async (e) => {
+            const btn = e.target.closest('[data-lang]');
+            if (btn) {
+                const lang = btn.getAttribute('data-lang');
+                localStorage.setItem('language', lang);
+                await applyLang(lang);
+            }
+        });
+
+        // 로고 관리자 모드
         document.getElementById('logo-link')?.addEventListener('click', (e) => {
             e.preventDefault();
             logoClickCount++;
@@ -169,5 +160,5 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    init();
+    initApp();
 });
