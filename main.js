@@ -7,9 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 2. CORE FUNCTIONS ---
 
-    /**
-     * Fetches data, filters it, and renders the list.
-     */
     async function fetchDataAndRender() {
         const analysisList = document.getElementById('analysis-list');
         const loadingIndicator = document.getElementById('loading-indicator');
@@ -29,7 +26,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const allMatches = jsonData.slice(1).map(row => {
                 let hitRate = parseFloat(row[4]);
-                if (hitRate > 1.0) hitRate /= 100; 
+                if (String(row[4]).includes('%')) {
+                    hitRate = parseFloat(row[4].replace('%', '')) / 100;
+                }
+                else if (hitRate > 1.0) {
+                    hitRate /= 100;
+                }
                 return {
                     time: row[0],
                     match: row[1],
@@ -41,10 +43,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
             }).filter(item => item.match && !isNaN(item.roi) && !isNaN(item.sampleSize) && !isNaN(item.hitRate));
 
-            // *** CORRECTED FILTERING LOGIC ***
-            // Ensure floating point comparisons are handled safely.
+            // *** CORRECTED & SIMPLIFIED FILTERING LOGIC ***
             const filteredMatches = allMatches.filter(item => 
-                item.roi > 1.0 && 
+                item.roi > 1 && 
                 item.sampleSize > 10 && 
                 item.hitRate > 0.51
             );
@@ -65,16 +66,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    /**
-     * Creates a card for a single match (public or VIP).
-     */
     function createMatchCard(item) {
         const listItem = document.createElement('div');
         listItem.className = 'analysis-list-item';
 
         if (item.hitRate >= 0.80) {
             listItem.innerHTML = `
-                <div class="lock-icon">...</div>
+                <div class="lock-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                </div>
                 <h3 class="vip-exclusive-title" data-i18n-key="vipExclusive">VIP Exclusive Prediction</h3>
                 <p class="vip-exclusive-text" data-i18n-key="vipOnlyMessage">This prediction (Hit Rate >= 80%) is for VIPs only.</p>
                 <a href="vip.html" class="subscribe-button" data-i18n-key="subscribeNow">Subscribe Now (7-day free trial)</a>
@@ -96,9 +96,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return listItem;
     }
 
-    /**
-     * Handles admin access via logo clicks.
-     */
     function handleAdminAccess() {
         logoClickCount++;
         clearTimeout(logoClickTimer);
@@ -114,7 +111,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- 3. EVENT LISTENERS & INITIALIZATION ---
     document.getElementById('logo-link')?.addEventListener('click', (e) => {
         e.preventDefault();
         handleAdminAccess();
@@ -125,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('language-switcher')?.addEventListener('click', (e) => {
         if (e.target.tagName === 'BUTTON') {
             const lang = e.target.getAttribute('data-lang');
-            window.applyTranslations(lang);
+            if(lang) window.applyTranslations(lang);
         }
     });
 
