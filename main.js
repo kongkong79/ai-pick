@@ -1,23 +1,21 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- 1. 설정 및 상태 관리 ---
+    // --- 1. 설정 및 상태 ---
     const ADMIN_PASSWORD = 'MGB_ADMIN_2024';
     let logoClickCount = 0;
     let logoClickTimer = null;
 
     /**
-     * 초기 실행 함수
+     * 초기화 함수
      * 테마와 언어를 설정하고 데이터를 불러옵니다.
      */
     async function init() {
-        // [테마 초기화]
+        // [테마 초기화] translations.js의 setTheme 사용
         const savedTheme = localStorage.getItem('theme') || 'light';
         if (window.setTheme) {
             window.setTheme(savedTheme);
-        } else {
-            document.documentElement.setAttribute('data-theme', savedTheme);
         }
 
-        // [언어 초기화] 번역 파일 로드를 기다립니다.
+        // [언어 초기화] 저장된 언어 불러오기 (비동기 대기 필수)
         const savedLang = localStorage.getItem('language') || 'en';
         await safeApplyLanguage(savedLang);
 
@@ -28,8 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setupEventListeners();
     }
 
-    // --- 2. 핵심 기능: 데이터 불러오기 및 렌더링 ---
-
+    // --- 2. 데이터 로드 및 렌더링 ---
     async function fetchDataAndRender() {
         const analysisList = document.getElementById('analysis-list');
         const loadingIndicator = document.getElementById('loading-indicator');
@@ -39,6 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
         analysisList.innerHTML = '';
 
         try {
+            // 캐시 방지용 파라미터 추가
             const response = await fetch('sports_data.xlsx?v=' + new Date().getTime());
             if (!response.ok) throw new Error('Excel file not found.');
 
@@ -47,10 +45,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const worksheet = workbook.Sheets[workbook.SheetNames[0]];
             const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
-            // 데이터 가공 (엑셀 컬럼 위치: Time(0), Home(1), Away(2), Odds(3), Rec(4), Hit(5)...)
+            // 엑셀 시트 데이터 매핑
             const allMatches = jsonData.slice(1).map(row => {
                 let hitRate = 0;
-                let rawHit = row[5]; 
+                let rawHit = row[5]; // F열 (Hit rate)
                 if (typeof rawHit === 'string') {
                     hitRate = parseFloat(rawHit.replace('%', '')) / 100;
                 } else {
@@ -60,15 +58,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 return {
                     time: row[0],
                     match: `${row[1]} vs ${row[2]}`,
-                    prediction: row[4], // AI Recommendation (PICK)
+                    prediction: row[4], // E열 (AI Recommendation)
                     odds: parseFloat(row[3]) || 0,
                     hitRate: hitRate || 0,
-                    roi: parseFloat(row[10]) || 0, // K열
-                    sampleSize: parseInt(row[11]) || 0 // L열
+                    roi: parseFloat(row[10]) || 0, // K열 (Expected ROI)
+                    sampleSize: parseInt(row[11]) || 0 // L열 (Sample Count)
                 };
             });
 
-            // 필터링: PICK이 있고, ROI >= 1.0, Sample >= 10
+            // 필터링 규칙 적용
             const filteredMatches = allMatches.filter(item => {
                 const hasValidPick = item.prediction && item.prediction !== '-' && item.prediction.trim() !== '';
                 return hasValidPick && item.roi >= 1.0 && item.sampleSize >= 10;
@@ -82,12 +80,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
 
-            // 데이터 로드 후 동적 텍스트 번역 재적용
+            // 중요: 동적으로 생성된 카드 내부 텍스트 번역 적용
             await safeApplyLanguage(localStorage.getItem('language') || 'en');
 
         } catch (error) {
-            console.error('Error:', error);
-            analysisList.innerHTML = `<p style="text-align:center; color:red;">Data Load Error.</p>`;
+            console.error('Data Load Error:', error);
+            analysisList.innerHTML = `<p style="text-align:center; color:red;">Failed to load sports data.</p>`;
         } finally {
             if (loadingIndicator) loadingIndicator.style.display = 'none';
         }
@@ -98,14 +96,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const card = document.createElement('div');
         card.className = 'analysis-list-item';
 
-        // 승률 80% 이상 VIP 잠금 로직
         if (item.hitRate >= 0.80 && !isVip) {
             card.innerHTML = `
                 <div style="text-align:center; padding:15px;">
                     <div style="font-size: 2rem; margin-bottom: 10px;">🔒</div>
                     <h3 data-i18n-key="vipExclusive">VIP Exclusive</h3>
-                    <p data-i18n-key="vipOnlyMessage" style="font-size:0.85rem; color:var(--text-muted);">High Win Rate (80%+)</p>
-                    <a href="vip.html" class="subscribe-button" data-i18n-key="subscribeNow" style="display:inline-block; margin-top:10px; padding:10px 20px; background:var(--primary-color); color:#fff; border-radius:5px; text-decoration:none;">Unlock Now</a>
+                    <p data-i18n-key="vipOnlyMessage" style="font-size:0.85rem; color:#888;">High Win Rate (80%+)</p>
+                    <a href="vip.html" class="subscribe-button" data-i18n-key="subscribeNow">Unlock</a>
                 </div>
             `;
         } else {
@@ -115,30 +112,35 @@ document.addEventListener('DOMContentLoaded', () => {
                     <span style="font-size:0.85rem; color:gray;">${item.time}</span>
                 </div>
                 <div style="background:rgba(128,128,128,0.1); padding:15px; border-radius:10px;">
-                    <p style="margin:5px 0;"><strong>Pick:</strong> <span style="color:#2563eb;">${item.prediction}</span></p>
-                    <p style="margin:5px 0;"><strong>Odds:</strong> ${item.odds.toFixed(2)} | <strong>Hit Rate:</strong> ${(item.hitRate * 100).toFixed(0)}%</p>
-                    <p style="margin:5px 0; font-size:0.8rem; color:gray;">ROI: ${item.roi} | Sample: ${item.sampleSize}</p>
+                    <p><strong>Pick:</strong> <span style="color:#2563eb;">${item.prediction}</span></p>
+                    <p><strong>Odds:</strong> ${item.odds.toFixed(2)} | <strong>Hit Rate:</strong> ${(item.hitRate * 100).toFixed(0)}%</p>
+                    <p style="font-size:0.8rem; color:gray;">ROI: ${item.roi} | Sample: ${item.sampleSize}</p>
                 </div>
             `;
         }
         return card;
     }
 
-    // --- 3. 이벤트 리스너 및 보조 기능 ---
+    // --- 3. 유틸리티 및 이벤트 리스너 ---
 
     async function safeApplyLanguage(lang) {
-        if (window.applyTranslations) {
-            await window.applyTranslations(lang);
+        // translations.js의 async window.applyTranslations 호출
+        if (typeof window.applyTranslations === 'function') {
+            try {
+                await window.applyTranslations(lang);
+            } catch (e) {
+                console.error("Translation Error:", e);
+            }
         }
     }
 
     function setupEventListeners() {
-        // [테마 전환]
+        // [테마 토글]
         document.getElementById('theme-toggle')?.addEventListener('click', () => {
             if (window.toggleTheme) window.toggleTheme();
         });
 
-        // [언어 전환]
+        // [언어 스위처] - 이벤트 위임
         document.getElementById('language-switcher')?.addEventListener('click', async (e) => {
             if (e.target.tagName === 'BUTTON') {
                 const lang = e.target.getAttribute('data-lang');
@@ -149,7 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // [로고 클릭 관리자]
+        // [관리자 접속]
         document.getElementById('logo-link')?.addEventListener('click', (e) => {
             e.preventDefault();
             logoClickCount++;
@@ -159,7 +161,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const pw = prompt('Admin Password?');
                 if (pw === ADMIN_PASSWORD) {
                     sessionStorage.setItem('isVip', 'true');
-                    alert('VIP Mode Activated');
                     location.reload();
                 }
                 logoClickCount = 0;
@@ -167,6 +168,5 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 초기화 시작
     init();
 });
