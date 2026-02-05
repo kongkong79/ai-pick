@@ -42,18 +42,16 @@
         </section>
 
         <section>
-            <h2 data-i18n-key="analysisTitle">Today's Betting Analysis (Raw Data)</h2>
-            <p class="filter-description">Displaying raw data from the Excel file for debugging.</p>
+            <h2 data-i18n-key="analysisTitle">Today's Betting Analysis</h2>
+            <p class="filter-description" data-i18n-key="filterDescription">Showing matches with ROI > 1, Sample Size > 10, and Hit Rate > 51%. Matches with 80%+ hit rate are for VIPs.</p>
             <table id="analysis-table">
                 <thead>
                     <tr>
-                        <th>Col A (Time)</th>
-                        <th>Col B (Match)</th>
-                        <th>Col C (Prediction)</th>
-                        <th>Col D (Odds)</th>
-                        <th>Col E (Hit Rate)</th>
-                        <th>Col F (ROI)</th>
-                        <th>Col G (Sample Size)</th>
+                        <th data-i18n-key="vipHeaderMatch">Match</th>
+                        <th data-i18n-key="vipHeaderPrediction">AI Prediction</th>
+                        <th data-i18n-key="vipHeaderOdds">Odds</th>
+                        <th data-i18n-key="vipHeaderHitRate">Hit Rate</th>
+                        <th data-i18n-key="vipHeaderROI">ROI</th>
                     </tr>
                 </thead>
                 <tbody id="analysis-table-body">
@@ -69,6 +67,6 @@
             <p data-i18n-key="footerText">&copy; 2024 Sports Betting Analysis. All rights reserved.</p>
         </div>
     </footer>
-    <script src="main.js?v=20"></script>
+    <script src="main.js?v=21"></script>
 </body>
 </html>
