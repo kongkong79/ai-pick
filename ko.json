@@ -14,5 +14,14 @@
   "vipExclusive": "VIP 전용 예측",
   "vipOnlyMessage": "승률 80% 이상의 데이터는 VIP 전용입니다.",
   "subscribeNow": "지금 확인하기",
+  "aboutTitle": "서비스 소개",
+  "aboutText1": "스포츠 베팅 분석 플랫폼에 오신 것을 환영합니다. 저희는 AI 기반의 통찰력을 제공하여 사용자가 더 현명한 결정을 내릴 수 있도록 돕습니다.",
+  "aboutText2": "저희 알고리즘은 과거 데이터, 팀 성적, 선수 통계 등을 분석하여 높은 정확도의 예측을 생성합니다.",
+  "contactTitle": "문의하기",
+  "contactDesc": "질문, 제안 또는 파트너십 문의가 있으시면 언제든지 아래 이메일로 연락주세요.",
+  "privacyTitle": "개인정보 처리방침",
+  "privacyIntro": "귀하의 개인정보 보호는 저희에게 매우 중요합니다.",
+  "privacyDataTitle": "데이터 수집",
+  "privacyDataDesc": "귀하가 명시적으로 제공하지 않는 한, 저희는 어떠한 개인 정보도 수집하지 않습니다.",
   "footerText": "© 2024 스포츠 베팅 분석. 모든 권리 보유."
 }
