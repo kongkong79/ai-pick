@@ -1,42 +1,35 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // THEME
+
+    // 1. HELPER FUNCTION DEFINITIONS
+
+    // Theme management
     const themeToggle = document.getElementById('theme-toggle');
     const themeIconLight = document.getElementById('theme-icon-light');
     const themeIconDark = document.getElementById('theme-icon-dark');
-    const currentTheme = localStorage.getItem('theme') || 'light';
 
     function setTheme(theme) {
         document.documentElement.setAttribute('data-theme', theme);
         localStorage.setItem('theme', theme);
         if (theme === 'dark') {
-            themeIconLight.style.display = 'none';
-            themeIconDark.style.display = 'inline-block';
+            if(themeIconLight) themeIconLight.style.display = 'none';
+            if(themeIconDark) themeIconDark.style.display = 'inline-block';
         } else {
-            themeIconLight.style.display = 'inline-block';
-            themeIconDark.style.display = 'none';
+            if(themeIconLight) themeIconLight.style.display = 'inline-block';
+            if(themeIconDark) themeIconDark.style.display = 'none';
         }
     }
 
-    setTheme(currentTheme);
-
-    themeToggle.addEventListener('click', () => {
-        let newTheme = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-        setTheme(newTheme);
-    });
-
-    // LANGUAGE
+    // Language management
     const languageSwitcher = document.getElementById('language-switcher');
-    
+
     async function loadTranslations(lang) {
         try {
-            const response = await fetch(`locales/${lang}.json`);
-            if (!response.ok) {
-                throw new Error(`Failed to load translation for ${lang}`);
-            }
+            const response = await fetch(`locales/${lang}.json?v=2`);
+            if (!response.ok) throw new Error(`Translation file for ${lang} not found`);
             return await response.json();
         } catch (error) {
             console.error(error);
-            const response = await fetch(`locales/en.json`);
+            const response = await fetch(`locales/en.json?v=2`);
             return await response.json();
         }
     }
@@ -45,55 +38,40 @@ document.addEventListener('DOMContentLoaded', () => {
         const translations = await loadTranslations(lang);
         document.querySelectorAll('[data-i18n-key]').forEach(element => {
             const key = element.getAttribute('data-i18n-key');
-            if (translations[key]) {
+            const translation = translations[key];
+            if (translation) {
                 if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
-                    element.placeholder = translations[key];
+                    element.placeholder = translation;
                 } else {
-                    element.innerHTML = translations[key];
+                    element.innerHTML = translation;
                 }
             }
         });
         localStorage.setItem('language', lang);
     }
 
-    languageSwitcher.addEventListener('click', (event) => {
-        if (event.target.tagName === 'BUTTON') {
-            const lang = event.target.getAttribute('data-lang');
-            setLanguage(lang);
-        }
-    });
-
-    const savedLang = localStorage.getItem('language') || 'en';
-    setLanguage(savedLang);
-
-    // DATA
-    const loadingIndicator = document.getElementById('loading-indicator');
-    const analysisTableBody = document.getElementById('analysis-table-body');
-
+    // Data fetching and rendering for the main page (CARD-BASED)
     async function fetchAndDisplayData() {
-        if (!analysisTableBody) return;
+        const resultsContainer = document.getElementById('results-container');
+        const loadingIndicator = document.getElementById('loading-indicator');
+        if (!resultsContainer) return;
 
         loadingIndicator.style.display = 'block';
-        analysisTableBody.innerHTML = '';
+        resultsContainer.innerHTML = '';
 
         try {
             const response = await fetch('sports_data.xlsx');
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
+            if (!response.ok) throw new Error('Network response was not ok');
+            
             const arrayBuffer = await response.arrayBuffer();
             const data = new Uint8Array(arrayBuffer);
             const workbook = XLSX.read(data, { type: 'array' });
-            const firstSheetName = workbook.SheetNames[0];
-            const worksheet = workbook.Sheets[firstSheetName];
+            const worksheet = workbook.Sheets[workbook.SheetNames[0]];
             const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
             const results = jsonData.slice(1).map(row => {
-                let hitRate = parseFloat(row[4]); // Column E is Hit Rate
-                if (hitRate > 1.0) {
-                    hitRate = hitRate / 100;
-                }
-
+                let hitRate = parseFloat(row[4]);
+                if (hitRate > 1.0) hitRate /= 100;
                 return {
                     match: row[1],
                     prediction: row[2],
@@ -102,56 +80,74 @@ document.addEventListener('DOMContentLoaded', () => {
                     roi: parseFloat(row[5]),
                     sampleSize: parseInt(row[6], 10)
                 };
-            }).filter(item => item.match && !isNaN(item.hitRate)); // Filter out invalid rows
+            }).filter(item => item.match && !isNaN(item.hitRate) && !isNaN(item.roi) && !isNaN(item.sampleSize));
 
-            const filteredResults = results.filter(item => 
-                item.roi > 1 && item.sampleSize > 10 && item.hitRate > 0.51
-            );
+            const filteredResults = results.filter(item => item.roi > 1 && item.sampleSize > 10 && item.hitRate > 0.51);
 
             if (filteredResults.length === 0) {
-                analysisTableBody.innerHTML = `<tr><td colspan="5" data-i18n-key="noMatches">No matches found for today.</td></tr>`;
-                setLanguage(localStorage.getItem('language') || 'en');
-                return;
-            }
+                resultsContainer.innerHTML = `<p data-i18n-key="noMatches">No matches found for today.</p>`;
+            } else {
+                filteredResults.forEach(item => {
+                    const card = document.createElement('div');
+                    card.classList.add('result-card');
 
-            filteredResults.forEach(item => {
-                const row = document.createElement('tr');
-                
-                if (item.hitRate >= 0.80) {
-                    row.classList.add('vip-row');
-                    row.innerHTML = `
-                        <td>${item.match}</td>
-                        <td colspan="4" class="vip-locked-cell">
+                    if (item.hitRate >= 0.80) {
+                        card.classList.add('vip-card');
+                        card.innerHTML = `
+                            <div class="card-header">${item.match}</div>
                             <div class="vip-lock-container">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                                <span data-i18n-key="vipExclusive">VIP Exclusive Prediction</span>
+                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                                <p data-i18n-key="vipExclusive">VIP Exclusive Prediction</p>
                                 <a href="vip.html" class="btn-subscribe" data-i18n-key="subscribeButtonShort">Subscribe</a>
                             </div>
-                        </td>
-                    `;
-                } else {
-                     row.innerHTML = `
-                        <td>${item.match}</td>
-                        <td>${item.prediction}</td>
-                        <td>${!isNaN(item.odds) ? item.odds.toFixed(2) : 'N/A'}</td>
-                        <td>${!isNaN(item.hitRate) ? (item.hitRate * 100).toFixed(2) + '%' : 'N/A'}</td>
-                        <td>${!isNaN(item.roi) ? item.roi.toFixed(2) : 'N/A'}</td>
-                    `;
-                }
-                analysisTableBody.appendChild(row);
-            });
-            
-            setLanguage(localStorage.getItem('language') || 'en');
-
-        } catch (error) { 
+                        `;
+                    } else {
+                        card.innerHTML = `
+                            <div class="card-header">${item.match}</div>
+                            <div class="card-body">
+                                <p><strong data-i18n-key="cardPrediction">Prediction:</strong> ${item.prediction}</p>
+                                <p><strong data-i18n-key="cardOdds">Odds:</strong> ${item.odds.toFixed(2)}</p>
+                                <p><strong data-i18n-key="cardHitRate">Hit Rate:</strong> ${(item.hitRate * 100).toFixed(2)}%</p>
+                                <p><strong data-i18n-key="cardROI">ROI:</strong> ${item.roi.toFixed(2)}</p>
+                            </div>
+                        `;
+                    }
+                    resultsContainer.appendChild(card);
+                });
+            }
+        } catch (error) {
             console.error('Error fetching or processing data:', error);
-            analysisTableBody.innerHTML = `<tr><td colspan="5" data-i18n-key="errorLoading">Error loading data. Please try again later.</td></tr>`;
-            setLanguage(localStorage.getItem('language') || 'en');
+            resultsContainer.innerHTML = `<p data-i18n-key="errorLoading">Error loading data. Please try again later.</p>`;
         } finally {
-             loadingIndicator.style.display = 'none';
+            loadingIndicator.style.display = 'none';
+            setLanguage(localStorage.getItem('language') || 'en');
         }
     }
 
-    fetchAndDisplayData();
+    // 2. EXECUTION LOGIC
 
+    // Set initial theme
+    setTheme(localStorage.getItem('theme') || 'light');
+
+    // Set initial language and then fetch data
+    setLanguage(localStorage.getItem('language') || 'en').then(() => {
+        fetchAndDisplayData();
+    });
+
+    // Add event listeners
+    if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+            let newTheme = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+            setTheme(newTheme);
+        });
+    }
+
+    if (languageSwitcher) {
+        languageSwitcher.addEventListener('click', (event) => {
+            if (event.target.tagName === 'BUTTON') {
+                const lang = event.target.getAttribute('data-lang');
+                setLanguage(lang);
+            }
+        });
+    }
 });
