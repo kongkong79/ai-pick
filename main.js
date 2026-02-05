@@ -26,10 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // LANGUAGE
     const languageSwitcher = document.getElementById('language-switcher');
-    const translations = {
-        // ... (translation data) ...
-    };
-
+    
     async function loadTranslations(lang) {
         try {
             const response = await fetch(`locales/${lang}.json`);
@@ -101,9 +98,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 sampleSize: parseInt(row[5], 10)
             }));
 
-            const filteredResults = results.filter(item => 
-                item.roi > 1 && item.sampleSize > 10 && item.hitRate > 0.51
-            );
+            // TEMPORARILY REMOVED FILTER FOR DEBUGGING
+            const filteredResults = results;
 
             if (filteredResults.length === 0) {
                 analysisTableBody.innerHTML = `<tr><td colspan="5" data-i18n-key="noMatches">No matches found for today.</td></tr>`;
@@ -114,6 +110,12 @@ document.addEventListener('DOMContentLoaded', () => {
             filteredResults.forEach(item => {
                 const row = document.createElement('tr');
                 
+                // Check if any data is invalid before deciding to show VIP or normal
+                if (!item.match || isNaN(item.hitRate)) {
+                    // Skip rendering this row if essential data is missing
+                    return;
+                }
+
                 if (item.hitRate >= 0.80) {
                     row.classList.add('vip-row');
                     row.innerHTML = `
@@ -130,9 +132,9 @@ document.addEventListener('DOMContentLoaded', () => {
                      row.innerHTML = `
                         <td>${item.match}</td>
                         <td>${item.prediction}</td>
-                        <td>${item.odds.toFixed(2)}</td>
-                        <td>${(item.hitRate * 100).toFixed(2)}%</td>
-                        <td>${item.roi.toFixed(2)}</td>
+                        <td>${!isNaN(item.odds) ? item.odds.toFixed(2) : 'N/A'}</td>
+                        <td>${!isNaN(item.hitRate) ? (item.hitRate * 100).toFixed(2) + '%' : 'N/A'}</td>
+                        <td>${!isNaN(item.roi) ? item.roi.toFixed(2) : 'N/A'}</td>
                     `;
                 }
                 analysisTableBody.appendChild(row);
