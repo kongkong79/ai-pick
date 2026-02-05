@@ -129,16 +129,40 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('theme', newTheme);
     });
 
-    // 언어 버튼들 (data-lang 속성이 있는 모든 요소)
-    document.querySelectorAll('[data-lang]').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const lang = btn.getAttribute('data-lang');
-            localStorage.setItem('language', lang);
-            if (typeof window.applyTranslations === 'function') {
-                window.applyTranslations(lang);
+    /// --- 언어 변환 기능 보강 ---
+function setupLanguageButtons() {
+    // 1. data-lang 속성을 가진 버튼과 language-switcher 내부의 버튼 모두 탐색
+    const langBtns = document.querySelectorAll('[data-lang], #language-switcher button');
+    
+    console.log("찾은 언어 버튼 개수:", langBtns.length); // 버튼이 잘 잡히는지 확인용
+
+    langBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            // 버튼 자체의 data-lang 또는 부모 요소의 data-lang 확인
+            const lang = btn.getAttribute('data-lang') || e.target.getAttribute('data-lang');
+            
+            if (lang) {
+                console.log("선택된 언어:", lang); // 브라우저 콘솔(F12)에서 확인 가능
+                localStorage.setItem('language', lang);
+                
+                // translations.js의 함수가 전역(window)에 있다면 실행
+                if (typeof window.applyTranslations === 'function') {
+                    window.applyTranslations(lang);
+                } else if (typeof applyTranslations === 'function') {
+                    applyTranslations(lang);
+                } else {
+                    console.error("번역 함수(applyTranslations)를 찾을 수 없습니다. translations.js가 로드되었는지 확인하세요.");
+                }
             }
         });
     });
 
-    fetchDataAndRender();
-});
+    // 2. 페이지 로드 시 저장된 언어 즉시 적용
+    const savedLang = localStorage.getItem('language') || 'en';
+    if (typeof window.applyTranslations === 'function') {
+        window.applyTranslations(savedLang);
+    }
+}
+
+// fetchDataAndRender 실행 직후나 DOMContentLoaded 마지막에 호출하세요.
+setupLanguageButtons();
