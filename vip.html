@@ -11,7 +11,7 @@
     <header>
         <div class="container">
             <a href="index.html" class="logo-link" id="logo-link">
-                <img src="https://i.imgur.com/b2d1VJQ.png" alt="Logo" class="logo-img">
+                 <img src="https://i.imgur.com/b2d1VJQ.png" alt="Logo" class="logo-img">
             </a>
             <nav>
                 <a href="index.html" data-i18n-key="navHome" class="nav-link">Home</a>
@@ -21,22 +21,13 @@
                 <a href="vip.html" class="nav-link vip-link active" data-i18n-key="navVip">VIP</a>
             </nav>
             <div class="header-controls">
-                <div id="language-switcher">
-                    <button data-lang="en">EN</button>
-                    <button data-lang="ko">KO</button>
-                    <button data-lang="ja">JA</button>
-                    <button data-lang="zh">CN</button>
-                </div>
-                <button id="theme-toggle">
-                    <svg id="theme-icon-light" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
-                    <svg id="theme-icon-dark" style="display: none;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-                </button>
+                <!-- Language and theme controls will be here -->
             </div>
         </div>
     </header>
 
     <main class="container">
-        <section id="access-denied" style="display: none;">
+        <section id="access-denied">
             <div class="vip-access-form">
                 <h2 data-i18n-key="vipAccessDenied">VIP Access Required</h2>
                 <p data-i18n-key="vipLoginPrompt">Please enter the password to access VIP content.</p>
@@ -55,8 +46,8 @@
             <h1 data-i18n-key="vipHeader">VIP Betting Analysis</h1>
             <p data-i18n-key="vipDescription">Exclusive access to all matches, including those with the highest hit rates. Use the sort buttons to find the best opportunities.</p>
             <div id="vip-controls">
-                <button id="sort-by-hit-rate" class="sort-button" data-i18n-key="sortByHitRate">Sort by Hit Rate</button>
-                <button id="sort-by-roi" class="sort-button" data-i18n-key="sortByROI">Sort by ROI</button>
+                <button id="sort-by-hit-rate" data-i18n-key="sortByHitRate">Sort by Hit Rate</button>
+                <button id="sort-by-roi" data-i18n-key="sortByROI">Sort by ROI</button>
             </div>
             <table id="vip-table">
                 <thead>
@@ -80,6 +71,6 @@
             <p data-i18n-key="footerText">&copy; 2024 Sports Betting Analysis. All rights reserved.</p>
         </div>
     </footer>
-    <script src="vip.js?v=4"></script>
+    <script src="vip.js?v=6"></script> 
 </body>
 </html>

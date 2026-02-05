@@ -2,37 +2,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 1. ALL FUNCTION DEFINITIONS
 
-    // Handles language switching by loading the correct translation file
-    async function loadTranslations(lang) {
+    // Applies translations to elements
+    async function setLanguage(lang) {
         try {
-            const response = await fetch(`locales/${lang}.json?v=3`); // Version bump to ensure fresh file
-            if (!response.ok) throw new Error(`Translation file for ${lang} not found`);
-            return await response.json();
+            const response = await fetch(`locales/${lang}.json?v=5`);
+            const translations = await response.json();
+            document.querySelectorAll('[data-i18n-key]').forEach(element => {
+                const key = element.getAttribute('data-i18n-key');
+                if (translations[key]) {
+                     if (element.tagName === 'INPUT' && element.type !== 'submit') {
+                        element.placeholder = translations[key];
+                    } else {
+                        element.innerHTML = translations[key];
+                    }
+                }
+            });
+            localStorage.setItem('language', lang);
         } catch (error) {
-            console.error(error);
-            // Fallback to English if the requested language is not found
-            const response = await fetch(`locales/en.json?v=3`);
-            return await response.json();
+            console.error('Error setting language:', error);
         }
     }
 
-    // Applies translations to all elements with a data-i18n-key attribute
-    async function setLanguage(lang) {
-        const translations = await loadTranslations(lang);
-        document.querySelectorAll('[data-i18n-key]').forEach(element => {
-            const key = element.getAttribute('data-i18n-key');
-            if (translations[key]) {
-                element.innerHTML = translations[key];
-            }
-        });
-        localStorage.setItem('language', lang);
-    }
-
-    // Renders the provided data into the VIP table
+    // Renders data into the VIP table
     function displayData(data) {
         const vipTableBody = document.querySelector('#vip-table tbody');
-        if (!vipTableBody) return;
-        vipTableBody.innerHTML = ''; // Clear previous data
+        vipTableBody.innerHTML = '';
         data.forEach(item => {
             const row = document.createElement('tr');
             row.innerHTML = `
@@ -44,71 +38,78 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             vipTableBody.appendChild(row);
         });
-        // Re-apply language after rendering new content
-        setLanguage(localStorage.getItem('language') || 'en');
     }
 
-    // Fetches and processes the Excel data for VIP users
+    // Fetches, processes, and displays all data for VIPs
     async function loadVipData() {
-        const vipTableBody = document.querySelector('#vip-table tbody');
         try {
             const response = await fetch('sports_data.xlsx');
-            if (!response.ok) throw new Error('Excel file not found');
-
             const arrayBuffer = await response.arrayBuffer();
-            const data = new Uint8Array(arrayBuffer);
-            const workbook = XLSX.read(data, { type: 'array' });
+            const workbook = XLSX.read(new Uint8Array(arrayBuffer), { type: 'array' });
             const worksheet = workbook.Sheets[workbook.SheetNames[0]];
             const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
-            // Process and clean the data
             let results = jsonData.slice(1).map(row => {
-                let hitRate = parseFloat(row[4]); // Column E
-                if (hitRate > 1.0) hitRate /= 100; // Normalize percentage
+                let hitRate = parseFloat(row[4]);
+                if (hitRate > 1.0) hitRate /= 100;
                 return {
-                    match: row[1],        // Column B
-                    prediction: row[2], // Column C
-                    odds: parseFloat(row[3]),   // Column D
+                    match: row[1],
+                    prediction: row[2],
+                    odds: parseFloat(row[3]),
                     hitRate: hitRate,
-                    roi: parseFloat(row[5]),      // Column F
-                    sampleSize: parseInt(row[6], 10) // Column G
+                    roi: parseFloat(row[5]),
                 };
-            }).filter(item => item.match && !isNaN(item.hitRate)); // Filter out any invalid or empty rows
+            }).filter(item => item.match && !isNaN(item.hitRate));
 
-            // Initial display and sort functionality
             displayData(results);
 
+            // Sorting functionality
             document.getElementById('sort-by-hit-rate').addEventListener('click', () => {
                 displayData([...results].sort((a, b) => b.hitRate - a.hitRate));
             });
-
             document.getElementById('sort-by-roi').addEventListener('click', () => {
                 displayData([...results].sort((a, b) => b.roi - a.roi));
             });
 
         } catch (error) {
             console.error('Error loading VIP data:', error);
-            if(vipTableBody) vipTableBody.innerHTML = `<tr><td colspan="5">Failed to load data.</td></tr>`;
         }
+    }
+
+    // Shows the main VIP content area
+    function showVipContent() {
+        document.getElementById('access-denied').style.display = 'none';
+        document.getElementById('vip-content').style.display = 'block';
+        loadVipData();
     }
 
 
     // 2. EXECUTION LOGIC
 
-    const accessDeniedSection = document.getElementById('access-denied');
-    const vipContentSection = document.getElementById('vip-content');
-    const isVip = sessionStorage.getItem('isVip') === 'true';
+    // Initialize language first
+    setLanguage(localStorage.getItem('language') || 'en');
 
-    if (isVip) {
-        // If user is VIP, show content and load data
-        if(accessDeniedSection) accessDeniedSection.style.display = 'none';
-        if(vipContentSection) vipContentSection.style.display = 'block';
-        loadVipData();
+    // Check for VIP status on page load
+    if (sessionStorage.getItem('isVip') === 'true') {
+        showVipContent();
     } else {
-        // If user is not VIP, show access denied message
-        if(accessDeniedSection) accessDeniedSection.style.display = 'block';
-        if(vipContentSection) vipContentSection.style.display = 'none';
-        // Set language for the "access denied" message
-        setLanguage(localStorage.getItem('language') || 'en');
+        document.getElementById('access-denied').style.display = 'block';
+        document.getElementById('vip-content').style.display = 'none';
     }
+
+    // Handle VIP login form submission
+    const loginForm = document.getElementById('vip-login-form');
+    loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const password = document.getElementById('password').value;
+        const errorMessage = document.getElementById('error-message');
+        
+        // The correct password is '7777'
+        if (password === '7777') {
+            sessionStorage.setItem('isVip', 'true');
+            showVipContent();
+        } else {
+            errorMessage.style.display = 'block';
+        }
+    });
 });
