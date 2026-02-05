@@ -1,67 +1,78 @@
-# Blueprint: AI 스포츠 예측 분석
+# Blueprint: AI Sports Betting Analysis Website
 
-## 1. 개요 (Overview)
+## 1. Project Overview
 
-이 애플리케이션은 AI가 분석한 스포츠 경기 예측 데이터를 웹 페이지에 시각적으로 표시하는 것을 목적으로 합니다. 사용자는 엑셀(Excel) 파일에 담긴 경기 예측 데이터를 손쉽게 조회하고, AI가 추천하는 베팅의 적중 확률과 예상 ROI, 그리고 관련 배당률을 명확하게 확인할 수 있습니다.
+An AI-powered sports betting analysis website that provides users with data-driven predictions for various matches. The site features a public area with filtered results and an exclusive VIP section with premium predictions, accessible through a subscription.
 
-## 2. 프로젝트 상세 (Project Details)
+Key features include:
+-   AI-generated match predictions from an Excel data source.
+-   A secure, session-based VIP/Admin access system.
+-   Multi-language support (English, Korean, Japanese, Chinese).
+-   A light/dark theme toggle for user comfort.
+-   A clean, responsive, and modern user interface.
+-   Direct Excel file download for VIP users.
 
-### 디자인 및 스타일 (Design & Style)
+## 2. Style, Design, and Feature Documentation
 
-*   **테마:**
-    *   **라이트 모드 (기본):** 전체적으로 밝은 테마를 사용하여 화사하고 가독성이 높은 사용자 경험을 제공합니다.
-    *   **다크 모드:** 사용자의 눈의 피로를 줄이고, 어두운 환경에서의 가독성을 높이는 다크 모드를 지원합니다.
-    *   테마는 사용자의 시스템 설정을 기본으로 감지하며, 수동으로 전환할 수 있습니다.
-*   **색상 팔레트:**
-    *   **라이트 모드:**
-        *   배경: `#f4f7f6`
-        *   카드 배경: `#ffffff`
-        *   텍스트: `#333333`
-        *   강조: `#007bff`
-    *   **다크 모드:**
-        *   배경: `#1c1c1e`
-        *   카드 배경: `#2c2c2e`
-        *   텍스트: `#ffffff`
-        *   강조: `#0a84ff`
-*   **레이아웃:**
-    *   반응형 그리드 레이아웃을 사용하여 다양한 화면 크기(데스크톱, 모바일)에 맞춰 콘텐츠가 유연하게 배치됩니다.
+This section details all implemented design elements and features from the initial version to the current one.
 
-### 기능 (Features)
+### v1: Initial Setup
+-   **Core Files**: `index.html`, `style.css`, `main.js`.
+-   **Functionality**: Fetched data from `sports_data.xlsx` and displayed it.
 
-*   **데이터 필터링 및 로딩:**
-    *   웹 페이지가 로드될 때, `today.xlsx` 파일을 비동기적으로 불러옵니다.
-    *   **다음 조건에 모두 부합하는 경기만 필터링하여 표시합니다:**
-        *   **예상 ROI > 1**
-        *   **표본 수 > 10**
-        *   **AI 적중 확률 > 51%**
-*   **프리미엄 콘텐츠 잠금:**
-    *   **적중 확률이 80%를 초과하는** 경기는 '프리미엄 예측'으로 간주됩니다.
-    *   해당 카드는 자물쇠 아이콘(🔒)과 함께 내용이 흐리게 처리되어 표시되며, 구독을 유도하는 메시지가 나타납니다.
-*   **구독 버튼 연동:**
-    *   '구독하기' 버튼 클릭 시, 사용자를 지정된 Gumroad 결제 페이지(`https://kongkong79.gumroad.com/l/ai-sports-vip`)로 리디렉션합니다.
-    *   이를 통해 사용자는 7일 무료 평가판으로 프리미엄 구독을 시작할 수 있습니다.
-    *   버튼 근처에 **'VIP 서비스 일주일 무료 제공'** 이라는 안내 문구를 추가하여 사용자의 이해를 돕습니다.
-*   **웹 컴포넌트 기반 카드 UI:**
-    *   `BettingResultCard` 커스텀 웹 컴포넌트를 통해 각 경기의 예측 정보를 표시합니다.
-    *   **표시 정보:** `경기 시간`, `홈팀` vs `원정팀`, `AI 추천`, `홈팀 배당률`, `AI 적중 확률`, `예상 ROI`
-*   **다국어 지원 (i18n):**
-    *   영어를 기본 언어로, 한국어, 일본어, 중국어를 지원합니다.
-*   **테마 전환:**
-    *   사용자가 라이트 모드와 다크 모드를 수동으로 전환할 수 있는 토글 버튼을 제공합니다.
-    *   사용자의 선택은 브라우저의 `localStorage`에 저장되어 다음 방문 시에도 유지됩니다.
-*   **광고 수익화 (Google AdSense):**
-    *   구글 애드센스 코드가 사이트에 통합되어 광고를 표시하고 수익을 창출할 수 있는 기반을 마련했습니다.
-    *   `ads.txt` 파일과 애드센스 관련 메타 태그 및 스크립트가 포함되었습니다.
+### v2: Internationalization (I18N)
+-   **Feature**: Added multi-language support (EN, KO, JA, CN).
+-   **Implementation**: Created a `translations` object in `main.js` and a `setLanguage` function to dynamically update UI text. Language preference is saved in `localStorage`.
 
-## 3. 개발 완료 (Development Completed)
+### v3: VIP/Admin Access
+-   **Feature**: Implemented a hidden admin access feature.
+-   **Implementation**: Clicking the site logo 5 times triggers a password prompt. Correct password grants VIP access by setting a `isVip` flag in `sessionStorage`.
 
-요청에 따라 애플리케이션의 핵심 기능 개발 및 추가 요구사항이 완료되었습니다.
+### v4: Theming
+-   **Feature**: Added a light/dark mode theme toggle.
+-   **Implementation**: Used CSS variables for colors and a JavaScript function to toggle a `data-theme` attribute on the `<html>` element. Theme preference is saved in `localStorage`.
 
-*   **핵심 데이터 필터링 기능 (ROI, 표본수, 적중률)을 유지**하여 사용자에게 유의미한 정보만을 제공합니다.
-*   **고급 정보(적중률 > 80%)에 대한 잠금 기능**을 구현하여 프리미엄 구독을 유도합니다.
-*   **다크 모드와 라이트 모드 전환 기능**을 추가하여 사용자 경험을 향상시켰습니다.
-*   **구글 애드센스 연동**을 통해 사이트의 수익화 기반을 마련했습니다.
-*   **프리미엄 구독 버튼을 Gumroad 결제 페이지에 연결**하여 사용자가 유료 서비스를 시작할 수 있도록 했습니다.
-*   **구독 버튼 주변에 'VIP 서비스 일주일 무료 제공' 문구를 추가**하여 사용자의 결정을 돕습니다.
+### v5: UI/UX Refinement
+-   **Design**: Modernized the UI with improved cards, a sticky header, and better visual hierarchy.
+-   **Files**: Updated `style.css` with new styles for cards, header, and layout.
 
-모든 변경 사항은 성공적으로 적용되었습니다.
+### v6: Multi-Page Architecture
+-   **Feature**: Expanded the site into multiple pages: Home, About, Contact, Privacy, and VIP.
+-   **Implementation**: Created `about.html`, `contact.html`, `privacy.html`, and `vip.html`. The navigation bar was updated to link to these pages.
+
+### v7: VIP Page Content
+-   **Feature**: The VIP page now displays all match data in a sortable table.
+-   **Implementation**: Created `vip.js` to handle fetching data and populating the table. Added sorting functionality for 'Hit Rate' and 'ROI'.
+
+### v8: Polished UI & Logo Update
+-   **Design**: Replaced the text-based admin placeholder logo with a circular icon (`Icon-1.svg`).
+-   **Implementation**: Updated the `<img>` tag in all HTML files and added styles in `style.css` to make it circular and interactive on hover.
+
+### v9 (Current): VIP Excel Download & Code Unification
+-   **Feature**: Added a feature for VIP users to download the full analysis report.
+-   **Implementation**:
+    1.  Added a "Download Full Analysis Report" section to `vip.html` with a download button.
+    2.  The button links directly to the `sports_data.xlsx` file, allowing users to download it.
+    3.  Added new translation keys for the download section to `main.js`.
+    4.  Styled the new download section and button in `style.css` for a consistent look.
+-   **Code Quality**:
+    1.  Unified the logo across all pages (`index.html`, `about.html`, `contact.html`, `privacy.html`) to use the new circular icon.
+    2.  Incremented the version of all JavaScript files (`main.js`, `vip.js`) to `v=16` in all relevant HTML files to prevent browser caching issues.
+
+---
+
+## 3. Current Task Plan (Completed)
+
+**Objective**: Implement a file download feature for VIP users and unify the site's branding.
+
+-   **Step 1: Add Download UI to VIP Page** - **COMPLETED**
+    -   Modified `vip.html` to include a new section for downloading the Excel file.
+-   **Step 2: Add Translations** - **COMPLETED**
+    -   Updated the `translations` object in `main.js` with keys `vipDownloadTitle` and `vipDownloadButton`.
+-   **Step 3: Correct File Path** - **COMPLETED**
+    -   Initially linked to a non-existent `sports_data_vip.xlsx`. Corrected the `href` attribute in the download button in `vip.html` to point to the correct `sports_data.xlsx` file.
+-   **Step 4: Style the Download Section** - **COMPLETED**
+    -   Added CSS rules in `style.css` for `.download-section` and `.btn-download` to ensure the new section is visually appealing.
+-   **Step 5: Unify Logos and Script Versions** - **COMPLETED**
+    -   Updated `index.html`, `about.html`, `contact.html`, and `privacy.html` to use the new circular SVG logo.
+    -   Updated the script tags in all HTML files to `?v=16` to ensure the latest JavaScript is loaded.
