@@ -1,30 +1,51 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- 1. 설정 및 상태 관리 ---
+    // --- 1. 설정 및 상태 ---
     const ADMIN_PASSWORD = 'MGB_ADMIN_2024';
     let logoClickCount = 0;
     let logoClickTimer = null;
 
-    // --- 2. 초기화 (테마 및 언어) ---
+    // --- 2. 언어 변환 핵심 함수 (가장 먼저 정의) ---
+    function applyLanguage(lang) {
+        if (!lang) return;
+        
+        console.log("Applying Language:", lang);
+        
+        // 1. translations.js의 전역 함수 호출 시도
+        if (typeof window.applyTranslations === 'function') {
+            window.applyTranslations(lang);
+        } else if (typeof applyTranslations === 'function') {
+            applyTranslations(lang);
+        } else {
+            console.error("translations.js를 찾을 수 없거나 applyTranslations 함수가 없습니다.");
+        }
+        
+        // 2. 버튼 활성화 상태 표시 (UI 피드백)
+        document.querySelectorAll('[data-lang]').forEach(btn => {
+            btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+        });
+    }
+
+    // --- 3. 초기화 (테마 및 언어 즉시 적용) ---
     function initApp() {
-        // 테마 설정 복구
+        // 테마 복구
         const savedTheme = localStorage.getItem('theme') || 'light';
         document.documentElement.setAttribute('data-theme', savedTheme);
 
-        // 언어 설정 복구 (최우선 실행)
+        // 언어 복구
         const savedLang = localStorage.getItem('language') || 'en';
         applyLanguage(savedLang);
 
-        // 데이터 로드 및 이벤트 연결
+        // 데이터 로드 및 이벤트 리스너 연결
         fetchDataAndRender();
         setupEventListeners();
     }
 
-    // --- 3. 데이터 로드 및 필터링 ---
+    // --- 4. 데이터 로드 및 렌더링 ---
     async function fetchDataAndRender() {
         const analysisList = document.getElementById('analysis-list');
         if (!analysisList) return;
 
-        analysisList.innerHTML = '<div style="text-align:center; padding:20px;">Loading Data...</div>';
+        analysisList.innerHTML = '<div style="text-align:center; padding:20px;">Loading...</div>';
 
         try {
             const response = await fetch('sports_data.xlsx?v=' + new Date().getTime());
@@ -35,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const allMatches = jsonData.slice(1).map(row => {
                 let hitRate = 0;
-                let rawHit = row[5]; // Hit rate 열
+                let rawHit = row[5]; 
                 if (typeof rawHit === 'string') {
                     hitRate = parseFloat(rawHit.replace('%', '')) / 100;
                 } else {
@@ -45,15 +66,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 return {
                     time: row[0],
                     match: `${row[1]} vs ${row[2]}`,
-                    prediction: row[4], // AI Recommendation
+                    prediction: row[4],
                     odds: parseFloat(row[3]) || 0,
                     hitRate: hitRate || 0,
-                    roi: parseFloat(row[10]) || 0, // K열: ROI
-                    sampleSize: parseInt(row[11]) || 0 // L열: Sample
+                    roi: parseFloat(row[10]) || 0,
+                    sampleSize: parseInt(row[11]) || 0
                 };
             });
 
-            // 필터링: PICK이 '-'이 아니고, ROI >= 1.0, Sample >= 10
             const filteredMatches = allMatches.filter(item => {
                 const hasValidPick = item.prediction && item.prediction !== '-' && item.prediction.trim() !== '';
                 return hasValidPick && item.roi >= 1.0 && item.sampleSize >= 10;
@@ -69,10 +89,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
         } catch (error) {
-            console.error('Data loading error:', error);
-            analysisList.innerHTML = `<p style="text-align:center; color:red; padding:20px;">Error: Could not load sports_data.xlsx</p>`;
+            console.error('Data Error:', error);
         } finally {
-            // 데이터 로드 후 번역 다시 적용 (데이터가 새로 생겼으므로)
+            // 데이터 로드 후 한 번 더 번역 적용
             applyLanguage(localStorage.getItem('language') || 'en');
         }
     }
@@ -88,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div style="font-size: 2rem; margin-bottom: 10px;">🔒</div>
                     <h3 data-i18n-key="vipExclusive">VIP Exclusive</h3>
                     <p data-i18n-key="vipOnlyMessage" style="font-size:0.85rem; color:#666;">High Win Rate (80%+)</p>
-                    <a href="vip.html" class="subscribe-button" data-i18n-key="subscribeNow" style="display:inline-block; margin-top:10px; padding:8px 16px; background:#2563eb; color:#fff; border-radius:5px; text-decoration:none;">Unlock</a>
+                    <a href="vip.html" class="subscribe-button" data-i18n-key="subscribeNow">Unlock</a>
                 </div>
             `;
         } else {
@@ -107,9 +126,28 @@ document.addEventListener('DOMContentLoaded', () => {
         return card;
     }
 
-    // --- 4. 이벤트 연결 (중요: 언어 버튼 포함) ---
+    // --- 5. 이벤트 리스너 설정 ---
     function setupEventListeners() {
-        // 로고 클릭 (관리자 모드)
+        // [테마]
+        document.getElementById('theme-toggle')?.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+
+        // [언어] - 클릭 이벤트 가로채기 (이벤트 위임)
+        document.addEventListener('click', (e) => {
+            const btn = e.target.closest('[data-lang]');
+            if (btn) {
+                const lang = btn.getAttribute('data-lang');
+                console.log("Language Button Clicked:", lang);
+                localStorage.setItem('language', lang);
+                applyLanguage(lang);
+            }
+        });
+
+        // [로고] 관리자 접속
         document.getElementById('logo-link')?.addEventListener('click', (e) => {
             e.preventDefault();
             logoClickCount++;
@@ -119,37 +157,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 const pw = prompt('Admin Password?');
                 if (pw === ADMIN_PASSWORD) {
                     sessionStorage.setItem('isVip', 'true');
-                    alert('VIP Mode Activated');
                     location.reload();
                 }
                 logoClickCount = 0;
             }
         });
-
-        // 테마 모드 토글
-        document.getElementById('theme-toggle')?.addEventListener('click', () => {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-        });
-
-        // 언어 버튼 클릭 (이벤트 위임 방식 - 가장 확실함)
-        document.addEventListener('click', (e) => {
-            const langBtn = e.target.closest('[data-lang]');
-            if (langBtn) {
-                const lang = langBtn.getAttribute('data-lang');
-                localStorage.setItem('language', lang);
-                applyLanguage(lang);
-            }
-        });
-    }
-
-    // translations.js와 연동하는 핵심 함수
-    function applyLanguage(lang) {
-        if (typeof window.applyTranslations === 'function') {
-            window.applyTranslations(lang);
-        }
     }
 
     initApp();
