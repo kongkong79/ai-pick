@@ -2,15 +2,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 1. ALL FUNCTION DEFINITIONS
 
-    // Applies translations to elements
+    // Language management
     async function setLanguage(lang) {
         try {
-            const response = await fetch(`locales/${lang}.json?v=5`);
+            const response = await fetch(`locales/${lang}.json?v=10`);
             const translations = await response.json();
             document.querySelectorAll('[data-i18n-key]').forEach(element => {
                 const key = element.getAttribute('data-i18n-key');
                 if (translations[key]) {
-                     if (element.tagName === 'INPUT' && element.type !== 'submit') {
+                    if (element.tagName === 'INPUT' && element.type !== 'submit') {
                         element.placeholder = translations[key];
                     } else {
                         element.innerHTML = translations[key];
@@ -38,6 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             vipTableBody.appendChild(row);
         });
+        // After rendering, re-apply the current language to the new content
+        setLanguage(localStorage.getItem('language') || 'en');
     }
 
     // Fetches, processes, and displays all data for VIPs
@@ -61,9 +63,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
             }).filter(item => item.match && !isNaN(item.hitRate));
 
+            // Initial sort by Hit Rate
+            results.sort((a, b) => b.hitRate - a.hitRate);
             displayData(results);
 
-            // Sorting functionality
+            // Add sorting event listeners
             document.getElementById('sort-by-hit-rate').addEventListener('click', () => {
                 displayData([...results].sort((a, b) => b.hitRate - a.hitRate));
             });
@@ -73,6 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (error) {
             console.error('Error loading VIP data:', error);
+            document.querySelector('#vip-table tbody').innerHTML = `<tr><td colspan="5">Failed to load data.</td></tr>`;
         }
     }
 
@@ -89,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize language first
     setLanguage(localStorage.getItem('language') || 'en');
 
-    // Check for VIP status on page load
+    // Check for VIP status from sessionStorage
     if (sessionStorage.getItem('isVip') === 'true') {
         showVipContent();
     } else {
@@ -97,14 +102,14 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('vip-content').style.display = 'none';
     }
 
-    // Handle VIP login form submission
+    // Handle VIP login form
     const loginForm = document.getElementById('vip-login-form');
     loginForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const password = document.getElementById('password').value;
         const errorMessage = document.getElementById('error-message');
         
-        // The correct password is '7777'
+        // The password remains '7777'
         if (password === '7777') {
             sessionStorage.setItem('isVip', 'true');
             showVipContent();

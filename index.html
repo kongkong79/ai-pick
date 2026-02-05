@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-i18n-key="appTitle">Sports Betting Analysis</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=10">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
     <header>
         <div class="container">
-            <a href="index.html" class="logo-link" id="logo-link">
+            <a href="#" class="logo-link" id="logo-link">
                  <img src="https://i.imgur.com/b2d1VJQ.png" alt="Logo" class="logo-img">
             </a>
             <nav>
@@ -39,29 +39,14 @@
         <section class="hero">
             <h1 data-i18n-key="headerTitle">Sports Betting Analysis</h1>
             <p data-i18n-key="headerSubtitle">Harness the power of AI for smarter sports betting.</p>
+             <a href="sports_data.xlsx" download class="download-button" data-i18n-key="downloadExcel">Download Excel File</a>
         </section>
 
-        <section>
-            <h2 data-i18n-key="analysisTitle">Today's Betting Analysis (Raw Data)</h2>
-            <p class="filter-description">Displaying raw data from the Excel file for debugging.</p>
-            <table id="analysis-table">
-                <thead>
-                    <tr>
-                        <th>Col A (Time)</th>
-                        <th>Col B (Match)</th>
-                        <th>Col C (Prediction)</th>
-                        <th>Col D (Odds)</th>
-                        <th>Col E (Hit Rate)</th>
-                        <th>Col F (ROI)</th>
-                        <th>Col G (Sample Size)</th>
-                    </tr>
-                </thead>
-                <tbody id="analysis-table-body">
-                    <!-- Results will be loaded here by JavaScript -->
-                </tbody>
-            </table>
-             <div id="loading-indicator" style="display: none;" data-i18n-key="loading">Loading match data...</div>
-        </section>
+        <div id="loading-indicator" style="display: none;" data-i18n-key="loading">Loading match data...</div>
+
+        <div id="results-container" class="results-grid">
+            <!-- Match data will be loaded here as cards -->
+        </div>
     </main>
 
     <footer>
@@ -69,6 +54,6 @@
             <p data-i18n-key="footerText">&copy; 2024 Sports Betting Analysis. All rights reserved.</p>
         </div>
     </footer>
-    <script src="main.js?v=25"></script>
+    <script src="main.js?v=10"></script>
 </body>
 </html>

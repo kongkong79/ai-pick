@@ -1,41 +1,57 @@
 :root {
-    --primary-color: #3498db;
-    --secondary-color: #2c3e50;
-    --background-color: #ecf0f1;
-    --text-color: #34495e;
-    --card-background: #ffffff;
-    --shadow-color: rgba(0, 0, 0, 0.1);
-    --vip-color: #e67e22;
+    --primary-color: #337ab7; /* A professional blue */
+    --secondary-color: #5cb85c; /* A calm green */
+    --background-color: #ffffff;
+    --text-color: #333333;
+    --card-background: #f9f9f9;
+    --card-border-color: #e3e3e3;
+    --header-bg: #ffffff;
+    --header-border: #e7e7e7;
+    --footer-bg: #f8f8f8;
+    --footer-text: #777;
+    --link-color: #337ab7;
+    --link-hover-color: #23527c;
+    --vip-color: #d9534f; /* A distinct red for VIP */
+    --shadow-color: rgba(0, 0, 0, 0.05);
 }
 
 [data-theme="dark"] {
-    --primary-color: #3498db;
-    --secondary-color: #ecf0f1;
-    --background-color: #2c3e50;
-    --text-color: #ecf0f1;
-    --card-background: #34495e;
-    --shadow-color: rgba(0, 0, 0, 0.4);
+    --primary-color: #449d44; /* A lighter green for dark mode */
+    --secondary-color: #398439;
+    --background-color: #1a1a1a;
+    --text-color: #e0e0e0;
+    --card-background: #2a2a2a;
+    --card-border-color: #3a3a3a;
+    --header-bg: #222222;
+    --header-border: #303030;
+    --footer-bg: #222222;
+    --footer-text: #aaaaaa;
+    --link-color: #6caddf;
+    --link-hover-color: #9acfea;
+    --vip-color: #e57373; /* A softer red for dark mode */
+    --shadow-color: rgba(0, 0, 0, 0.25);
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     background-color: var(--background-color);
     color: var(--text-color);
     line-height: 1.6;
     margin: 0;
+    padding: 0;
     transition: background-color 0.3s, color 0.3s;
 }
 
 .container {
-    max-width: 1100px;
-    margin: auto;
-    overflow: hidden;
+    max-width: 1200px;
+    margin: 0 auto;
     padding: 0 20px;
 }
 
 header {
-    background: var(--card-background);
-    box-shadow: 0 2px 5px var(--shadow-color);
+    background-color: var(--header-bg);
+    border-bottom: 1px solid var(--header-border);
+    box-shadow: 0 2px 4px var(--shadow-color);
     padding: 1rem 0;
     position: sticky;
     top: 0;
@@ -49,8 +65,7 @@ header .container {
 }
 
 .logo-link {
-    display: flex;
-    align-items: center;
+    display: inline-block;
 }
 
 .logo-img {
@@ -58,38 +73,47 @@ header .container {
     width: auto;
 }
 
-nav a {
-    color: var(--text-color);
-    text-decoration: none;
-    margin: 0 15px;
-    font-weight: 500;
-    transition: color 0.3s;
+nav {
+    display: flex;
+    gap: 15px;
 }
 
-nav a.active, nav a:hover {
-    color: var(--primary-color);
+.nav-link {
+    color: var(--link-color);
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.nav-link:hover, .nav-link.active {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.vip-link {
+    font-weight: bold;
+    color: var(--vip-color);
+}
+
+.vip-link:hover, .vip-link.active {
+    background-color: var(--vip-color);
+    color: white;
 }
 
 .header-controls {
     display: flex;
     align-items: center;
+    gap: 15px;
 }
 
 #language-switcher button, #theme-toggle {
     background: none;
-    border: 1px solid var(--secondary-color);
-    color: var(--secondary-color);
-    padding: 5px 10px;
-    border-radius: 5px;
+    border: 1px solid var(--card-border-color);
+    color: var(--text-color);
     cursor: pointer;
-    margin-left: 10px;
-    transition: background-color 0.3s, color 0.3s;
-}
-
-#language-switcher button:hover, #theme-toggle:hover {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
-    color: white;
+    padding: 8px;
+    border-radius: 5px;
 }
 
 .hero {
@@ -97,94 +121,170 @@ nav a.active, nav a:hover {
     padding: 4rem 0;
 }
 
-.hero h1 {
-    font-size: 2.5rem;
-    margin-bottom: 0.5rem;
+.download-button {
+    display: inline-block;
+    margin-top: 1rem;
+    background-color: var(--secondary-color);
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
 }
 
-.filter-description {
+.download-button:hover {
+    background-color: var(--primary-color);
+}
+
+#loading-indicator {
     text-align: center;
-    margin-bottom: 2rem;
-    font-style: italic;
-    color: #666;
+    padding: 2rem;
+    font-size: 1.2em;
 }
 
-#analysis-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 2rem;
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 2rem 0;
+}
+
+.result-card {
+    background-color: var(--card-background);
+    border: 1px solid var(--card-border-color);
+    border-radius: 8px;
     box-shadow: 0 4px 8px var(--shadow-color);
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
-#analysis-table th, #analysis-table td {
-    border: 1px solid #ddd;
-    padding: 12px;
-    text-align: left;
+.result-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px var(--shadow-color);
 }
 
-#analysis-table th {
+.card-header {
     background-color: var(--primary-color);
     color: white;
+    padding: 15px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    font-weight: bold;
 }
 
-#analysis-table tbody tr:nth-child(even) {
-    background-color: #f2f2f2;
+.card-body {
+    padding: 15px;
 }
 
-#analysis-table tbody tr:hover {
-    background-color: #ddd;
+.card-body p {
+    margin: 0 0 10px;
 }
 
-[data-theme="dark"] #analysis-table th, [data-theme="dark"] #analysis-table td {
-    border: 1px solid #555;
+.vip-card .card-header {
+    background-color: var(--vip-color);
 }
 
-[data-theme="dark"] #analysis-table tbody tr:nth-child(even) {
-    background-color: #3a506b;
+.vip-lock-container {
+    padding: 20px;
+    text-align: center;
 }
 
-[data-theme="dark"] #analysis-table tbody tr:hover {
-    background-color: #4a6588;
+.vip-lock-container svg {
+    margin-bottom: 10px;
+    color: var(--vip-color);
 }
 
+.btn-subscribe {
+    display: inline-block;
+    background-color: var(--vip-color);
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    margin-top: 10px;
+    border: none;
+    cursor: pointer;
+}
 
 footer {
     text-align: center;
     padding: 2rem 0;
     margin-top: 2rem;
-    color: #777;
+    background-color: var(--footer-bg);
+    color: var(--footer-text);
+    border-top: 1px solid var(--header-border);
 }
 
-
-/* VIP Page specific styles */
-.vip-access-form {
-    max-width: 400px;
-    margin: 2rem auto;
+/* VIP Page & Admin Panel Styles */
+.vip-access-form, #admin-panel {
+    background-color: var(--card-background);
     padding: 2rem;
-    background: var(--card-background);
+    margin: 2rem auto;
+    max-width: 500px;
     border-radius: 8px;
-    box-shadow: 0 4px 8px var(--shadow-color);
+    box-shadow: 0 4px 15px var(--shadow-color);
 }
 
-.vip-access-form h2 {
+.form-group {
+    margin-bottom: 1rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input[type="password"], input[type="file"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid var(--card-border-color);
+    border-radius: 4px;
+}
+
+#vip-controls {
+    margin-bottom: 1rem;
     text-align: center;
-    color: var(--primary-color);
 }
 
-#vip-content table {
+.sort-button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 0 5px;
+}
+
+#vip-table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 2rem;
+    margin-top: 1rem;
 }
 
-#vip-content th, #vip-content td {
-    border: 1px solid #ddd;
+#vip-table th, #vip-table td {
+    border: 1px solid var(--card-border-color);
     padding: 12px;
     text-align: left;
 }
 
-#vip-content th {
+#vip-table thead {
     background-color: var(--primary-color);
     color: white;
 }
 
+#admin-panel {
+    display: none; /* Initially hidden */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2000;
+    width: 80%;
+    max-width: 800px;
+}
+
+#admin-data-table-container {
+    max-height: 400px;
+    overflow-y: auto;
+    margin-top: 1rem;
+}
