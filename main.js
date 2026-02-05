@@ -89,33 +89,37 @@ document.addEventListener('DOMContentLoaded', () => {
             const worksheet = workbook.Sheets[firstSheetName];
             const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
-            const results = jsonData.slice(1).map(row => ({
-                match: row[0],
-                prediction: row[1],
-                odds: parseFloat(row[2]),
-                hitRate: parseFloat(row[3]),
-                roi: parseFloat(row[4]),
-                sampleSize: parseInt(row[5], 10)
-            }));
+            const results = jsonData.slice(1).map(row => {
+                let hitRate = parseFloat(row[4]); // Column E is Hit Rate
+                // Handle if hit rate is in percentage format (e.g., 95.5) vs decimal (0.955)
+                if (hitRate > 1.0) {
+                    hitRate = hitRate / 100;
+                }
 
-            // TEMPORARILY REMOVED FILTER FOR DEBUGGING
-            const filteredResults = results;
+                return {
+                    match: row[1], // Column B is Match
+                    prediction: row[2], // Column C is Prediction
+                    odds: parseFloat(row[3]), // Column D is Odds
+                    hitRate: hitRate,
+                    roi: parseFloat(row[5]), // Column F is ROI
+                    sampleSize: parseInt(row[6], 10) // Column G is Sample Size
+                };
+            }).filter(item => item.match); // Ensure rows with no match name are skipped
+
+
+            const filteredResults = results.filter(item => 
+                item.roi > 1 && item.sampleSize > 10 && item.hitRate > 0.51
+            );
 
             if (filteredResults.length === 0) {
                 analysisTableBody.innerHTML = `<tr><td colspan="5" data-i18n-key="noMatches">No matches found for today.</td></tr>`;
-                setLanguage(localStorage.getItem('language') || 'en'); // re-apply translation
+                setLanguage(localStorage.getItem('language') || 'en');
                 return;
             }
 
             filteredResults.forEach(item => {
                 const row = document.createElement('tr');
                 
-                // Check if any data is invalid before deciding to show VIP or normal
-                if (!item.match || isNaN(item.hitRate)) {
-                    // Skip rendering this row if essential data is missing
-                    return;
-                }
-
                 if (item.hitRate >= 0.80) {
                     row.classList.add('vip-row');
                     row.innerHTML = `
@@ -140,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 analysisTableBody.appendChild(row);
             });
             
-            setLanguage(localStorage.getItem('language') || 'en'); // re-apply translations to new content
+            setLanguage(localStorage.getItem('language') || 'en');
 
         } catch (error) { 
             console.error('Error fetching or processing data:', error);
