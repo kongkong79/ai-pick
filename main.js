@@ -1,16 +1,24 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // --- 1. 설정 및 상태 ---
     const ADMIN_PASSWORD = 'MGB_ADMIN_2024';
     let logoClickCount = 0;
+    let logoClickTimer = null;
 
-    // 1. 초기 언어 설정 실행
-    const initLanguage = () => {
+    // --- 2. 초기 실행 (테마 & 언어) ---
+    function initApp() {
+        // 테마 초기화
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+
+        // 언어 초기화
         const savedLang = localStorage.getItem('language') || 'en';
         if (typeof window.applyTranslations === 'function') {
             window.applyTranslations(savedLang);
         }
-    };
-    initLanguage();
+    }
+    initApp();
 
+    // --- 3. 데이터 로드 및 렌더링 ---
     async function fetchDataAndRender() {
         const analysisList = document.getElementById('analysis-list');
         if (!analysisList) return;
@@ -23,7 +31,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
             const allMatches = jsonData.slice(1).map(row => {
-                // 승률(Hit rate) 데이터 보정
                 let hitRate = 0;
                 let rawHit = row[5]; 
                 if (typeof rawHit === 'string') {
@@ -35,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return {
                     time: row[0],
                     match: `${row[1]} vs ${row[2]}`,
-                    prediction: row[4], // AI Recommendation (PICK)
+                    prediction: row[4],
                     odds: parseFloat(row[3]) || 0,
                     hitRate: hitRate || 0,
                     roi: parseFloat(row[10]) || 0,
@@ -43,29 +50,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
             });
 
-            // *** 필터링 로직 업데이트 ***
+            // 필터링: PICK이 있고, ROI 1.0 이상, 표본 10 이상
             const filteredMatches = allMatches.filter(item => {
-                const hasValidPick = item.prediction && item.prediction !== '-' && item.prediction.trim() !== ''; // PICK이 비어있거나 '-'인 경우 제외
-                const meetsRoi = item.roi >= 1.0; // ROI 1 이상
-                const meetsSample = item.sampleSize >= 10; // 표본 10 이상
-                
-                return hasValidPick && meetsRoi && meetsSample;
+                const hasValidPick = item.prediction && item.prediction !== '-' && item.prediction.trim() !== '';
+                return hasValidPick && item.roi >= 1.0 && item.sampleSize >= 10;
             });
 
             analysisList.innerHTML = '';
 
             if (filteredMatches.length === 0) {
-                analysisList.innerHTML = `<p data-i18n-key="noMatches" style="text-align:center; padding:20px;">No matches found matching criteria.</p>`;
+                analysisList.innerHTML = `<p data-i18n-key="noMatches" style="text-align:center; padding:20px;">No matches found.</p>`;
             } else {
                 filteredMatches.forEach(item => {
                     analysisList.appendChild(createMatchCard(item));
                 });
             }
         } catch (error) {
-            console.error('Data Load Error:', error);
+            console.error('Data Error:', error);
         } finally {
-            // 데이터 출력 후 번역 다시 한번 입히기
-            initLanguage();
+            // 데이터 로드 후 번역 다시 적용
+            const currentLang = localStorage.getItem('language') || 'en';
+            if (typeof window.applyTranslations === 'function') window.applyTranslations(currentLang);
         }
     }
 
@@ -74,35 +79,37 @@ document.addEventListener('DOMContentLoaded', () => {
         const card = document.createElement('div');
         card.className = 'analysis-list-item';
 
-        // 승률 80% 이상 VIP 잠금
         if (item.hitRate >= 0.80 && !isVip) {
             card.innerHTML = `
                 <div class="lock-icon" style="font-size: 2rem; margin-bottom: 10px;">🔒</div>
                 <h3 data-i18n-key="vipExclusive">VIP Exclusive</h3>
-                <p data-i18n-key="vipOnlyMessage">This prediction is for VIP members.</p>
-                <a href="vip.html" class="subscribe-button" data-i18n-key="subscribeNow">Unlock (Gumroad)</a>
+                <a href="vip.html" class="subscribe-button" data-i18n-key="subscribeNow">Unlock Now</a>
             `;
         } else {
             card.style.textAlign = 'left';
             card.innerHTML = `
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                    <strong style="font-size:1.1rem;">${item.match}</strong>
+                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                    <strong>${item.match}</strong>
                     <span style="color:#666; font-size:0.9rem;">${item.time}</span>
                 </div>
-                <div style="background:#f1f5f9; padding:15px; border-radius:10px;">
-                    <p><strong>Pick:</strong> <span style="color:#2563eb;">${item.prediction}</span></p>
+                <div style="background:rgba(0,0,0,0.05); padding:15px; border-radius:10px;">
+                    <p><strong>Pick:</strong> ${item.prediction}</p>
                     <p><strong>Odds:</strong> ${item.odds.toFixed(2)} | <strong>Hit Rate:</strong> ${(item.hitRate * 100).toFixed(0)}%</p>
-                    <p style="font-size:0.8rem; color:#64748b; margin-top:5px;">ROI: ${item.roi} | Sample: ${item.sampleSize}</p>
+                    <p style="font-size:0.8rem; color:#888;">ROI: ${item.roi} | Sample: ${item.sampleSize}</p>
                 </div>
             `;
         }
         return card;
     }
 
-    // 로고 5번 클릭 관리자 모드
+    // --- 4. 모든 이벤트 리스너 통합 ---
+
+    // 로고 5번 클릭 관리자
     document.getElementById('logo-link')?.addEventListener('click', (e) => {
         e.preventDefault();
         logoClickCount++;
+        clearTimeout(logoClickTimer);
+        logoClickTimer = setTimeout(() => { logoClickCount = 0; }, 2000);
         if (logoClickCount === 5) {
             const pw = prompt('Admin Password?');
             if (pw === ADMIN_PASSWORD) {
@@ -114,12 +121,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 언어 전환 버튼 연결
-    document.querySelectorAll('.lang-btn').forEach(btn => {
+    // 테마 토글 버튼
+    document.getElementById('theme-toggle')?.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+    });
+
+    // 언어 버튼들 (data-lang 속성이 있는 모든 요소)
+    document.querySelectorAll('[data-lang]').forEach(btn => {
         btn.addEventListener('click', () => {
             const lang = btn.getAttribute('data-lang');
             localStorage.setItem('language', lang);
-            initLanguage(); // 즉시 번역 적용
+            if (typeof window.applyTranslations === 'function') {
+                window.applyTranslations(lang);
+            }
         });
     });
 
