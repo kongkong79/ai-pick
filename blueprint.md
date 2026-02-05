@@ -1,78 +1,49 @@
-# Blueprint: AI Sports Betting Analysis Website
 
-## 1. Project Overview
+# Project Blueprint: AI Sports Betting Analysis
 
-An AI-powered sports betting analysis website that provides users with data-driven predictions for various matches. The site features a public area with filtered results and an exclusive VIP section with premium predictions, accessible through a subscription.
+This document outlines the purpose, features, and implementation plan for the web application. It serves as the single source of truth for all development.
 
-Key features include:
--   AI-generated match predictions from an Excel data source.
--   A secure, session-based VIP/Admin access system.
--   Multi-language support (English, Korean, Japanese, Chinese).
--   A light/dark theme toggle for user comfort.
--   A clean, responsive, and modern user interface.
--   Direct Excel file download for VIP users.
+## 1. Core Purpose
 
-## 2. Style, Design, and Feature Documentation
+To provide AI-driven sports betting analysis to users, with a clear distinction between publicly available data and exclusive VIP content.
 
-This section details all implemented design elements and features from the initial version to the current one.
+## 2. Feature Breakdown
 
-### v1: Initial Setup
--   **Core Files**: `index.html`, `style.css`, `main.js`.
--   **Functionality**: Fetched data from `sports_data.xlsx` and displayed it.
+### A. Homepage (Public View - `index.html`)
 
-### v2: Internationalization (I18N)
--   **Feature**: Added multi-language support (EN, KO, JA, CN).
--   **Implementation**: Created a `translations` object in `main.js` and a `setLanguage` function to dynamically update UI text. Language preference is saved in `localStorage`.
+- **Data Filtering:** Displays a curated list of matches from `sports_data.xlsx` that meet **ALL** of the following criteria:
+    - Sample Size > 10
+    - ROI > 1
+    - Hit Rate > 51%
+- **VIP Content Locking:** Any match from the filtered list with a **Hit Rate of 80% or higher** will be obfuscated and displayed as a "VIP Exclusive Prediction" card, prompting users to subscribe.
+- **Layout:** A clean, card-based list layout as per the reference screenshot.
+- **Header:**
+    - Circular "dml" logo.
+    - Navigation: Home, About, Contact, Privacy, VIP.
+    - Controls: Language switcher (EN, KO, JA, CN) and a Light/Dark theme toggle.
 
-### v3: VIP/Admin Access
--   **Feature**: Implemented a hidden admin access feature.
--   **Implementation**: Clicking the site logo 5 times triggers a password prompt. Correct password grants VIP access by setting a `isVip` flag in `sessionStorage`.
+### B. Admin-Only VIP Access
 
-### v4: Theming
--   **Feature**: Added a light/dark mode theme toggle.
--   **Implementation**: Used CSS variables for colors and a JavaScript function to toggle a `data-theme` attribute on the `<html>` element. Theme preference is saved in `localStorage`.
+- **Trigger:** Clicking the circular "dml" logo 5 consecutive times on the homepage.
+- **Password:** `MGB_ADMIN_2024`
+- **Action:** Upon successful password entry, the administrator is automatically redirected to the VIP page (`vip.html`) with full access granted for that session. This is an admin-only shortcut for content verification.
 
-### v5: UI/UX Refinement
--   **Design**: Modernized the UI with improved cards, a sticky header, and better visual hierarchy.
--   **Files**: Updated `style.css` with new styles for cards, header, and layout.
+### C. VIP Page (`vip.html`)
 
-### v6: Multi-Page Architecture
--   **Feature**: Expanded the site into multiple pages: Home, About, Contact, Privacy, and VIP.
--   **Implementation**: Created `about.html`, `contact.html`, `privacy.html`, and `vip.html`. The navigation bar was updated to link to these pages.
+- **Standard User Access:** Users navigate here from the homepage. They are presented with a login form to enter their access key.
+- **Authentication:**
+    - **(Future) Gumroad Integration:** The system will validate the entered key against a list of valid license keys stored in `licenses.txt`. The temporary `7777` key will be completely removed.
+- **Content:** Upon successful authentication, the user can view **ALL** match data from the spreadsheet, without any filtering. The data is presented in a sortable table format (sort by Hit Rate, ROI).
 
-### v7: VIP Page Content
--   **Feature**: The VIP page now displays all match data in a sortable table.
--   **Implementation**: Created `vip.js` to handle fetching data and populating the table. Added sorting functionality for 'Hit Rate' and 'ROI'.
+### D. Data Management (Admin)
 
-### v8: Polished UI & Logo Update
--   **Design**: Replaced the text-based admin placeholder logo with a circular icon (`Icon-1.svg`).
--   **Implementation**: Updated the `<img>` tag in all HTML files and added styles in `style.css` to make it circular and interactive on hover.
+- **Method:** The administrator updates the site's data by replacing the `sports_data.xlsx` file in the project's root directory.
+- **Note:** The complex, on-page upload panel has been removed in favor of this simpler, more direct file management approach to ensure stability.
 
-### v9 (Current): VIP Excel Download & Code Unification
--   **Feature**: Added a feature for VIP users to download the full analysis report.
--   **Implementation**:
-    1.  Added a "Download Full Analysis Report" section to `vip.html` with a download button.
-    2.  The button links directly to the `sports_data.xlsx` file, allowing users to download it.
-    3.  Added new translation keys for the download section to `main.js`.
-    4.  Styled the new download section and button in `style.css` for a consistent look.
--   **Code Quality**:
-    1.  Unified the logo across all pages (`index.html`, `about.html`, `contact.html`, `privacy.html`) to use the new circular icon.
-    2.  Incremented the version of all JavaScript files (`main.js`, `vip.js`) to `v=16` in all relevant HTML files to prevent browser caching issues.
+## 3. Execution Plan
 
----
-
-## 3. Current Task Plan (Completed)
-
-**Objective**: Implement a file download feature for VIP users and unify the site's branding.
-
--   **Step 1: Add Download UI to VIP Page** - **COMPLETED**
-    -   Modified `vip.html` to include a new section for downloading the Excel file.
--   **Step 2: Add Translations** - **COMPLETED**
-    -   Updated the `translations` object in `main.js` with keys `vipDownloadTitle` and `vipDownloadButton`.
--   **Step 3: Correct File Path** - **COMPLETED**
-    -   Initially linked to a non-existent `sports_data_vip.xlsx`. Corrected the `href` attribute in the download button in `vip.html` to point to the correct `sports_data.xlsx` file.
--   **Step 4: Style the Download Section** - **COMPLETED**
-    -   Added CSS rules in `style.css` for `.download-section` and `.btn-download` to ensure the new section is visually appealing.
--   **Step 5: Unify Logos and Script Versions** - **COMPLETED**
-    -   Updated `index.html`, `about.html`, `contact.html`, and `privacy.html` to use the new circular SVG logo.
-    -   Updated the script tags in all HTML files to `?v=16` to ensure the latest JavaScript is loaded.
+1.  **[COMPLETED]** Establish this `blueprint.md` file.
+2.  **[NEXT] Rebuild `index.html`:** Create the clean HTML structure based on the screenshot, removing the old admin panel code.
+3.  **[PLANNED] Rebuild `style.css`:** Implement the visual design, including the circular logo and card styles.
+4.  **[PLANNED] Rebuild `main.js`:** Implement the public data filtering/locking logic and the new 5-click admin access feature.
+5.  **[PLANNED] Refactor VIP Access:** Once the homepage is approved, modify `vip.js` to use a `licenses.txt` file for real key validation, removing all hardcoded passwords.
