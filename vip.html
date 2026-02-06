@@ -6,35 +6,54 @@
     <title>VIP Access - BetMetrics</title>
     <link rel="stylesheet" href="style.css?v=110">
     <style>
-/* [다크모드] 전체 카드 및 테이블 가독성 강화 */
-[data-theme="dark"] .summary-card {
+/* 1. 전체 컨테이너 및 헤더 중앙 정렬 */
+#vip-unlocked-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    text-align: center;
+    width: 100%;
+}
+
+/* 2. 테이블 카드 박스 중앙 정렬 */
+.summary-card {
+    margin: 30px auto !important;
+    width: 95%;
+    max-width: 900px;
+    display: inline-block; /* 쏠림 방지 */
+}
+
+/* 3. 테이블 내부 데이터 정중앙 정렬 (가장 중요한 부분!) */
+.summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 auto;
+}
+
+.summary-table th, 
+.summary-table td {
+    padding: 15px 10px;
+    text-align: center !important; /* 모든 텍스트를 셀 중앙으로 */
+    vertical-align: middle;
+}
+
+/* 4. AI Pick 배지(아이콘+텍스트) 중앙 정렬 */
+.badge-home, .badge-away {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    min-width: 100px; /* 배지 크기 통일로 정렬감 부여 */
+}
+
+/* 5. 다크모드에서 왼쪽 쏠림 및 배경색 수정 */
+[data-theme="dark"] .summary-table tr {
     background-color: #1e293b !important;
-    border: 1px solid #334155;
 }
 
-/* [중요] 펼쳐지는 행(more-matches)의 배경색과 글자색 강제 적용 */
-[data-theme="dark"] .more-matches {
-    background-color: #1e293b !important; /* 흰색 배경 제거 */
-}
-
-[data-theme="dark"] .summary-table td, 
-[data-theme="dark"] .summary-table th {
-    color: #f1f5f9 !important; /* 모든 텍스트를 밝은 회색으로 */
-    border-bottom: 1px solid #334155 !important;
-}
-
-/* [다크모드] 하단 엑셀 박스 및 텍스트 정렬 유지 */
-[data-theme="dark"] .analysis-list-item {
-    background-color: #1e293b !important;
+[data-theme="dark"] .summary-table td {
     color: #f1f5f9 !important;
-    border: 1px solid #334155;
-}
-
-/* 버튼 스타일 가독성 유지 */
-[data-theme="dark"] #show-more-btn {
-    background-color: transparent;
-    color: #3b82f6;
-    border-color: #3b82f6;
+    border-bottom: 1px solid #334155 !important;
 }
     </style>
 </head>
