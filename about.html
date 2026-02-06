@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-i18n-key="appTitle">About Us - Sports Betting Analysis</title>
-    <link rel="stylesheet" href="style.css">
+    <title data-i18n-key="appTitle">About Us - BetMetrics</title>
+    <link rel="stylesheet" href="style.css?v=110">
 </head>
 <body>
-<header>
+    <header>
         <div class="container">
             <a href="index.html" class="logo-link" id="logo-link">
                  <img src="betmetrics.png?v=3" alt="BetMetrics Logo" class="logo-img">
@@ -16,15 +16,13 @@
                      <span class="logo-sub-text">AI Analysis</span>
                  </div>
             </a>
-
             <nav>
                 <a href="index.html" data-i18n-key="navHome" class="nav-link">Home</a>
-                <a href="about.html" data-i18n-key="navAbout" class="nav-link">About</a>
+                <a href="about.html" data-i18n-key="navAbout" class="nav-link active">About</a>
                 <a href="contact.html" data-i18n-key="navContact" class="nav-link">Contact</a>
                 <a href="privacy.html" data-i18n-key="navPrivacy" class="nav-link">Privacy</a>
                 <a href="vip.html" class="nav-link vip-link" data-i18n-key="navVip">VIP</a>
             </nav>
-
             <div class="header-controls">
                 <div id="language-switcher">
                     <button data-lang="en">EN</button>
@@ -38,19 +36,22 @@
     </header>
 
     <main class="container">
-        <section>
+        <section class="hero">
             <h2 data-i18n-key="aboutTitle">About Us</h2>
-            <p data-i18n-key="aboutText1">Welcome to our Sports Betting Analysis platform. We are dedicated to providing AI-driven insights to help you make more informed betting decisions.</p>
-            <p data-i18n-key="aboutText2">Our sophisticated algorithms analyze vast amounts of historical data, team performance, player statistics, and many other factors to generate predictions with high accuracy.</p>
+            <div class="analysis-list-item" style="text-align: left; line-height: 1.8;">
+                <p data-i18n-key="aboutText1">Welcome to BetMetrics. We provide AI-driven sports insights to help you make smarter decisions.</p>
+                <p data-i18n-key="aboutText2">Our algorithms analyze historical data, team performance, and player stats to generate high-accuracy predictions.</p>
+            </div>
         </section>
     </main>
 
     <footer>
         <div class="container">
-            <p data-i18n-key="footerText">&copy; 2024 Sports Betting Analysis. All rights reserved.</p>
+            <p data-i18n-key="footerText">&copy; 2024 BetMetrics. All rights reserved.</p>
         </div>
     </footer>
 
-    <script src="translations.js"></script>
+    <script src="translations.js?v=110"></script>
+    <script src="main.js?v=110"></script>
 </body>
 </html>
