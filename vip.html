@@ -6,36 +6,67 @@
     <title>VIP Access - BetMetrics</title>
     <link rel="stylesheet" href="style.css?v=110">
     <style>
-    /* [공통] 다크모드일 때 카드와 테이블 내부의 모든 글자를 밝게 설정 */
-[data-theme="dark"] .summary-card,
-[data-theme="dark"] .summary-table,
-[data-theme="dark"] .summary-table td,
-[data-theme="dark"] .summary-table th,
-[data-theme="dark"] .analysis-list-item h3,
-[data-theme="dark"] .analysis-list-item p {
-    color: #f1f5f9 !important; /* !important로 강제 적용 */
+/* 1. 전체 컨테이너 중앙 정렬 */
+#vip-unlocked-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 가로 중앙 정렬 */
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+    padding: 20px;
 }
 
-/* [추가] 펼쳐지는 행(more-matches) 다크모드 배경색 수정 */
-[data-theme="dark"] .more-matches {
-    background-color: #1e293b !important; /* 기본 배경보다 살짝 밝거나 같은 톤 */
+/* 2. 요약 카드 박스 중앙 정렬 및 가독성 */
+.summary-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    margin: 30px auto; /* 상하 여백 30px, 좌우 자동(중앙) */
+    width: 100%;
+    max-width: 850px;
+    overflow: hidden;
 }
 
-/* [추가] 엑셀 다운로드 섹션 다크모드 배경 수정 */
+/* 다크모드 카드 배경 */
+[data-theme="dark"] .summary-card {
+    background: #1e293b !important;
+    border: 1px solid #334155;
+}
+
+/* 3. 테이블 정렬 최적화 */
+.summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 auto; /* 테이블 자체 중앙 정렬 */
+}
+
+.summary-table th, .summary-table td {
+    padding: 15px;
+    text-align: center; /* 글자들을 가운데로! */
+    vertical-align: middle;
+}
+
+/* 4. 하단 엑셀 다운로드 박스 중앙 정렬 */
+.analysis-list-item {
+    width: 100%;
+    max-width: 600px;
+    margin: 40px auto !important; /* 좌우 마진 auto로 중앙 배치 */
+    padding: 30px;
+    border-radius: 12px;
+}
+
 [data-theme="dark"] .analysis-list-item {
     background-color: #1e293b !important;
-    border: 1px solid #334155 !important;
+    color: #f1f5f9 !important;
 }
 
-/* [추가] 엑셀 다운로드 텍스트 가독성 강화 */
-[data-theme="dark"] .analysis-list-item h3 {
-    color: #007bff !important; /* 제목은 포인트 컬러 유지 */
-}
-
-/* [버튼] 쇼모어 버튼 다크모드 색상 */
-[data-theme="dark"] #show-more-btn {
-    border-color: #3b82f6;
-    color: #3b82f6;
+/* 5. 모바일 대응 */
+@media (max-width: 600px) {
+    .summary-table th, .summary-table td {
+        padding: 8px;
+        font-size: 0.8rem;
+    }
 }
     </style>
 </head>
