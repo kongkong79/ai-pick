@@ -29,14 +29,18 @@
             <div class="analysis-list-item" style="max-width: 500px; margin: 40px auto; border: 2px solid #fbbf24; text-align: center;">
                 <div class="lock-icon" style="font-size: 50px;">🔒</div>
                 <h3>VIP Exclusive Benefits</h3>
-                <a href="https://kongkong79.gumroad.com/l/ai-sports-vip" target="_blank" class="nav-link" style="display: block; background: #fbbf24; color: #000; padding: 15px; border-radius: 12px; font-weight: 800; text-decoration: none; margin: 20px 0;">
-                    Subscribe to VIP on Gumroad
+                <p style="font-size: 0.9rem; color: #666; margin-bottom: 20px;">
+                    Get access to 80%+ Win Rate AI reports.
+                </p>
+                <a href="https://www.buymeacoffee.com/ai365pick" target="_blank" class="nav-link" style="display: block; background: #fbbf24; color: #000; padding: 15px; border-radius: 12px; font-weight: 800; text-decoration: none; margin: 20px 0;">
+                    Get Monthly VIP Pass ($9)
                 </a>
+                
                 <div style="margin-top: 20px; padding-top: 20px; border-top: 1px dashed #ccc;">
-                    <p style="font-size: 0.9rem; margin-bottom: 10px;">Already have a License Key?</p>
+                    <p style="font-size: 0.85rem; margin-bottom: 10px;">Already a member? Enter this month's code:</p>
                     <div style="display: flex; gap: 5px; justify-content: center;">
-                        <input type="text" id="vip-code-input" placeholder="Enter License Key" style="padding: 10px; width: 60%;">
-                        <button id="verify-btn" onclick="verifyVipCode()" style="padding: 10px 20px; background: #007bff; color: white; border: none; cursor: pointer;">Verify</button>
+                        <input type="text" id="vip-code-input" placeholder="Enter Access Code" style="padding: 10px; width: 60%; border: 1px solid #ccc; border-radius: 4px;">
+                        <button id="verify-btn" onclick="verifyVipCode()" style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Verify</button>
                     </div>
                 </div>
             </div>
@@ -52,52 +56,67 @@
                     Download Excel File
                 </a>
             </div>
-            <button id="logout-btn" onclick="logoutVip()" style="display:none; background: none; border: none; color: gray; cursor: pointer; text-decoration: underline; font-size: 0.8rem; margin-top: 20px;">
-                Logout from VIP session
+            <button id="logout-btn" onclick="logoutVip()" style="background: none; border: none; color: gray; cursor: pointer; text-decoration: underline; font-size: 0.8rem; margin-top: 20px;">
+                Logout / End Session
             </button>
         </section>
     </main>
 
     <script>
-        // VIP 상태 체크
-        function checkVipStatus() {
-            const isVip = localStorage.getItem('isVipUser') === 'true';
-            const lockedSec = document.getElementById('vip-locked-section');
-            const unlockedSec = document.getElementById('vip-unlocked-section');
-            const logoutBtn = document.getElementById('logout-btn');
+        /**
+         * 1. 이번 달 전용 비밀번호 설정
+         * 매월 1일 BMAC 'Welcome Message'와 이 코드를 동일하게 수정하세요.
+         */
+        const CURRENT_MONTH_CODE = "FEB888"; 
 
-            if (isVip) {
-                if (lockedSec) lockedSec.style.display = 'none';
-                if (unlockedSec) unlockedSec.style.display = 'block';
-                if (logoutBtn) logoutBtn.style.display = 'inline-block';
-            } else {
-                if (lockedSec) lockedSec.style.display = 'block';
-                if (unlockedSec) unlockedSec.style.display = 'none';
-                if (logoutBtn) logoutBtn.style.display = 'none';
-            }
-        }
-
-        // 인증 함수
+        // VIP 인증 처리
         function verifyVipCode() {
             const inputCode = document.getElementById('vip-code-input').value.trim();
-            if (inputCode === "VIP777") {
-                alert("Success! VIP Access Granted.");
+            const now = new Date();
+            
+            // 이번 달의 마지막 날 계산 (말일 23:59:59에 자동 만료되도록 설정)
+            const lastDayOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
+
+            if (inputCode === CURRENT_MONTH_CODE) {
+                alert("Success! Access valid until the end of this month.");
                 localStorage.setItem('isVipUser', 'true');
+                localStorage.setItem('vipExpireDate', lastDayOfMonth.getTime()); // 만료 일시 저장
                 location.reload();
             } else {
-                alert("Invalid code.");
+                alert("Invalid code. Please check your Welcome Message on Buy Me a Coffee.");
             }
         }
 
-        // 로그아웃 함수
-        function logoutVip() {
-            if (confirm("Logout?")) {
+        // VIP 상태 체크 (페이지 로드 시 실행)
+        function checkVipStatus() {
+            const isVip = localStorage.getItem('isVipUser') === 'true';
+            const expireTime = localStorage.getItem('vipExpireDate');
+            const now = new Date().getTime();
+
+            const lockedSec = document.getElementById('vip-locked-section');
+            const unlockedSec = document.getElementById('vip-unlocked-section');
+
+            // 1. VIP가 아니거나, 2. 만료 시간이 지났다면 세션 초기화
+            if (!isVip || (expireTime && now > expireTime)) {
                 localStorage.removeItem('isVipUser');
+                localStorage.removeItem('vipExpireDate');
+                if (lockedSec) lockedSec.style.display = 'block';
+                if (unlockedSec) unlockedSec.style.display = 'none';
+            } else {
+                if (lockedSec) lockedSec.style.display = 'none';
+                if (unlockedSec) unlockedSec.style.display = 'block';
+            }
+        }
+
+        // 로그아웃
+        function logoutVip() {
+            if (confirm("Logout from VIP session?")) {
+                localStorage.removeItem('isVipUser');
+                localStorage.removeItem('vipExpireDate');
                 location.reload();
             }
         }
 
-        // 실행
         document.addEventListener('DOMContentLoaded', checkVipStatus);
     </script>
 </body>
