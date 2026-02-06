@@ -6,67 +6,35 @@
     <title>VIP Access - BetMetrics</title>
     <link rel="stylesheet" href="style.css?v=110">
     <style>
-/* 1. 전체 컨테이너 중앙 정렬 */
-#vip-unlocked-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* 가로 중앙 정렬 */
-    justify-content: center;
-    text-align: center;
-    width: 100%;
-    padding: 20px;
-}
-
-/* 2. 요약 카드 박스 중앙 정렬 및 가독성 */
-.summary-card {
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    margin: 30px auto; /* 상하 여백 30px, 좌우 자동(중앙) */
-    width: 100%;
-    max-width: 850px;
-    overflow: hidden;
-}
-
-/* 다크모드 카드 배경 */
+/* [다크모드] 전체 카드 및 테이블 가독성 강화 */
 [data-theme="dark"] .summary-card {
-    background: #1e293b !important;
+    background-color: #1e293b !important;
     border: 1px solid #334155;
 }
 
-/* 3. 테이블 정렬 최적화 */
-.summary-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 0 auto; /* 테이블 자체 중앙 정렬 */
+/* [중요] 펼쳐지는 행(more-matches)의 배경색과 글자색 강제 적용 */
+[data-theme="dark"] .more-matches {
+    background-color: #1e293b !important; /* 흰색 배경 제거 */
 }
 
-.summary-table th, .summary-table td {
-    padding: 15px;
-    text-align: center; /* 글자들을 가운데로! */
-    vertical-align: middle;
+[data-theme="dark"] .summary-table td, 
+[data-theme="dark"] .summary-table th {
+    color: #f1f5f9 !important; /* 모든 텍스트를 밝은 회색으로 */
+    border-bottom: 1px solid #334155 !important;
 }
 
-/* 4. 하단 엑셀 다운로드 박스 중앙 정렬 */
-.analysis-list-item {
-    width: 100%;
-    max-width: 600px;
-    margin: 40px auto !important; /* 좌우 마진 auto로 중앙 배치 */
-    padding: 30px;
-    border-radius: 12px;
-}
-
+/* [다크모드] 하단 엑셀 박스 및 텍스트 정렬 유지 */
 [data-theme="dark"] .analysis-list-item {
     background-color: #1e293b !important;
     color: #f1f5f9 !important;
+    border: 1px solid #334155;
 }
 
-/* 5. 모바일 대응 */
-@media (max-width: 600px) {
-    .summary-table th, .summary-table td {
-        padding: 8px;
-        font-size: 0.8rem;
-    }
+/* 버튼 스타일 가독성 유지 */
+[data-theme="dark"] #show-more-btn {
+    background-color: transparent;
+    color: #3b82f6;
+    border-color: #3b82f6;
 }
     </style>
 </head>
