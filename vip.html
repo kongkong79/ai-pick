@@ -6,60 +6,37 @@
     <title>VIP Access - BetMetrics</title>
     <link rel="stylesheet" href="style.css?v=110">
     <style>
-       /* 기본 테이블 카드 스타일 (라이트모드 기반) */
-.summary-card {
-    background: var(--card-bg, #fff); /* 변수 사용 권장 */
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    margin: 30px auto;
-    max-width: 850px;
-    overflow: hidden;
-    text-align: left;
-    color: var(--text-color, #333);
+    /* [공통] 다크모드일 때 카드와 테이블 내부의 모든 글자를 밝게 설정 */
+[data-theme="dark"] .summary-card,
+[data-theme="dark"] .summary-table,
+[data-theme="dark"] .summary-table td,
+[data-theme="dark"] .summary-table th,
+[data-theme="dark"] .analysis-list-item h3,
+[data-theme="dark"] .analysis-list-item p {
+    color: #f1f5f9 !important; /* !important로 강제 적용 */
 }
 
-/* 다크모드 전용 스타일 적용 */
-[data-theme="dark"] .summary-card {
-    background: #1e293b; /* 어두운 배경색 */
-    border: 1px solid #334155;
-    color: #f1f5f9; /* 밝은 글자색 */
+/* [추가] 펼쳐지는 행(more-matches) 다크모드 배경색 수정 */
+[data-theme="dark"] .more-matches {
+    background-color: #1e293b !important; /* 기본 배경보다 살짝 밝거나 같은 톤 */
 }
 
-.summary-table {
-    width: 100%;
-    border-collapse: collapse;
+/* [추가] 엑셀 다운로드 섹션 다크모드 배경 수정 */
+[data-theme="dark"] .analysis-list-item {
+    background-color: #1e293b !important;
+    border: 1px solid #334155 !important;
 }
 
-.summary-table th {
-    background: #f8f9fa;
-    color: #333;
-    padding: 12px;
-    border-bottom: 2px solid #dee2e6;
+/* [추가] 엑셀 다운로드 텍스트 가독성 강화 */
+[data-theme="dark"] .analysis-list-item h3 {
+    color: #007bff !important; /* 제목은 포인트 컬러 유지 */
 }
 
-/* 다크모드 테이블 헤더 */
-[data-theme="dark"] .summary-table th {
-    background: #334155;
-    color: #f1f5f9;
-    border-bottom: 2px solid #475569;
+/* [버튼] 쇼모어 버튼 다크모드 색상 */
+[data-theme="dark"] #show-more-btn {
+    border-color: #3b82f6;
+    color: #3b82f6;
 }
-
-.summary-table td {
-    padding: 12px;
-    border-bottom: 1px solid #eee;
-    font-size: 0.9rem;
-    color: inherit; /* 부모인 .summary-card의 글자색을 따름 */
-}
-
-[data-theme="dark"] .summary-table td {
-    border-bottom: 1px solid #334155;
-}
-
-/* 배지 가독성 유지 */
-.badge-home { background: #fff3cd; color: #856404; padding: 4px 8px; border-radius: 4px; font-weight: bold; }
-.badge-away { background: #d1ecf1; color: #0c5460; padding: 4px 8px; border-radius: 4px; font-weight: bold; }
-[data-theme="dark"] .badge-home { background: #453517; color: #ffda6a; }
-[data-theme="dark"] .badge-away { background: #0c394b; color: #a5f3fc; }
     </style>
 </head>
 <body>
