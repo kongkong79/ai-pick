@@ -6,45 +6,60 @@
     <title>VIP Access - BetMetrics</title>
     <link rel="stylesheet" href="style.css?v=110">
     <style>
-        /* 추가된 추천 경기 테이블 스타일 */
-        .summary-card {
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            margin: 30px auto;
-            max-width: 850px;
-            overflow: hidden;
-            text-align: left;
-        }
-        .summary-header {
-            background: #007bff;
-            color: white;
-            padding: 15px 20px;
-            font-weight: 800;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .summary-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .summary-table th {
-            background: #f8f9fa;
-            color: #333;
-            font-size: 0.85rem;
-            padding: 12px;
-            border-bottom: 2px solid #dee2e6;
-        }
-        .summary-table td {
-            padding: 12px;
-            border-bottom: 1px solid #eee;
-            font-size: 0.9rem;
-        }
-        .badge-home { background: #fff3cd; color: #856404; padding: 4px 8px; border-radius: 4px; font-weight: bold; }
-        .badge-away { background: #d1ecf1; color: #0c5460; padding: 4px 8px; border-radius: 4px; font-weight: bold; }
-        .hit-rate { color: #d32f2f; font-weight: 800; }
-        .condition-tag { font-size: 0.75rem; color: #666; padding: 10px 20px; background: #fdfdfd; }
+       /* 기본 테이블 카드 스타일 (라이트모드 기반) */
+.summary-card {
+    background: var(--card-bg, #fff); /* 변수 사용 권장 */
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    margin: 30px auto;
+    max-width: 850px;
+    overflow: hidden;
+    text-align: left;
+    color: var(--text-color, #333);
+}
+
+/* 다크모드 전용 스타일 적용 */
+[data-theme="dark"] .summary-card {
+    background: #1e293b; /* 어두운 배경색 */
+    border: 1px solid #334155;
+    color: #f1f5f9; /* 밝은 글자색 */
+}
+
+.summary-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.summary-table th {
+    background: #f8f9fa;
+    color: #333;
+    padding: 12px;
+    border-bottom: 2px solid #dee2e6;
+}
+
+/* 다크모드 테이블 헤더 */
+[data-theme="dark"] .summary-table th {
+    background: #334155;
+    color: #f1f5f9;
+    border-bottom: 2px solid #475569;
+}
+
+.summary-table td {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+    font-size: 0.9rem;
+    color: inherit; /* 부모인 .summary-card의 글자색을 따름 */
+}
+
+[data-theme="dark"] .summary-table td {
+    border-bottom: 1px solid #334155;
+}
+
+/* 배지 가독성 유지 */
+.badge-home { background: #fff3cd; color: #856404; padding: 4px 8px; border-radius: 4px; font-weight: bold; }
+.badge-away { background: #d1ecf1; color: #0c5460; padding: 4px 8px; border-radius: 4px; font-weight: bold; }
+[data-theme="dark"] .badge-home { background: #453517; color: #ffda6a; }
+[data-theme="dark"] .badge-away { background: #0c394b; color: #a5f3fc; }
     </style>
 </head>
 <body>
