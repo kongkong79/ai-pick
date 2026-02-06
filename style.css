@@ -59,33 +59,37 @@ header .container { display: flex; justify-content: space-between; align-items: 
 .logo-link:hover { transform: scale(1.02); }
 
 .logo-img {
-    height: 42px;
+    height: 45px; /* 로고 크기 */
     width: auto;
     border-radius: 8px;
 }
 
-.logo-text {
-    font-size: 1.4rem;
-    font-weight: 800;
-    color: var(--text-color);
+.logo-text-group {
     display: flex;
     flex-direction: column;
+}
+
+.logo-main-text {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--text-color);
     line-height: 1;
 }
 
-.logo-text small {
+.logo-sub-text {
     font-size: 0.75rem;
     font-weight: 500;
     color: var(--primary-blue);
     margin-top: 4px;
+    text-transform: uppercase;
 }
 
 /* === Navigation & Controls === */
-nav { display: flex; gap: 8px; }
+nav { display: flex; gap: 5px; }
 .nav-link {
     color: var(--text-color);
     text-decoration: none;
-    padding: 8px 16px;
+    padding: 8px 14px;
     border-radius: 8px;
     font-weight: 600;
     font-size: 0.9rem;
@@ -114,9 +118,9 @@ nav { display: flex; gap: 8px; }
 }
 
 /* === Main Content === */
-main { padding: 4rem 0; }
-.hero { text-align: center; margin-bottom: 4rem; }
-.hero h1 { font-size: 3rem; font-weight: 900; margin-bottom: 1rem; letter-spacing: -0.05em; }
+main { padding: 3rem 0; }
+.hero { text-align: center; margin-bottom: 3rem; }
+.hero h1 { font-size: 2.5rem; font-weight: 900; margin-bottom: 1rem; }
 
 #analysis-list {
     display: grid;
@@ -133,6 +137,6 @@ main { padding: 4rem 0; }
     transition: transform 0.3s ease;
 }
 
-.analysis-list-item:hover { transform: translateY(-10px); }
+.analysis-list-item:hover { transform: translateY(-8px); }
 
 footer { padding: 4rem 0; text-align: center; border-top: 1px solid var(--header-border); color: var(--text-muted); }
