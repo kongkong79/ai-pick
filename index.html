@@ -56,5 +56,39 @@
 
     <script src="translations.js"></script>
     <script src="main.js"></script>
+    <script>
+    // 페이지가 로드될 때 VIP 상태를 확인하여 화면을 변경합니다.
+    document.addEventListener('DOMContentLoaded', function() {
+        const isVip = localStorage.getItem('isVipUser'); // VIP 인증 여부 확인
+        
+        if (isVip === 'true') {
+            // 1. 모든 'VIP Exclusive' 텍스트를 'VIP Unlocked'로 변경
+            document.querySelectorAll('.analysis-list-item h3').forEach(el => {
+                if (el.textContent.includes('VIP Exclusive')) {
+                    el.textContent = '✅ VIP Unlocked';
+                }
+            });
+
+            // 2. 모든 자물쇠 아이콘(🔒)을 체크 아이콘(🔓 또는 ✅)으로 변경
+            document.querySelectorAll('.lock-icon').forEach(el => {
+                el.textContent = '🔓'; 
+            });
+
+            // 3. 'Unlock Now' 버튼을 'View Analysis'로 변경하고 VIP 페이지로 연결
+            document.querySelectorAll('.unlock-link, .nav-link').forEach(el => {
+                if (el.textContent.toLowerCase().includes('unlock')) {
+                    el.textContent = 'View Report';
+                    el.href = 'vip.html'; // 이미 인증됐으니 VIP 페이지로 바로 보냄
+                }
+            });
+            
+            // 4. 메인 페이지의 잠긴 카드 스타일 변경 (선택 사항)
+            document.querySelectorAll('.analysis-list-item').forEach(el => {
+                el.style.borderColor = '#3b82f6'; // 파란색 테두리로 변경
+                el.style.background = 'rgba(59, 130, 246, 0.05)'; // 연한 파란색 배경
+            });
+        }
+    });
+</script>
 </body>
 </html>
