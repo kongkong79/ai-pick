@@ -74,10 +74,40 @@ nav { display: flex; gap: 8px; }
     padding: 6px 10px; border-radius: 8px; cursor: pointer;
 }
 
-/* 메인 및 카드 디자인 */
-main { padding: 40px 0; }
-.analysis-list-item { 
-    background: var(--card-bg); border: 1px solid var(--header-border);
-    border-radius: 16px; padding: 20px; margin-bottom: 20px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+/* 1. 카드를 감싸는 컨테이너 설정 */
+#analysis-list {
+    display: grid;
+    /* 기본적으로 1줄에 1개 (모바일) */
+    grid-template-columns: 1fr; 
+    gap: 20px;
+    padding: 20px 0;
+}
+
+/* 2. 태블릿 (화면 너비 768px 이상) - 1줄에 2개 */
+@media (min-width: 768px) {
+    #analysis-list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* 3. 데스크탑 (화면 너비 1024px 이상) - 1줄에 3개 */
+@media (min-width: 1024px) {
+    #analysis-list {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* 4. 카드 디자인 미세 조정 (크기 최적화) */
+.analysis-list-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* 내용이 적어도 버튼/메시지가 아래 고정되도록 */
+    height: 100%; /* 모든 카드의 높이를 통일 */
+    padding: 20px;
+    margin-bottom: 0; /* Grid Gap을 사용하므로 여백 제거 */
+    transition: transform 0.2s ease;
+}
+
+.analysis-list-item:hover {
+    transform: translateY(-5px); /* 마우스 올렸을 때 살짝 들리는 효과 */
 }
