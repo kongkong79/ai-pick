@@ -1,58 +1,104 @@
-<script>
-// 1. 페이지 로드 시 VIP 상태 체크하여 화면 전환
-function checkVipStatus() {
-    const isVip = localStorage.getItem('isVipUser') === 'true';
-    const lockedSec = document.getElementById('vip-locked-section');
-    const unlockedSec = document.getElementById('vip-unlocked-section');
-    const logoutBtn = document.getElementById('logout-btn'); // 로그아웃 버튼 가져오기
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIP Access - BetMetrics</title>
+    <link rel="stylesheet" href="style.css?v=110">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="index.html" class="logo-link">
+                 <img src="betmetrics.png?v=3" alt="BetMetrics Logo" class="logo-img">
+                 <div class="logo-text-group">
+                     <span class="logo-main-text">BetMetrics</span>
+                     <span class="logo-sub-text">AI Analysis</span>
+                 </div>
+            </a>
+            <nav>
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="vip.html" class="nav-link active">VIP</a>
+            </nav>
+        </div>
+    </header>
 
-    if (isVip) {
-        if (lockedSec) lockedSec.style.display = 'none';
-        if (unlockedSec) unlockedSec.style.display = 'block';
-        if (logoutBtn) logoutBtn.style.display = 'inline-block'; // VIP면 버튼 보이게 함
-    } else {
-        if (lockedSec) lockedSec.style.display = 'block';
-        if (unlockedSec) unlockedSec.style.display = 'none';
-        if (logoutBtn) logoutBtn.style.display = 'none'; // 아니면 버튼 숨김
-    }
-}
+    <main class="container">
+        <section id="vip-locked-section" class="hero">
+            <h1 style="color: #fbbf24;">⭐ VIP Premium Member</h1>
+            <div class="analysis-list-item" style="max-width: 500px; margin: 40px auto; border: 2px solid #fbbf24; text-align: center;">
+                <div class="lock-icon" style="font-size: 50px;">🔒</div>
+                <h3>VIP Exclusive Benefits</h3>
+                <a href="https://kongkong79.gumroad.com/l/ai-sports-vip" target="_blank" class="nav-link" style="display: block; background: #fbbf24; color: #000; padding: 15px; border-radius: 12px; font-weight: 800; text-decoration: none; margin: 20px 0;">
+                    Subscribe to VIP on Gumroad
+                </a>
+                <div style="margin-top: 20px; padding-top: 20px; border-top: 1px dashed #ccc;">
+                    <p style="font-size: 0.9rem; margin-bottom: 10px;">Already have a License Key?</p>
+                    <div style="display: flex; gap: 5px; justify-content: center;">
+                        <input type="text" id="vip-code-input" placeholder="Enter VIP777" style="padding: 10px; width: 60%;">
+                        <button id="verify-btn" onclick="verifyVipCode()" style="padding: 10px 20px; background: #007bff; color: white; border: none; cursor: pointer;">Verify</button>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-// 2. VIP 코드(VIP777) 인증 함수
-async function verifyVipCode() {
-    const inputCode = document.getElementById('vip-code-input').value.trim();
-    const verifyBtn = document.getElementById('verify-btn');
+        <section id="vip-unlocked-section" style="display: none; text-align: center;">
+            <h1 style="color: #007bff;">✅ VIP Member Zone</h1>
+            <div class="analysis-list-item" style="max-width: 600px; margin: 40px auto; background: #f0f7ff; border: 2px solid #007bff; padding: 30px;">
+                <div style="font-size: 50px;">📊</div>
+                <h3>Daily AI Analysis Report</h3>
+                <p>File: <strong>BetMetrics_Premium_Report.xlsx</strong></p>
+                <a href="sports_data.xlsx" download class="nav-link" style="display: inline-block; background: #007bff; color: white; padding: 15px 30px; border-radius: 12px; font-weight: 800; text-decoration: none; margin-top: 20px;">
+                    Download Excel File
+                </a>
+            </div>
+            <button id="logout-btn" onclick="logoutVip()" style="display:none; background: none; border: none; color: gray; cursor: pointer; text-decoration: underline; font-size: 0.8rem; margin-top: 20px;">
+                Logout from VIP session
+            </button>
+        </section>
+    </main>
 
-    if (!inputCode) {
-        alert("Please enter your Access Code.");
-        return;
-    }
+    <script>
+        // VIP 상태 체크
+        function checkVipStatus() {
+            const isVip = localStorage.getItem('isVipUser') === 'true';
+            const lockedSec = document.getElementById('vip-locked-section');
+            const unlockedSec = document.getElementById('vip-unlocked-section');
+            const logoutBtn = document.getElementById('logout-btn');
 
-    verifyBtn.disabled = true;
-    verifyBtn.innerText = "Verifying...";
+            if (isVip) {
+                if (lockedSec) lockedSec.style.display = 'none';
+                if (unlockedSec) unlockedSec.style.display = 'block';
+                if (logoutBtn) logoutBtn.style.display = 'inline-block';
+            } else {
+                if (lockedSec) lockedSec.style.display = 'block';
+                if (unlockedSec) unlockedSec.style.display = 'none';
+                if (logoutBtn) logoutBtn.style.display = 'none';
+            }
+        }
 
-    if (inputCode === "VIP777") {
-        alert("Success! VIP Access Granted.");
-        localStorage.setItem('isVipUser', 'true');
-        localStorage.setItem('userLicense', inputCode);
-        
-        // 새로고침하여 위 checkVipStatus()가 실행되게 함
-        window.location.reload(); 
-    } else {
-        alert("Invalid code. Please check your email.");
-        verifyBtn.disabled = false;
-        verifyBtn.innerText = "Verify";
-    }
-}
+        // 인증 함수
+        function verifyVipCode() {
+            const inputCode = document.getElementById('vip-code-input').value.trim();
+            if (inputCode === "VIP777") {
+                alert("Success! VIP Access Granted.");
+                localStorage.setItem('isVipUser', 'true');
+                location.reload();
+            } else {
+                alert("Invalid code.");
+            }
+        }
 
-// 3. 로그아웃 함수
-function logoutVip() {
-    if (confirm("Logout from VIP session?")) {
-        localStorage.removeItem('isVipUser');
-        localStorage.removeItem('userLicense');
-        window.location.reload(); // 새로고침하여 초기 잠금 상태로 이동
-    }
-}
+        // 로그아웃 함수
+        function logoutVip() {
+            if (confirm("Logout?")) {
+                localStorage.removeItem('isVipUser');
+                location.reload();
+            }
+        }
 
-// 페이지 로드 즉시 실행
-document.addEventListener('DOMContentLoaded', checkVipStatus);
-</script>
+        // 실행
+        document.addEventListener('DOMContentLoaded', checkVipStatus);
+    </script>
+</body>
+</html>
