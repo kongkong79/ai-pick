@@ -157,4 +157,21 @@ function setLanguage(lang) {
     });
 
     // 버튼 활성화 표시
-    document.
+    document.querySelectorAll('#language-switcher button').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+    });
+}
+
+// 페이지 로드 시 언어 적용
+document.addEventListener('DOMContentLoaded', () => {
+    const savedLang = localStorage.getItem('selectedLanguage') || 'en';
+    setLanguage(savedLang);
+
+    // 언어 버튼 클릭 이벤트 등록
+    document.querySelectorAll('#language-switcher button').forEach(button => {
+        button.addEventListener('click', () => {
+            const lang = button.getAttribute('data-lang');
+            setLanguage(lang);
+        });
+    });
+});
