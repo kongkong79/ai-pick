@@ -91,7 +91,23 @@
     <script src="translations.js?v=110"></script>
     <script src="main.js?v=110"></script>
     <script>
-        async function verifyVipCode() {
+// 1. 페이지 로드 시 VIP 상태 체크하여 화면 전환
+function checkVipStatus() {
+    const isVip = localStorage.getItem('isVipUser') === 'true';
+    const lockedSec = document.getElementById('vip-locked-section');
+    const unlockedSec = document.getElementById('vip-unlocked-section');
+
+    if (isVip) {
+        if (lockedSec) lockedSec.style.display = 'none';
+        if (unlockedSec) unlockedSec.style.display = 'block';
+    } else {
+        if (lockedSec) lockedSec.style.display = 'block';
+        if (unlockedSec) unlockedSec.style.display = 'none';
+    }
+}
+
+// 2. VIP 코드(VIP777) 인증 함수
+async function verifyVipCode() {
     const inputCode = document.getElementById('vip-code-input').value.trim();
     const verifyBtn = document.getElementById('verify-btn');
 
@@ -103,18 +119,22 @@
     verifyBtn.disabled = true;
     verifyBtn.innerText = "Verifying...";
 
-    // [수정 포인트] 이메일에 적힌 'VIP777'과 일치하는지 확인
     if (inputCode === "VIP777") {
         alert("Success! VIP Access Granted.");
         localStorage.setItem('isVipUser', 'true');
         localStorage.setItem('userLicense', inputCode);
-        location.reload(); // 페이지 새로고침하여 자물쇠 해제
+        
+        // 새로고침하여 위 checkVipStatus()가 실행되게 함
+        window.location.reload(); 
     } else {
-        alert("This code is invalid. Please check your email again.");
+        alert("Invalid code. Please check your email.");
         verifyBtn.disabled = false;
         verifyBtn.innerText = "Verify";
     }
 }
+
+// 페이지 로드 즉시 실행
+document.addEventListener('DOMContentLoaded', checkVipStatus);
     </script>
 </body>
 </html>
