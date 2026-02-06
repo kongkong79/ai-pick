@@ -91,79 +91,30 @@
     <script src="translations.js?v=110"></script>
     <script src="main.js?v=110"></script>
     <script>
-        /**
-         * 1. VIP 상태 체크 및 화면 전환
-         */
-        function checkVipStatus() {
-            const isVip = localStorage.getItem('isVipUser') === 'true';
-            const lockedSec = document.getElementById('vip-locked-section');
-            const unlockedSec = document.getElementById('vip-unlocked-section');
-
-            if (isVip) {
-                if (lockedSec) lockedSec.style.display = 'none';
-                if (unlockedSec) unlockedSec.style.display = 'block';
-            } else {
-                if (lockedSec) lockedSec.style.display = 'block';
-                if (unlockedSec) unlockedSec.style.display = 'none';
-            }
-        }
-
-        /**
-         * 2. Gumroad API 라이선스 검증
-         */
         async function verifyVipCode() {
-            const inputCode = document.getElementById('vip-code-input').value.trim();
-            const verifyBtn = document.getElementById('verify-btn');
+    const inputCode = document.getElementById('vip-code-input').value.trim();
+    const verifyBtn = document.getElementById('verify-btn');
 
-            if (!inputCode) {
-                alert("Please enter your License Key.");
-                return;
-            }
+    if (!inputCode) {
+        alert("Please enter your Access Code.");
+        return;
+    }
 
-            verifyBtn.disabled = true;
-            verifyBtn.innerText = "Verifying...";
+    verifyBtn.disabled = true;
+    verifyBtn.innerText = "Verifying...";
 
-            try {
-                const response = await fetch('https://api.gumroad.com/v2/licenses/verify', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: new URLSearchParams({
-                        'product_id': 'amtqr', // 확인된 상품 ID
-                        'license_key': inputCode
-                    })
-                });
-
-                const data = await response.json();
-
-                // 성공 조건: API 응답 success가 true이고 구독 취소 정보가 없을 때
-                if (data.success && (!data.purchase || !data.purchase.subscription_cancelled_at)) {
-                    alert("Success! VIP Access Granted.");
-                    localStorage.setItem('isVipUser', 'true');
-                    localStorage.setItem('userLicense', inputCode);
-                    location.reload();
-                } else {
-                    alert("This license is invalid or has expired.");
-                }
-            } catch (error) {
-                console.error("Auth Error:", error);
-                alert("Server connection error. Please try again.");
-            } finally {
-                verifyBtn.disabled = false;
-                verifyBtn.innerText = "Verify";
-            }
-        }
-
-        /**
-         * 3. 로그아웃
-         */
-        function logoutVip() {
-            localStorage.removeItem('isVipUser');
-            localStorage.removeItem('userLicense');
-            location.reload();
-        }
-
-        // 페이지 로드 시 상태 확인 실행
-        document.addEventListener('DOMContentLoaded', checkVipStatus);
+    // [수정 포인트] 이메일에 적힌 'VIP777'과 일치하는지 확인
+    if (inputCode === "VIP777") {
+        alert("Success! VIP Access Granted.");
+        localStorage.setItem('isVipUser', 'true');
+        localStorage.setItem('userLicense', inputCode);
+        location.reload(); // 페이지 새로고침하여 자물쇠 해제
+    } else {
+        alert("This code is invalid. Please check your email again.");
+        verifyBtn.disabled = false;
+        verifyBtn.innerText = "Verify";
+    }
+}
     </script>
 </body>
 </html>
