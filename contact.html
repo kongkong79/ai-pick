@@ -53,5 +53,21 @@
 
     <script src="translations.js?v=110"></script>
     <script src="main.js?v=110"></script>
+    <script>
+    // 1. 페이지 로드 시 저장된 테마 적용
+    document.addEventListener('DOMContentLoaded', () => {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    });
+
+    // 2. 테마 토글 함수 (버튼에 연결된 경우)
+    function toggleTheme() {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+    }
+</script>
 </body>
 </html>
