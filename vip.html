@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-i18n-key="vipTitle">VIP Access - Sports Betting Analysis</title>
-    <link rel="stylesheet" href="style.css?v=102">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <title data-i18n-key="appTitle">VIP Access - BetMetrics</title>
+    <link rel="stylesheet" href="style.css?v=200">
 </head>
 <body>
-   <header>
+    <header>
         <div class="container">
             <a href="index.html" class="logo-link" id="logo-link">
                  <img src="betmetrics.png?v=3" alt="BetMetrics Logo" class="logo-img">
@@ -23,7 +22,7 @@
                 <a href="about.html" data-i18n-key="navAbout" class="nav-link">About</a>
                 <a href="contact.html" data-i18n-key="navContact" class="nav-link">Contact</a>
                 <a href="privacy.html" data-i18n-key="navPrivacy" class="nav-link">Privacy</a>
-                <a href="vip.html" class="nav-link vip-link" data-i18n-key="navVip">VIP</a>
+                <a href="vip.html" class="nav-link vip-link active" data-i18n-key="navVip">VIP</a>
             </nav>
 
             <div class="header-controls">
@@ -39,50 +38,82 @@
     </header>
 
     <main class="container">
-        <div id="access-denied">
-            <div class="vip-access-form">
-                <h2 data-i18n-key="vipAccessDenied">VIP Access Required</h2>
-                <p data-i18n-key="vipLoginPrompt">Please enter your access key to view VIP content.</p>
-                <form id="vip-login-form">
-                    <div class="form-group">
-                        <label for="password" data-i18n-key="passwordLabel">Access Key</label>
-                        <input type="password" id="password" required>
-                    </div>
-                    <button type="submit" class="subscribe-button" data-i18n-key="loginButton">Log In</button>
-                </form>
-                <p id="error-message" style="display: none;" data-i18n-key="incorrectPassword">Incorrect access key.</p>
-            </div>
-        </div>
+        <section id="vip-locked-section" class="hero">
+            <h1 style="color: #fbbf24;">⭐ VIP Premium Member</h1>
+            <p>VIP 회원이 되어 매일 업데이트되는 AI 정밀 분석 리포트를 확인하세요.</p>
+            
+            <div class="analysis-list-item" style="max-width: 500px; margin: 40px auto; border: 2px solid #fbbf24;">
+                <div class="lock-icon" style="font-size: 50px; margin-bottom: 20px;">🔒</div>
+                <h3>VIP 전용 혜택</h3>
+                <ul style="text-align: left; display: inline-block; margin-bottom: 30px;">
+                    <li>매일 업데이트되는 정밀 분석 엑셀 다운로드</li>
+                    <li>승률 80% 이상 고확률 경기 즉시 확인</li>
+                    <li>VIP 전용 실시간 알림 서비스</li>
+                </ul>
+                
+                <a href="여기에_검로드_결제_링크를_넣으세요" target="_blank" class="subscribe-button" style="background: #fbbf24; color: #000 !important; width: 100%; margin-bottom: 15px;">
+                    결제하고 VIP 코드 받기
+                </a>
 
-        <section id="vip-content" style="display: none;">
-            <h1 data-i18n-key="vipHeader">VIP Betting Analysis</h1>
-            <p data-i18n-key="vipDescription">Exclusive access to all matches. Use the sort buttons to find the best opportunities.</p>
-            <div id="vip-controls">
-                <button id="sort-by-hit-rate" class="sort-button" data-i18n-key="sortByHitRate">Sort by Hit Rate</button>
-                <button id="sort-by-roi" class="sort-button" data-i18n-key="sortByROI">Sort by ROI</button>
+                <div style="margin-top: 20px; padding-top: 20px; border-top: 1px dashed #ccc;">
+                    <p style="font-size: 0.9rem;">이미 코드가 있으신가요?</p>
+                    <input type="text" id="vip-code-input" placeholder="발급된 코드를 입력하세요" style="padding: 10px; border-radius: 8px; border: 1px solid #ddd; width: 70%;">
+                    <button onclick="verifyVipCode()" style="padding: 10px 20px; border-radius: 8px; background: #2563eb; color: white; border: none; cursor: pointer;">인증</button>
+                </div>
             </div>
-            <table id="vip-table">
-                <thead>
-                    <tr>
-                        <th data-i18n-key="vipHeaderMatch">Match</th>
-                        <th data-i18n-key="vipHeaderPrediction">Prediction</th>
-                        <th data-i18n-key="vipHeaderOdds">Odds</th>
-                        <th data-i18n-key="vipHeaderHitRate">Hit Rate</th>
-                        <th data-i18n-key="vipHeaderROI">ROI</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- VIP data will be loaded here by vip.js -->
-                </tbody>
-            </table>
+        </section>
+
+        <section id="vip-unlocked-section" style="display: none; text-align: center;">
+            <h1 style="color: #2563eb;">✅ VIP Member Zone</h1>
+            <p>환영합니다! 오늘자 정밀 분석 리포트를 다운로드 할 수 있습니다.</p>
+
+            <div class="analysis-list-item" style="max-width: 600px; margin: 40px auto; background: #f0fdf4; border-color: #22c55e;">
+                <div style="font-size: 50px; margin-bottom: 20px;">📊</div>
+                <h3>오늘의 분석 리포트</h3>
+                <p>파일명: <strong>Daily_Analysis_Report.xlsx</strong></p>
+                <a href="Daily_Analysis_Report.xlsx" download class="subscribe-button" style="background: #22c55e; width: 200px;">
+                    엑셀 파일 다운로드
+                </a>
+            </div>
+            
+            <p style="color: var(--text-muted); font-size: 0.8rem;">코드는 브라우저에 저장되어 재접속 시 유지됩니다.</p>
         </section>
     </main>
 
     <footer>
         <div class="container">
-            <p data-i18n-key="footerText">&copy; 2024 Sports Betting Analysis. All rights reserved.</p>
+            <p>&copy; 2024 BetMetrics. All rights reserved.</p>
         </div>
     </footer>
-    <script src="vip.js?v=102"></script> 
+
+    <script src="translations.js"></script>
+    <script>
+        // VIP 코드 인증 함수
+        function verifyVipCode() {
+            const inputCode = document.getElementById('vip-code-input').value;
+            const CORRECT_CODE = "여기에_원하는_비밀코드를_적으세요"; // 예: "MGB2024"
+
+            if (inputCode === CORRECT_CODE) {
+                localStorage.setItem('isVipUser', 'true');
+                alert('VIP 인증에 성공했습니다!');
+                checkVipStatus();
+            } else {
+                alert('올바르지 않은 코드입니다. 다시 확인해 주세요.');
+            }
+        }
+
+        // VIP 상태 확인 함수 (페이지 로드 시 실행)
+        function checkVipStatus() {
+            const isVip = localStorage.getItem('isVipUser');
+            if (isVip === 'true') {
+                document.getElementById('vip-locked-section').style.display = 'none';
+                document.getElementById('vip-unlocked-section').style.display = 'block';
+            }
+        }
+
+        // 페이지 시작 시 VIP인지 확인
+        window.onload = checkVipStatus;
+    </script>
+    <script src="main.js"></script>
 </body>
 </html>
