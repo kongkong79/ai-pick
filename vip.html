@@ -1,110 +1,18 @@
-<!DOCTYPE html>
-<html lang="en" data-theme="light">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-i18n-key="appTitle">VIP Access - BetMetrics</title>
-    <link rel="stylesheet" href="style.css?v=110">
-</head>
-<body>
-    <header>
-        <div class="container">
-            <a href="index.html" class="logo-link" id="logo-link">
-                 <img src="betmetrics.png?v=3" alt="BetMetrics Logo" class="logo-img">
-                 <div class="logo-text-group">
-                     <span class="logo-main-text">BetMetrics</span>
-                     <span class="logo-sub-text">AI Analysis</span>
-                 </div>
-            </a>
-
-            <nav>
-                <a href="index.html" data-i18n-key="navHome" class="nav-link">Home</a>
-                <a href="about.html" data-i18n-key="navAbout" class="nav-link">About</a>
-                <a href="contact.html" data-i18n-key="navContact" class="nav-link">Contact</a>
-                <a href="privacy.html" data-i18n-key="navPrivacy" class="nav-link">Privacy</a>
-                <a href="vip.html" class="nav-link vip-link active" data-i18n-key="navVip">VIP</a>
-            </nav>
-
-            <div class="header-controls">
-                <div id="language-switcher">
-                    <button data-lang="en">EN</button>
-                    <button data-lang="ko">KO</button>
-                    <button data-lang="ja">JA</button>
-                    <button data-lang="zh">CN</button>
-                </div>
-                <button id="theme-toggle">☀️</button>
-            </div>
-        </div>
-    </header>
-
-    <main class="container">
-        <section id="vip-locked-section" class="hero">
-            <h1 style="color: #fbbf24;">⭐ VIP Premium Member</h1>
-            <p data-i18n-key="vipSubtitle">Get exclusive access to daily AI-driven analysis reports.</p>
-            
-            <div class="analysis-list-item" style="max-width: 500px; margin: 40px auto; border: 2px solid #fbbf24; text-align: center;">
-                <div class="lock-icon" style="font-size: 50px; margin-bottom: 20px;">🔒</div>
-                <h3 data-i18n-key="vipBenefitsTitle">VIP Exclusive Benefits</h3>
-                <ul style="text-align: left; display: inline-block; margin-bottom: 30px; line-height: 1.8;">
-                    <li data-i18n-key="vipBenefit1">Daily high-precision Excel report downloads</li>
-                    <li data-i18n-key="vipBenefit2">Immediate access to 80%+ win rate matches</li>
-                    <li data-i18n-key="vipBenefit3">Real-time VIP telegram notifications</li>
-                </ul>
-                
-                <a href="https://kongkong79.gumroad.com/l/ai-sports-vip" target="_blank" class="nav-link" style="display: block; background: #fbbf24; color: #000 !important; padding: 15px; border-radius: 12px; font-weight: 800; text-decoration: none; margin-bottom: 20px;">
-                    Subscribe to VIP on Gumroad
-                </a>
-
-                <div style="margin-top: 20px; padding-top: 20px; border-top: 1px dashed var(--header-border);">
-                    <p data-i18n-key="alreadyHaveCode" style="font-size: 0.9rem; margin-bottom: 10px;">Already have a License Key?</p>
-                    <div style="display: flex; gap: 5px; justify-content: center;">
-                        <input type="text" id="vip-code-input" placeholder="Enter License Key" style="padding: 10px; border-radius: 8px; border: 1px solid var(--header-border); background: var(--card-bg); color: var(--text-color); width: 60%;">
-                        <button id="verify-btn" onclick="verifyVipCode()" style="padding: 10px 20px; border-radius: 8px; background: var(--primary-blue); color: white; border: none; cursor: pointer; font-weight: bold;">Verify</button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="vip-unlocked-section" style="display: none; text-align: center; animation: fadeIn 0.5s;">
-            <h1 style="color: var(--primary-blue);">✅ VIP Member Zone</h1>
-            <p data-i18n-key="vipWelcome">Welcome! You can now download today's premium analysis.</p>
-
-            <div class="analysis-list-item" style="max-width: 600px; margin: 40px auto; background: var(--light-blue); border-color: var(--primary-blue);">
-                <div style="font-size: 50px; margin-bottom: 20px;">📊</div>
-                <h3 data-i18n-key="reportTitle">Daily AI Analysis Report</h3>
-                <p>File: <strong>BetMetrics_Premium_Report.xlsx</strong></p>
-                
-                <a href="sports_data.xlsx" download class="nav-link" style="display: inline-block; background: var(--primary-blue); color: white !important; padding: 15px 30px; border-radius: 12px; font-weight: 800; text-decoration: none; margin-top: 20px;">
-                    Download Excel File
-                </a>
-            </div>
-           <button id="logout-btn" onclick="logoutVip()" style="display:none; margin-top: 20px;" class="btn-secondary">
-    Logout from VIP session
-</button>
-        </section>
-    </main>
-
-    <footer style="margin-top: 50px; padding: 30px 0; border-top: 1px solid var(--header-border); text-align: center;">
-        <div class="container">
-            <p data-i18n-key="footerText">&copy; 2024 BetMetrics. All rights reserved.</p>
-        </div>
-    </footer>
-
-    <script src="translations.js?v=110"></script>
-    <script src="main.js?v=110"></script>
-    <script>
 // 1. 페이지 로드 시 VIP 상태 체크하여 화면 전환
 function checkVipStatus() {
     const isVip = localStorage.getItem('isVipUser') === 'true';
     const lockedSec = document.getElementById('vip-locked-section');
     const unlockedSec = document.getElementById('vip-unlocked-section');
+    const logoutBtn = document.getElementById('logout-btn'); // 로그아웃 버튼 가져오기
 
     if (isVip) {
         if (lockedSec) lockedSec.style.display = 'none';
         if (unlockedSec) unlockedSec.style.display = 'block';
+        if (logoutBtn) logoutBtn.style.display = 'inline-block'; // VIP면 버튼 보이게 함
     } else {
         if (lockedSec) lockedSec.style.display = 'block';
         if (unlockedSec) unlockedSec.style.display = 'none';
+        if (logoutBtn) logoutBtn.style.display = 'none'; // 아니면 버튼 숨김
     }
 }
 
@@ -135,8 +43,14 @@ async function verifyVipCode() {
     }
 }
 
+// 3. 로그아웃 함수
+function logoutVip() {
+    if (confirm("Logout from VIP session?")) {
+        localStorage.removeItem('isVipUser');
+        localStorage.removeItem('userLicense');
+        window.location.reload(); // 새로고침하여 초기 잠금 상태로 이동
+    }
+}
+
 // 페이지 로드 즉시 실행
 document.addEventListener('DOMContentLoaded', checkVipStatus);
-    </script>
-</body>
-</html>
