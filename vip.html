@@ -91,34 +91,51 @@
     <script src="translations.js?v=110"></script>
     <script src="main.js?v=110"></script>
 
-    <script>
-        // 1. VIP 코드 인증 로직
-        function verifyVipCode() {
-            const inputCode = document.getElementById('vip-code-input').value;
-            // 원하는 코드로 수정하세요
-            const SECRET_CODE = "VIP777"; 
+    async function verifyCode() {
+    const inputCode = document.getElementById('vip-code-input').value.trim();
+    const verifyBtn = document.querySelector('.verify-btn');
 
-            if (inputCode === SECRET_CODE) {
-                localStorage.setItem('isVipUser', 'true');
-                alert('Success! VIP access granted.');
-                checkVipStatus();
-            } else {
-                alert('Invalid code. Please check your Gumroad receipt.');
-            }
+    if (!inputCode) {
+        alert("Please enter your License Key.");
+        return;
+    }
+
+    // 상태 표시
+    verifyBtn.disabled = true;
+    verifyBtn.innerText = "Verifying...";
+
+    try {
+        // Gumroad API 실시간 검증 호출
+        const response = await fetch('https://api.gumroad.com/v2/licenses/verify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({
+                'product_id': 'amtqr', // 확인된 상품 ID 입력
+                'license_key': inputCode
+            })
+        });
+
+        const data = await response.json();
+
+        // 검증 기준: 
+        // 1. success: true (유효한 키)
+        // 2. subscription_cancelled_at: null (구독이 유지 중이거나 체험 중)
+        if (data.success && !data.purchase.subscription_cancelled_at) {
+            alert("Success! VIP Access Granted.");
+            localStorage.setItem('isVipUser', 'true');
+            localStorage.setItem('userLicense', inputCode);
+            location.reload();
+        } else {
+            alert("This license is invalid or has expired after the free trial.");
         }
-
-        // 2. VIP 상태 체크 및 화면 전환
-        function checkVipStatus() {
-            const isVip = localStorage.getItem('isVipUser');
-            const locked = document.getElementById('vip-locked-section');
-            const unlocked = document.getElementById('vip-unlocked-section');
-
-            if (isVip === 'true') {
-                if(locked) locked.style.display = 'none';
-                if(unlocked) unlocked.style.display = 'block';
-            }
-        }
-
+    } catch (error) {
+        console.error("Auth Error:", error);
+        alert("Server connection error. Please try again.");
+    } finally {
+        verifyBtn.disabled = false;
+        verifyBtn.innerText = "Verify";
+    }
+}
         // 3. 로그아웃 (테스트용)
         function logoutVip() {
             localStorage.removeItem('isVipUser');
