@@ -5,6 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VIP Access - BetMetrics</title>
     <link rel="stylesheet" href="style.css?v=110">
+    <style>
+        /* 추가된 추천 경기 테이블 스타일 */
+        .summary-card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin: 30px auto;
+            max-width: 850px;
+            overflow: hidden;
+            text-align: left;
+        }
+        .summary-header {
+            background: #007bff;
+            color: white;
+            padding: 15px 20px;
+            font-weight: 800;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .summary-table th {
+            background: #f8f9fa;
+            color: #333;
+            font-size: 0.85rem;
+            padding: 12px;
+            border-bottom: 2px solid #dee2e6;
+        }
+        .summary-table td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            font-size: 0.9rem;
+        }
+        .badge-home { background: #fff3cd; color: #856404; padding: 4px 8px; border-radius: 4px; font-weight: bold; }
+        .badge-away { background: #d1ecf1; color: #0c5460; padding: 4px 8px; border-radius: 4px; font-weight: bold; }
+        .hit-rate { color: #d32f2f; font-weight: 800; }
+        .condition-tag { font-size: 0.75rem; color: #666; padding: 10px 20px; background: #fdfdfd; }
+    </style>
 </head>
 <body>
     <header>
@@ -32,51 +73,95 @@
                 <p style="font-size: 0.9rem; color: #666; margin-bottom: 20px;">
                     Get access to 80%+ Win Rate AI reports.
                 </p>
-                
                 <a href="https://kongkong79.gumroad.com/l/ai-sports-vip" target="_blank" class="nav-link" style="display: block; background: #fbbf24; color: #000; padding: 15px; border-radius: 12px; font-weight: 800; text-decoration: none; margin: 20px 0;">
                     Subscribe to VIP on Gumroad ($9.99)
                 </a>
-                
                 <div style="margin-top: 20px; padding-top: 20px; border-top: 1px dashed #ccc;">
                     <p style="font-size: 0.85rem; margin-bottom: 10px;">Already a member? Enter this month's code:</p>
                     <div style="display: flex; gap: 5px; justify-content: center;">
                         <input type="text" id="vip-code-input" placeholder="Enter Access Code" style="padding: 10px; width: 60%; border: 1px solid #ccc; border-radius: 4px;">
                         <button id="verify-btn" onclick="verifyVipCode()" style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Verify</button>
                     </div>
-                    <p style="font-size: 0.75rem; color: #999; margin-top: 10px;">*The code is provided on your Gumroad receipt after payment.</p>
                 </div>
             </div>
         </section>
 
         <section id="vip-unlocked-section" style="display: none; text-align: center;">
             <h1 style="color: #007bff;">✅ VIP Member Zone</h1>
-            <div class="analysis-list-item" style="max-width: 600px; margin: 40px auto; background: #f0f7ff; border: 2px solid #007bff; padding: 30px;">
-                <div style="font-size: 50px;">📊</div>
-                <h3>Daily AI Analysis Report</h3>
-                <p>File: <strong>sports_data.xlsx</strong></p>
-                <a href="sports_data.xlsx" download class="nav-link" style="display: inline-block; background: #007bff; color: white; padding: 15px 30px; border-radius: 12px; font-weight: 800; text-decoration: none; margin-top: 20px;">
-                    Download Excel File
+
+            <div class="summary-card">
+                <div class="summary-header">
+                    <span>🔥 Today's High Probability Picks</span>
+                    <span style="font-size: 0.8rem; opacity: 0.9;">Updated: Feb 2026</span>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table class="summary-table">
+                        <thead>
+                            <tr>
+                                <th>Match (Home vs Away)</th>
+                                <th>AI Pick</th>
+                                <th>Hit Rate</th>
+                                <th>ROI</th>
+                                <th>Samples</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="font-weight: bold;">Barakaldo vs CF Talavera</td>
+                                <td><span class="badge-home">🏠 Home Win</span></td>
+                                <td class="hit-rate">77.6%</td>
+                                <td>1.20</td>
+                                <td>85</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">Al-Ettifaq vs Damac</td>
+                                <td><span class="badge-home">🏠 Home Win</span></td>
+                                <td class="hit-rate">72.8%</td>
+                                <td>1.20</td>
+                                <td>81</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">Kyoto Sanga vs Vissel Kobe</td>
+                                <td><span class="badge-away">✈️ Away Win</span></td>
+                                <td class="hit-rate">81.8%</td>
+                                <td>0.95</td>
+                                <td>11</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">Roda vs ADO Den Haag</td>
+                                <td><span class="badge-away">✈️ Away Win</span></td>
+                                <td class="hit-rate">81.8%</td>
+                                <td>0.92</td>
+                                <td>11</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="condition-tag">
+                    <strong>Criteria:</strong> ROI ≥ 1.0 (Home) or Hit Rate ≥ 70% (Away), Win Rate ≥ 70%, Samples ≥ 10.
+                </div>
+            </div>
+
+            <div class="analysis-list-item" style="max-width: 600px; margin: 40px auto; background: #f8f9fa; border: 1px solid #ddd; padding: 20px;">
+                <h3>Full Analysis Spreadsheet</h3>
+                <p style="font-size: 0.85rem; color: #666;">Download the complete data including all leagues and ROI metrics.</p>
+                <a href="sports_data.xlsx" download class="nav-link" style="display: inline-block; background: #28a745; color: white; padding: 12px 25px; border-radius: 8px; font-weight: bold; text-decoration: none; margin-top: 15px;">
+                    📥 Download sports_data.xlsx
                 </a>
             </div>
-            <button id="logout-btn" onclick="logoutVip()" style="background: none; border: none; color: gray; cursor: pointer; text-decoration: underline; font-size: 0.8rem; margin-top: 20px;">
+
+            <button id="logout-btn" onclick="logoutVip()" style="background: none; border: none; color: gray; cursor: pointer; text-decoration: underline; font-size: 0.8rem; margin-bottom: 40px;">
                 Logout / End Session
             </button>
         </section>
     </main>
 
     <script>
-        /**
-         * 1. 이번 달 전용 비밀번호 설정
-         * 매월 1일 검로드 'Content' 섹션과 이 코드를 동일하게 수정하세요.
-         */
         const CURRENT_MONTH_CODE = "FEB888"; 
 
-        // VIP 인증 처리
         function verifyVipCode() {
             const inputCode = document.getElementById('vip-code-input').value.trim();
             const now = new Date();
-            
-            // 이번 달의 마지막 날 계산 (말일 23:59:59에 자동 만료)
             const lastDayOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
 
             if (inputCode === CURRENT_MONTH_CODE) {
@@ -85,11 +170,10 @@
                 localStorage.setItem('vipExpireDate', lastDayOfMonth.getTime());
                 location.reload();
             } else {
-                alert("Invalid code. Please check your Gumroad content page or email receipt.");
+                alert("Invalid code. Please check your Gumroad content page.");
             }
         }
 
-        // VIP 상태 체크
         function checkVipStatus() {
             const isVip = localStorage.getItem('isVipUser') === 'true';
             const expireTime = localStorage.getItem('vipExpireDate');
@@ -109,7 +193,6 @@
             }
         }
 
-        // 로그아웃
         function logoutVip() {
             if (confirm("Logout from VIP session?")) {
                 localStorage.removeItem('isVipUser');
