@@ -1,3 +1,4 @@
+<script>
 // 1. 페이지 로드 시 VIP 상태 체크하여 화면 전환
 function checkVipStatus() {
     const isVip = localStorage.getItem('isVipUser') === 'true';
@@ -54,3 +55,4 @@ function logoutVip() {
 
 // 페이지 로드 즉시 실행
 document.addEventListener('DOMContentLoaded', checkVipStatus);
+</script>
