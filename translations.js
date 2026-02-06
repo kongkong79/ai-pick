@@ -1,86 +1,160 @@
-// 이 파일은 모든 페이지에서 테마와 언어 설정을 관리합니다.
-
-const TRANSLATIONS = {}; // 로드된 번역 데이터를 저장하는 캐시
-
-/**
- * 언어 JSON 파일을 가져와서 문서에 적용합니다.
- * 파일이 locales 폴더가 아닌 루트(최상위)에 있으므로 경로를 수정했습니다.
- */
-window.applyTranslations = async (lang) => {
-    if (!lang) lang = 'en';
-
-    // 캐시에 없는 경우에만 파일 호출
-    if (!TRANSLATIONS[lang]) {
-        try {
-            // 현재 파일들이 최상위에 있으므로 'locales/' 경로를 제거함
-            const response = await fetch(`${lang}.json?v=${new Date().getTime()}`);
-            if (!response.ok) {
-                console.error(`번역 파일(${lang}.json)을 찾을 수 없습니다. 위치를 확인하세요.`);
-                return;
-            }
-            TRANSLATIONS[lang] = await response.json();
-        } catch (error) {
-            console.error(`번역 로딩 에러 (${lang}):`, error);
-            return;
-        }
+const translations = {
+    // 1. 영어 (기본값)
+    en: {
+        appTitle: "BetMetrics AI Analysis",
+        navHome: "Home",
+        navAbout: "About",
+        navContact: "Contact",
+        navPrivacy: "Privacy",
+        navVip: "VIP",
+        headerTitle: "Sports Betting Analysis",
+        headerSubtitle: "Harness the power of AI for smarter betting.",
+        analysisTitle: "Today's Analysis",
+        filterDescription: "Matches with ROI > 1.0, Sample > 10, Hit Rate > 51%.",
+        loading: "Loading data...",
+        noMatches: "No matches found.",
+        vipExclusive: "VIP Exclusive",
+        vipOnlyMessage: "80%+ win rate data is for VIPs only.",
+        subscribeNow: "Subscribe Now",
+        aboutTitle: "About Us",
+        aboutText1: "We provide AI-driven insights for smarter betting decisions.",
+        aboutText2: "Our algorithms analyze historical data and player statistics.",
+        contactTitle: "Contact Us",
+        contactDesc: "Feel free to reach out for inquiries or partnerships.",
+        privacyTitle: "Privacy Policy",
+        privacyIntro: "Your privacy is important to us.",
+        privacyDataTitle: "Data Collection",
+        privacyDataDesc: "We do not collect personal data without consent.",
+        footerText: "© 2024 BetMetrics. All rights reserved.",
+        vipSubtitle: "Get exclusive access to daily AI-driven reports.",
+        vipBenefitsTitle: "VIP Exclusive Benefits",
+        vipBenefit1: "Daily high-precision Excel reports",
+        vipBenefit2: "80%+ win rate premium picks",
+        vipBenefit3: "Real-time VIP notifications",
+        alreadyHaveCode: "Already have an access code?",
+        vipWelcome: "Welcome! Download your premium report below.",
+        reportTitle: "Daily AI Analysis Report"
+    },
+    // 2. 한국어
+    ko: {
+        appTitle: "BetMetrics AI 분석",
+        navHome: "홈",
+        navAbout: "정보",
+        navContact: "문의",
+        navPrivacy: "개인정보",
+        navVip: "VIP",
+        headerTitle: "스포츠 베팅 분석 시스템",
+        headerSubtitle: "AI의 힘을 빌려 더 스마트한 베팅을 경험하세요.",
+        analysisTitle: "오늘의 경기 분석",
+        filterDescription: "ROI 1.0 이상, 표본 10개 이상, 승률 51% 이상의 경기만 표시합니다.",
+        loading: "데이터를 불러오는 중...",
+        noMatches: "조건에 맞는 경기가 없습니다.",
+        vipExclusive: "VIP 전용 예측",
+        vipOnlyMessage: "승률 80% 이상의 데이터는 VIP 전용입니다.",
+        subscribeNow: "지금 구독하기",
+        aboutTitle: "서비스 소개",
+        aboutText1: "AI 기반 통찰력을 통해 더 현명한 결정을 내릴 수 있도록 돕습니다.",
+        aboutText2: "저희 알고리즘은 과거 데이터와 선수 통계를 정밀하게 분석합니다.",
+        contactTitle: "문의하기",
+        contactDesc: "질문이나 파트너십 문의는 언제든 환영합니다.",
+        privacyTitle: "개인정보 처리방침",
+        privacyIntro: "귀하의 개인정보 보호는 저희에게 중요합니다.",
+        privacyDataTitle: "데이터 수집",
+        privacyDataDesc: "동의 없이 개인 정보를 수집하지 않습니다.",
+        footerText: "© 2024 BetMetrics. 모든 권리 보유.",
+        vipSubtitle: "매일 업데이트되는 VIP 전용 리포트를 확인하세요.",
+        vipBenefitsTitle: "VIP 회원 전용 혜택",
+        vipBenefit1: "매일 업데이트되는 고정밀 엑셀 리포트",
+        vipBenefit2: "승률 80% 이상의 프리미엄 픽 제공",
+        vipBenefit3: "실시간 VIP 전용 알림 서비스",
+        alreadyHaveCode: "이미 인증 코드가 있으신가요?",
+        vipWelcome: "환영합니다! 프리미엄 리포트를 다운로드하세요.",
+        reportTitle: "오늘의 AI 정밀 분석 리포트"
+    },
+    // 3. 일본어
+    ja: {
+        appTitle: "BetMetrics AI分析",
+        navHome: "ホーム",
+        navAbout: "情報",
+        navContact: "お問い合わせ",
+        navPrivacy: "プライバシー",
+        navVip: "VIP",
+        headerTitle: "スポーツベッティング分析",
+        headerSubtitle: "AIの力で、よりスマートなベッティングを。",
+        analysisTitle: "本日の試合分析",
+        filterDescription: "ROI 1.0以上、サンプル10個以上、勝率51%以上の試合を表示します。",
+        loading: "データを読み込み中...",
+        noMatches: "該当する試合がありません。",
+        vipExclusive: "VIP専用予測",
+        vipOnlyMessage: "勝率80%以上のデータはVIP会員限定です。",
+        subscribeNow: "今すぐ購読",
+        aboutTitle: "サービス紹介",
+        aboutText1: "AI主導のインサイトを提供し、より賢明な意思決定をサポートします。",
+        aboutText2: "当社のアルゴリズムは、過去のデータと選手統計を分析します。",
+        contactTitle: "お問い合わせ",
+        contactDesc: "ご質問や提携に関するお問い合わせはこちらまで。",
+        privacyTitle: "プライバシーポリシー",
+        privacyIntro: "お客様のプライバシーを尊重します。",
+        privacyDataTitle: "データの収集",
+        privacyDataDesc: "同意なしに個人情報を収集することはありません。",
+        footerText: "© 2024 BetMetrics. 無断複写・転載を禁じます。",
+        vipSubtitle: "毎日更新されるVIP限定レポートにアクセス。",
+        vipBenefitsTitle: "VIP会員限定特典",
+        vipBenefit1: "高精度なExcelレポートの毎日配信",
+        vipBenefit2: "勝率80%以上のプレミアムピック",
+        vipBenefit3: "リアルタイムVIP通知サービス",
+        alreadyHaveCode: "アクセスコードをお持ちですか？",
+        vipWelcome: "ようこそ！プレミアムレポートをダウンロードしてください。",
+        reportTitle: "本日のAI精密分析レポート"
+    },
+    // 4. 중국어
+    zh: {
+        appTitle: "BetMetrics AI 分析",
+        navHome: "首页",
+        navAbout: "关于",
+        navContact: "联系",
+        navPrivacy: "隐私",
+        navVip: "VIP会员",
+        headerTitle: "体育博彩分析系统",
+        headerSubtitle: "借助 AI 的力量，让投注更明智。",
+        analysisTitle: "今日赛事分析",
+        filterDescription: "仅显示 ROI > 1.0, 样本 > 10, 胜率 > 51% 的比赛。",
+        loading: "数据加载中...",
+        noMatches: "未找到符合条件的比赛。",
+        vipExclusive: "VIP 专属预测",
+        vipOnlyMessage: "胜率 80% 以上的数据仅限 VIP 查看。",
+        subscribeNow: "立即订阅",
+        aboutTitle: "关于我们",
+        aboutText1: "我们提供 AI 驱动的见解，帮助您做出明智的决定。",
+        aboutText2: "我们的算法分析历史数据和球员统计数据。",
+        contactTitle: "联系我们",
+        contactDesc: "如有任何疑问或合作意向，请随时联系。",
+        privacyTitle: "隐私政策",
+        privacyIntro: "您的隐私对我们非常重要。",
+        privacyDataTitle: "数据收集",
+        privacyDataDesc: "未经同意，我们不会收集任何个人信息。",
+        footerText: "© 2024 BetMetrics. 版权所有。",
+        vipSubtitle: "获取每日 AI 驱动的专属分析报告。",
+        vipBenefitsTitle: "VIP 会员专属权益",
+        vipBenefit1: "每日更新的高精度 Excel 报告",
+        vipBenefit2: "胜率 80% 以上的高级推荐",
+        vipBenefit3: "实时 VIP 专属通知服务",
+        alreadyHaveCode: "已有授权码？",
+        vipWelcome: "欢迎！请下载您的专属分析报告。",
+        reportTitle: "今日 AI 精密分析报告"
     }
+};
 
-    const translations = TRANSLATIONS[lang];
+// 언어 변경 함수
+function setLanguage(lang) {
+    localStorage.setItem('selectedLanguage', lang);
     
-    // [data-i18n-key] 속성을 가진 모든 엘리먼트 번역
     document.querySelectorAll('[data-i18n-key]').forEach(element => {
         const key = element.getAttribute('data-i18n-key');
-        if (translations[key]) {
-            if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
-                element.placeholder = translations[key];
-            } else {
-                element.innerHTML = translations[key];
-            }
+        if (translations[lang] && translations[lang][key]) {
+            element.textContent = translations[lang][key];
         }
     });
 
-    // 버튼 활성화 스타일 업데이트
-    document.querySelectorAll('#language-switcher button').forEach(btn => {
-        if (btn.getAttribute('data-lang') === lang) {
-            btn.classList.add('active');
-            btn.style.fontWeight = 'bold';
-        } else {
-            btn.classList.remove('active');
-            btn.style.fontWeight = 'normal';
-        }
-    });
-
-    localStorage.setItem('language', lang);
-};
-
-/**
- * 테마를 설정하고 로컬 스토리지에 저장합니다.
- */
-window.setTheme = (theme) => {
-    if (theme !== 'light' && theme !== 'dark') theme = 'light';
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('theme', theme);
-    
-    const themeToggle = document.getElementById('theme-toggle');
-    if (themeToggle) {
-        themeToggle.innerHTML = theme === 'light' ? '☀️' : '🌙';
-    }
-};
-
-/**
- * 다크/라이트 테마를 토글합니다.
- */
-window.toggleTheme = () => {
-    const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
-    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-    window.setTheme(newTheme);
-};
-
-// --- 초기 실행 --- //
-document.addEventListener('DOMContentLoaded', () => {
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    window.setTheme(savedTheme);
-
-    const savedLang = localStorage.getItem('language') || 'en';
-    window.applyTranslations(savedLang);
-});
+    // 버튼 활성화 표시
+    document.
