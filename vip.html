@@ -32,8 +32,9 @@
                 <p style="font-size: 0.9rem; color: #666; margin-bottom: 20px;">
                     Get access to 80%+ Win Rate AI reports.
                 </p>
-                <a href="buymeacoffee.com/ai365pick" target="_blank" class="nav-link" style="display: block; background: #fbbf24; color: #000; padding: 15px; border-radius: 12px; font-weight: 800; text-decoration: none; margin: 20px 0;">
-                    Get Monthly VIP Pass ($9)
+                
+                <a href="https://kongkong79.gumroad.com/l/ai-sports-vip" target="_blank" class="nav-link" style="display: block; background: #fbbf24; color: #000; padding: 15px; border-radius: 12px; font-weight: 800; text-decoration: none; margin: 20px 0;">
+                    Subscribe to VIP on Gumroad ($9)
                 </a>
                 
                 <div style="margin-top: 20px; padding-top: 20px; border-top: 1px dashed #ccc;">
@@ -42,6 +43,7 @@
                         <input type="text" id="vip-code-input" placeholder="Enter Access Code" style="padding: 10px; width: 60%; border: 1px solid #ccc; border-radius: 4px;">
                         <button id="verify-btn" onclick="verifyVipCode()" style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Verify</button>
                     </div>
+                    <p style="font-size: 0.75rem; color: #999; margin-top: 10px;">*The code is provided on your Gumroad receipt after payment.</p>
                 </div>
             </div>
         </section>
@@ -65,7 +67,7 @@
     <script>
         /**
          * 1. 이번 달 전용 비밀번호 설정
-         * 매월 1일 BMAC 'Welcome Message'와 이 코드를 동일하게 수정하세요.
+         * 매월 1일 검로드 'Content' 섹션과 이 코드를 동일하게 수정하세요.
          */
         const CURRENT_MONTH_CODE = "FEB888"; 
 
@@ -74,20 +76,20 @@
             const inputCode = document.getElementById('vip-code-input').value.trim();
             const now = new Date();
             
-            // 이번 달의 마지막 날 계산 (말일 23:59:59에 자동 만료되도록 설정)
+            // 이번 달의 마지막 날 계산 (말일 23:59:59에 자동 만료)
             const lastDayOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
 
             if (inputCode === CURRENT_MONTH_CODE) {
                 alert("Success! Access valid until the end of this month.");
                 localStorage.setItem('isVipUser', 'true');
-                localStorage.setItem('vipExpireDate', lastDayOfMonth.getTime()); // 만료 일시 저장
+                localStorage.setItem('vipExpireDate', lastDayOfMonth.getTime());
                 location.reload();
             } else {
-                alert("Invalid code. Please check your Welcome Message on Buy Me a Coffee.");
+                alert("Invalid code. Please check your Gumroad content page or email receipt.");
             }
         }
 
-        // VIP 상태 체크 (페이지 로드 시 실행)
+        // VIP 상태 체크
         function checkVipStatus() {
             const isVip = localStorage.getItem('isVipUser') === 'true';
             const expireTime = localStorage.getItem('vipExpireDate');
@@ -96,7 +98,6 @@
             const lockedSec = document.getElementById('vip-locked-section');
             const unlockedSec = document.getElementById('vip-unlocked-section');
 
-            // 1. VIP가 아니거나, 2. 만료 시간이 지났다면 세션 초기화
             if (!isVip || (expireTime && now > expireTime)) {
                 localStorage.removeItem('isVipUser');
                 localStorage.removeItem('vipExpireDate');
