@@ -86,50 +86,56 @@
    <script>
     const VIP_CODE = "FEB888";
 
-   async function initVipPage() {
+  async function initVipPage() {
         const tbody = document.getElementById('vip-data-body');
         const dateDisplay = document.getElementById('target-date');
         
         try {
-            dateDisplay.innerText = "데이터 신뢰도 검증 중 (표본 10개 이상)...";
+            dateDisplay.innerText = "Verified Picks (Sample 10+)";
             
             const response = await fetch('sports_data.xlsx?v=' + Math.random());
-            if (!response.ok) throw new Error('파일 로드 실패');
-            
             const arrayBuffer = await response.arrayBuffer();
             const data = new Uint8Array(arrayBuffer);
             const workbook = XLSX.read(data, { type: 'array' });
             const sheet = workbook.Sheets[workbook.SheetNames[0]];
-            
-            // 모든 데이터를 가져오되 빈 칸을 0으로 채움
             const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: 0 });
-
-            if (rows.length < 2) throw new Error('데이터가 없습니다.');
 
             tbody.innerHTML = '';
             
-            // 데이터 필터링 시작
+            // [주의사항 추가] 테이블 상단에 공지 삽입
+            const noticeHtml = `
+                <tr class="notice-row">
+                    <td colspan="4" style="background: #fff9db; color: #856404; padding: 15px; font-size: 0.85rem; border-bottom: 2px solid #ffeeba; text-align: left !important;">
+                        <strong>⚠️ 필독 주의사항:</strong> <br>
+                        원정팀 승리(Away Win) 추천 경기는 단순히 "원정팀이 이긴다"는 공격적인 접근보다는, 
+                        <strong>"원정팀이 지지 않는다(무승부 포함)"</strong>는 안정적인 방향으로 접근하시는 것을 권장합니다.
+                    </td>
+                </tr>`;
+            tbody.insertAdjacentHTML('beforeend', noticeHtml);
+
             const dataRows = rows.slice(1); 
             let filteredCount = 0;
 
             dataRows.forEach(row => {
-                // 사장님 엑셀 기준: L열(인덱스 11)이 Sample Count입니다.
                 const sampleCount = parseInt(row[11]); 
-                const homeTeam = row[1];
-                const awayTeam = row[2];
-                const homeOdds = parseFloat(row[3]);
-                const aiPick = String(row[4]);
-                const hitRate = row[5];
-                const time = row[0];
+                if (sampleCount < 10) return; // 표본 필터링
 
-                // [핵심 필터] 표본이 10개 미만인 데이터는 VIP에게 보여주지 않음
-                if (sampleCount < 10) return;
+                const time = row[0];        
+                const homeTeam = row[1];    
+                const awayTeam = row[2];    
+                const homeOdds = parseFloat(row[3]); 
+                const aiPick = String(row[4]);      
+                const hitRate = row[5];     
 
-                let pickHtml = aiPick.includes("Home") 
+                // AI 추천 방향에 따라 강조할 팀 결정
+                const isHomeWin = aiPick.includes("Home");
+                const homeStyle = isHomeWin ? "font-weight:bold; color:var(--text-color);" : "font-weight:normal; color:#888;";
+                const awayStyle = !isHomeWin ? "font-weight:bold; color:var(--text-color);" : "font-weight:normal; color:#888;";
+                
+                let pickHtml = isHomeWin 
                     ? '<span class="badge-home">🏠 Home Win</span>' 
                     : '<span class="badge-away">✈️ Away Win</span>';
 
-                // [Banker 로직] 배당 1.15 이하 + 표본 10개 이상이면 최강 안전빵
                 if (homeOdds > 0 && homeOdds <= 1.15) {
                     pickHtml += '<span class="badge-banker">⭐ Banker</span>';
                 }
@@ -138,25 +144,20 @@
                 tr.innerHTML = `
                     <td style="text-align:left !important; padding-left:20px;">
                         <span style="font-size:0.7rem; color:gray; display:block;">${time}</span>
-                        <span style="font-weight:bold;">${homeTeam}</span> 
-                        <span style="font-size:0.8rem; color:#888;">vs ${awayTeam}</span>
+                        <span style="${homeStyle}">${homeTeam}</span> 
+                        <span style="font-size:0.8rem; color:#ccc; margin: 0 5px;">vs</span>
+                        <span style="${awayStyle}">${awayTeam}</span>
                     </td>
                     <td>${pickHtml}</td>
                     <td style="color:#059669; font-weight:bold;">${hitRate}%</td>
                     <td>
                         <span style="font-weight:bold;">${homeOdds.toFixed(2)}</span><br>
-                        <small style="color:#999; font-size:0.7rem;">Samples: ${sampleCount}</small>
+                        <small style="color:#999; font-size:0.65rem;">Samples: ${sampleCount}</small>
                     </td>
                 `;
                 tbody.appendChild(tr);
                 filteredCount++;
             });
-
-            dateDisplay.innerText = `Verified Picks: ${filteredCount} Matches`;
-
-            if (filteredCount === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" style="padding:50px;">표본 10개 이상의 신뢰할 수 있는 데이터가 아직 없습니다.</td></tr>`;
-            }
 
         } catch (err) {
             console.error(err);
