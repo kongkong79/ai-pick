@@ -86,60 +86,52 @@
    <script>
     const VIP_CODE = "FEB888";
 
-    async function initVipPage() {
+   async function initVipPage() {
         const tbody = document.getElementById('vip-data-body');
         const dateDisplay = document.getElementById('target-date');
         
         try {
-            dateDisplay.innerText = "최신 AI 분석 데이터를 불러오는 중...";
+            dateDisplay.innerText = "데이터 신뢰도 검증 중 (표본 10개 이상)...";
             
-            // 엑셀 파일 읽기 (캐시 방지)
             const response = await fetch('sports_data.xlsx?v=' + Math.random());
-            if (!response.ok) throw new Error('sports_data.xlsx 파일을 찾을 수 없습니다.');
+            if (!response.ok) throw new Error('파일 로드 실패');
             
             const arrayBuffer = await response.arrayBuffer();
             const data = new Uint8Array(arrayBuffer);
             const workbook = XLSX.read(data, { type: 'array' });
             const sheet = workbook.Sheets[workbook.SheetNames[0]];
             
-            // 헤더를 포함하여 배열로 변환
-            const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: "" });
+            // 모든 데이터를 가져오되 빈 칸을 0으로 채움
+            const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: 0 });
 
-            if (rows.length < 2) throw new Error('엑셀에 표시할 데이터가 없습니다.');
+            if (rows.length < 2) throw new Error('데이터가 없습니다.');
 
             tbody.innerHTML = '';
             
-            // 첫 번째 줄(헤더) 제외하고 상위 20개 경기 표시
+            // 데이터 필터링 시작
             const dataRows = rows.slice(1); 
-            dateDisplay.innerText = "Today's Live Analysis";
+            let filteredCount = 0;
 
             dataRows.forEach(row => {
-                // 사장님 엑셀 컬럼 기준 (0부터 시작)
-                const time = row[0];        // A열: 시간
-                const homeTeam = row[1];    // B열: 홈팀
-                const awayTeam = row[2];    // C열: 원정팀
-                const homeOdds = parseFloat(row[3]); // D열: 홈배당
-                const aiPick = row[4];      // E열: AI Recommendation
-                const hitRate = row[5];     // F열: Hit rate
+                // 사장님 엑셀 기준: L열(인덱스 11)이 Sample Count입니다.
+                const sampleCount = parseInt(row[11]); 
+                const homeTeam = row[1];
+                const awayTeam = row[2];
+                const homeOdds = parseFloat(row[3]);
+                const aiPick = String(row[4]);
+                const hitRate = row[5];
+                const time = row[0];
 
-                if (!homeTeam) return; // 데이터가 비어있으면 건너뜀
+                // [핵심 필터] 표본이 10개 미만인 데이터는 VIP에게 보여주지 않음
+                if (sampleCount < 10) return;
 
-                let pickHtml = "";
-                // AI 추천 문구에 따른 배지 설정
-                if (aiPick.includes("Home")) {
-                    pickHtml = '<span class="badge-home">🏠 Home Win</span>';
-                } else {
-                    pickHtml = '<span class="badge-away">✈️ Away Win</span>';
-                }
+                let pickHtml = aiPick.includes("Home") 
+                    ? '<span class="badge-home">🏠 Home Win</span>' 
+                    : '<span class="badge-away">✈️ Away Win</span>';
 
-                // [VIP 특별 로직]
-                // 1. 배당이 1.15 이하로 낮으면 무조건 Banker
+                // [Banker 로직] 배당 1.15 이하 + 표본 10개 이상이면 최강 안전빵
                 if (homeOdds > 0 && homeOdds <= 1.15) {
                     pickHtml += '<span class="badge-banker">⭐ Banker</span>';
-                }
-                // 2. 적중률이 100%이거나 매우 높으면 별도 표시 (선택사항)
-                if (parseFloat(hitRate) >= 90) {
-                    pickHtml += '<span class="badge-banker" style="background:#dbeafe; color:#1e40af; border-color:#3b82f6;">🔥 Hot</span>';
                 }
 
                 const tr = document.createElement('tr');
@@ -151,21 +143,26 @@
                     </td>
                     <td>${pickHtml}</td>
                     <td style="color:#059669; font-weight:bold;">${hitRate}%</td>
-                    <td style="font-weight:bold;">${homeOdds > 0 ? homeOdds.toFixed(2) : '-'}</td>
+                    <td>
+                        <span style="font-weight:bold;">${homeOdds.toFixed(2)}</span><br>
+                        <small style="color:#999; font-size:0.7rem;">Samples: ${sampleCount}</small>
+                    </td>
                 `;
                 tbody.appendChild(tr);
+                filteredCount++;
             });
+
+            dateDisplay.innerText = `Verified Picks: ${filteredCount} Matches`;
+
+            if (filteredCount === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" style="padding:50px;">표본 10개 이상의 신뢰할 수 있는 데이터가 아직 없습니다.</td></tr>`;
+            }
 
         } catch (err) {
             console.error(err);
-            dateDisplay.innerText = "Error!";
-            tbody.innerHTML = `<tr><td colspan="4" style="padding:50px; color:red;">
-                <b>데이터 로딩 실패:</b> ${err.message}<br>
-                <small>파일명이 <b>sports_data.xlsx</b>인지, 깃허브에 잘 올라갔는지 확인해주세요.</small>
-            </td></tr>`;
+            dateDisplay.innerText = "Filter Error";
         }
     }
-
     // --- 아래 로그인/로그아웃 함수는 기존과 동일하게 유지 ---
     function checkStatus() {
         const isVip = localStorage.getItem('isVipUser') === 'true';
