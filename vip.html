@@ -7,20 +7,30 @@
     <link rel="stylesheet" href="style.css?v=110">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
-        #vip-unlocked-section { display: flex; flex-direction: column; align-items: center; text-align: center; width: 100%; }
-        .summary-card { margin: 30px auto !important; width: 95%; max-width: 900px; display: inline-block; background: var(--card-bg); border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); overflow: hidden; }
-        .summary-header { background: #007bff; color: white; padding: 15px; font-weight: bold; display: flex; justify-content: space-between; }
+        #vip-unlocked-section { display: flex; flex-direction: column; align-items: center; width: 100%; }
+        .summary-card { margin: 20px auto !important; width: 95%; max-width: 900px; background: var(--card-bg); border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); overflow: hidden; }
+        .summary-header { background: #007bff; color: white; padding: 15px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
         .summary-table { width: 100%; border-collapse: collapse; }
         .summary-table th, .summary-table td { padding: 15px 10px; text-align: center !important; border-bottom: 1px solid #eee; }
         
-        /* VIP 전용 배지 스타일 */
+        /* 뱃지 스타일 */
         .badge-banker { background: #d1fae5; color: #065f46; padding: 4px 8px; border-radius: 4px; font-weight: bold; border: 1px solid #10b981; margin-left: 5px; font-size: 0.8rem; }
-        .badge-warning { background: #fee2e2; color: #991b1b; padding: 4px 8px; border-radius: 4px; font-weight: bold; border: 1px solid #ef4444; margin-left: 5px; font-size: 0.8rem; }
         
         [data-theme="dark"] .summary-table td { color: #f1f5f9; border-bottom: 1px solid #334155; }
         [data-theme="dark"] .summary-table tr { background: #1e293b; }
-        .condition-tag { background: #f8f9fa; padding: 15px; border-top: 1px solid #eee; text-align: left; font-size: 0.85rem; color: #666; }
-        [data-theme="dark"] .condition-tag { background: #0f172a; border-color: #334155; color: #94a3b8; }
+
+        /* 더보기 버튼 스타일 */
+        #more-btn-container { padding: 20px; background: var(--card-bg); border-top: 1px solid #eee; }
+        .view-more-btn { width: 100%; padding: 12px; background: #f8f9fa; border: 1px dashed #ccc; cursor: pointer; border-radius: 8px; font-weight: bold; color: #666; transition: 0.3s; }
+        .view-more-btn:hover { background: #e9ecef; }
+        [data-theme="dark"] .view-more-btn { background: #334155; border-color: #475569; color: #cbd5e1; }
+
+        /* 다운로드 버튼 */
+        .download-btn { background: #ffffff; color: #007bff; border: none; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; cursor: pointer; font-weight: bold; }
+        .download-btn:hover { background: #f0f0f0; }
+
+        /* 숨겨진 행 */
+        .hidden-row { display: none; }
     </style>
 </head>
 <body>
@@ -46,7 +56,7 @@
             <div class="analysis-list-item" style="max-width: 500px; margin: 40px auto; border: 2px solid #fbbf24; text-align: center; padding: 30px; border-radius: 15px;">
                 <div class="lock-icon" style="font-size: 50px;">🔒</div>
                 <h3>VIP Exclusive Benefits</h3>
-                <p>Get access to 80%+ Win Rate AI reports.</p>
+                <p>Access 80%+ Win Rate AI Reports</p>
                 <a href="https://kongkong79.gumroad.com/l/ai-sports-vip" target="_blank" class="nav-link" style="display: block; background: #fbbf24; color: #000; padding: 15px; border-radius: 12px; font-weight: 800; text-decoration: none; margin: 20px 0;">Subscribe Now ($9.99)</a>
                 <input type="text" id="vip-code-input" placeholder="Enter Code" style="padding: 10px; width: 60%; border-radius: 4px; border: 1px solid #ccc;">
                 <button onclick="verifyVipCode()" style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">Verify</button>
@@ -55,27 +65,18 @@
 
         <section id="vip-unlocked-section" style="display: none;">
             <h1 style="color: #007bff;">✅ VIP Member Zone</h1>
+            
             <div class="summary-card">
                 <div class="summary-header">
-                    <span>🔥 AI Smart Picks (High Accuracy)</span>
-                    <span id="target-date">Loading Date...</span>
+                    <span id="header-title">🔥 AI Smart Picks</span>
+                    <button class="download-btn" id="dl-btn" onclick="downloadExcel()">📥 Download Excel</button>
                 </div>
                 <table class="summary-table">
-                    <thead>
-                        <tr>
-                            <th>Match</th>
-                            <th>AI Recommendation</th>
-                            <th>Accuracy</th>
-                            <th>Odds</th>
-                        </tr>
-                    </thead>
                     <tbody id="vip-data-body">
                         </tbody>
                 </table>
-                <div class="condition-tag">
-                    <strong>Filtering Logic:</strong><br>
-                    • ⭐ <strong>Banker:</strong> Home Odds ≤ 1.10 (Historical Accuracy 88%+)<br>
-                    • ⚠️ <strong>Draw Risk:</strong> Predicted Away Win with Home Odds 1.7-1.9 (High Draw probability)
+                <div id="more-btn-container" style="display: none;">
+                    <button class="view-more-btn" onclick="toggleMoreMatches()" id="more-btn">+ Load More Matches</button>
                 </div>
             </div>
             
@@ -83,31 +84,29 @@
         </section>
     </main>
 
-   <script>
+<script>
     const VIP_CODE = "FEB888";
 
-  async function initVipPage() {
+    async function initVipPage() {
         const tbody = document.getElementById('vip-data-body');
-        const dateDisplay = document.getElementById('target-date');
-        
-        // 브라우저 언어 감지 (ko면 한국어, 아니면 영어)
         const userLang = navigator.language || navigator.userLanguage;
         const isKo = userLang.includes('ko');
 
-        // 번역 텍스트 설정
         const texts = {
-            loading: isKo ? "데이터 분석 중..." : "Analyzing Data...",
             noticeTitle: isKo ? "⚠️ 필독 주의사항:" : "⚠️ Important Notice:",
             noticeDesc: isKo 
                 ? "원정팀 승리(Away Win) 추천 경기는 단순히 '원정팀이 이긴다'는 접근보다는, <strong>'원정팀이 지지 않는다(무승부 포함)'</strong>는 안정적인 방향으로 접근하시는 것을 권장합니다."
-                : "For 'Away Win' recommendations, we suggest a conservative approach: focus on <strong>'Away Team Not to Lose (Double Chance)'</strong> rather than a straight win.",
+                : "For 'Away Win' picks, we suggest a conservative approach: focus on <strong>'Away Team Not to Lose (Double Chance)'</strong>.",
             samples: isKo ? "표본" : "Samples",
-            verified: isKo ? "검증된 픽" : "Verified Picks"
+            more: isKo ? "+ 더 많은 경기 보기" : "+ View More Matches",
+            download: isKo ? "📥 엑셀 다운로드" : "📥 Download Excel"
         };
 
+        // 버튼 텍스트 초기화
+        document.getElementById('more-btn').innerText = texts.more;
+        document.getElementById('dl-btn').innerText = texts.download;
+
         try {
-            dateDisplay.innerText = texts.loading;
-            
             const response = await fetch('sports_data.xlsx?v=' + Math.random());
             const arrayBuffer = await response.arrayBuffer();
             const data = new Uint8Array(arrayBuffer);
@@ -117,70 +116,78 @@
 
             tbody.innerHTML = '';
             
-            // [주의사항 공지] 유저 언어에 맞춰 자동 번역 출력
-            const noticeHtml = `
+            // 주의사항 공지 삽입
+            tbody.innerHTML = `
                 <tr class="notice-row">
                     <td colspan="4" style="background: #fff9db; color: #856404; padding: 15px; font-size: 0.85rem; border-bottom: 2px solid #ffeeba; text-align: left !important;">
-                        <strong>${texts.noticeTitle}</strong> <br>
-                        ${texts.noticeDesc}
+                        <strong>${texts.noticeTitle}</strong> <br>${texts.noticeDesc}
                     </td>
                 </tr>`;
-            tbody.insertAdjacentHTML('beforeend', noticeHtml);
 
             const dataRows = rows.slice(1); 
-            let filteredCount = 0;
+            let count = 0;
 
-            dataRows.forEach(row => {
+            dataRows.forEach((row) => {
                 const sampleCount = parseInt(row[11]); 
                 if (sampleCount < 10) return;
 
-                const time = row[0];        
-                const homeTeam = row[1];    
-                const awayTeam = row[2];    
-                const homeOdds = parseFloat(row[3]); 
-                const aiPick = String(row[4]);      
-                const hitRate = row[5];     
+                const time = row[0], homeTeam = row[1], awayTeam = row[2], 
+                      homeOdds = parseFloat(row[3]), aiPick = String(row[4]), hitRate = row[5];
 
                 const isHomeWin = aiPick.includes("Home");
-                const homeStyle = isHomeWin ? "font-weight:bold; color:var(--text-color);" : "font-weight:normal; color:#888;";
-                const awayStyle = !isHomeWin ? "font-weight:bold; color:var(--text-color);" : "font-weight:normal; color:#888;";
+                const homeStyle = isHomeWin ? "font-weight:bold;" : "color:#888;";
+                const awayStyle = !isHomeWin ? "font-weight:bold;" : "color:#888;";
                 
-                // 배지는 이모지가 포함되어 있어 만국 공통으로 이해 가능
-                let pickHtml = isHomeWin 
-                    ? '<span class="badge-home">🏠 Home Win</span>' 
-                    : '<span class="badge-away">✈️ Away Win</span>';
-
-                if (homeOdds > 0 && homeOdds <= 1.15) {
-                    pickHtml += '<span class="badge-banker">⭐ Banker</span>';
-                }
+                let pickHtml = isHomeWin ? '<span class="badge-home">🏠 Home Win</span>' : '<span class="badge-away">✈️ Away Win</span>';
+                if (homeOdds > 0 && homeOdds <= 1.15) pickHtml += '<span class="badge-banker">⭐ Banker</span>';
 
                 const tr = document.createElement('tr');
+                // 7경기가 넘어가면 클래스를 추가하여 숨김 처리
+                if (count >= 7) tr.className = 'hidden-row';
+
                 tr.innerHTML = `
                     <td style="text-align:left !important; padding-left:20px;">
                         <span style="font-size:0.7rem; color:gray; display:block;">${time}</span>
-                        <span style="${homeStyle}">${homeTeam}</span> 
-                        <span style="font-size:0.8rem; color:#ccc; margin: 0 5px;">vs</span>
-                        <span style="${awayStyle}">${awayTeam}</span>
+                        <span style="${homeStyle}">${homeTeam}</span> <span style="color:#ccc;">vs</span> <span style="${awayStyle}">${awayTeam}</span>
                     </td>
                     <td>${pickHtml}</td>
                     <td style="color:#059669; font-weight:bold;">${hitRate}%</td>
-                    <td>
-                        <span style="font-weight:bold;">${homeOdds.toFixed(2)}</span><br>
-                        <small style="color:#999; font-size:0.65rem;">${texts.samples}: ${sampleCount}</small>
-                    </td>
+                    <td><b>${homeOdds.toFixed(2)}</b><br><small style="color:#999; font-size:0.6rem;">${texts.samples}:${sampleCount}</small></td>
                 `;
                 tbody.appendChild(tr);
-                filteredCount++;
+                count++;
             });
 
-            dateDisplay.innerText = `${texts.verified}: ${filteredCount}`;
+            // 데이터가 7개보다 많으면 '더보기' 버튼 활성화
+            if (count > 7) {
+                document.getElementById('more-btn-container').style.display = 'block';
+            }
 
         } catch (err) {
             console.error(err);
-            dateDisplay.innerText = "Error";
         }
     }
-    // --- 아래 로그인/로그아웃 함수는 기존과 동일하게 유지 ---
+
+    // 더보기 토글 함수
+    function toggleMoreMatches() {
+        const hiddenRows = document.querySelectorAll('.hidden-row');
+        const btn = document.getElementById('more-btn');
+        const userLang = navigator.language || navigator.userLanguage;
+        
+        if (hiddenRows.length > 0 && hiddenRows[0].style.display === 'table-row') {
+            hiddenRows.forEach(row => row.style.display = 'none');
+            btn.innerText = userLang.includes('ko') ? "+ 더 많은 경기 보기" : "+ View More Matches";
+        } else {
+            hiddenRows.forEach(row => row.style.display = 'table-row');
+            btn.innerText = userLang.includes('ko') ? "▲ 접기" : "▲ Close";
+        }
+    }
+
+    // 엑셀 다운로드 함수
+    function downloadExcel() {
+        window.location.href = 'sports_data.xlsx';
+    }
+
     function checkStatus() {
         const isVip = localStorage.getItem('isVipUser') === 'true';
         document.getElementById('vip-locked-section').style.display = isVip ? 'none' : 'block';
@@ -193,12 +200,12 @@
         else { alert("Wrong code."); }
     }
     function logoutVip() { localStorage.removeItem('isVipUser'); location.reload(); }
+    
     document.addEventListener('DOMContentLoaded', () => {
         const savedTheme = localStorage.getItem('theme') || 'light';
         document.documentElement.setAttribute('data-theme', savedTheme);
         checkStatus();
     });
 </script>
-
 </body>
 </html>
