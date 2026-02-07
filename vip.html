@@ -5,59 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VIP Access - BetMetrics</title>
     <link rel="stylesheet" href="style.css?v=110">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
-        /* 1. 전체 컨테이너 및 헤더 중앙 정렬 */
-        #vip-unlocked-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center; 
-            text-align: center;
-            width: 100%;
-        }
-
-        /* 2. 테이블 카드 박스 중앙 정렬 */
-        .summary-card {
-            margin: 30px auto !important;
-            width: 95%;
-            max-width: 900px;
-            display: inline-block;
-        }
-
-        /* 3. 테이블 내부 데이터 정중앙 정렬 */
-        .summary-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 0 auto;
-        }
-
-        .summary-table th, 
-        .summary-table td {
-            padding: 15px 10px;
-            text-align: center !important; 
-            vertical-align: middle;
-        }
-
-        /* 4. VIP 전용 특수 배지 스타일 */
-        .badge-banker {
-            background: #d1fae5; color: #065f46;
-            padding: 4px 8px; border-radius: 4px; font-weight: bold; border: 1px solid #10b981; margin-left: 5px;
-        }
-        .badge-warning {
-            background: #fee2e2; color: #991b1b;
-            padding: 4px 8px; border-radius: 4px; font-weight: bold; border: 1px solid #ef4444; margin-left: 5px;
-        }
-        [data-theme="dark"] .badge-banker { background: #064e3b; color: #34d399; }
-        [data-theme="dark"] .badge-warning { background: #7f1d1d; color: #fca5a5; }
-
-        /* 5. 하단 엑셀 박스 및 다크모드 해결 */
-        #vip-unlocked-section .analysis-list-item {
-            width: 90%; max-width: 600px; margin: 40px auto !important;
-            padding: 30px; border-radius: 12px; display: flex; flex-direction: column; align-items: center;
-        }
-
-        [data-theme="dark"] .summary-table tr { background-color: #1e293b !important; }
-        [data-theme="dark"] .summary-table td { color: #f1f5f9 !important; border-bottom: 1px solid #334155 !important; }
-        [data-theme="dark"] .analysis-list-item { background-color: #1e293b !important; color: #f1f5f9 !important; border: 1px solid #334155 !important; }
+        #vip-unlocked-section { display: flex; flex-direction: column; align-items: center; text-align: center; width: 100%; }
+        .summary-card { margin: 30px auto !important; width: 95%; max-width: 900px; display: inline-block; background: var(--card-bg); border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); overflow: hidden; }
+        .summary-header { background: #007bff; color: white; padding: 15px; font-weight: bold; display: flex; justify-content: space-between; }
+        .summary-table { width: 100%; border-collapse: collapse; }
+        .summary-table th, .summary-table td { padding: 15px 10px; text-align: center !important; border-bottom: 1px solid #eee; }
+        
+        /* VIP 전용 배지 스타일 */
+        .badge-banker { background: #d1fae5; color: #065f46; padding: 4px 8px; border-radius: 4px; font-weight: bold; border: 1px solid #10b981; margin-left: 5px; font-size: 0.8rem; }
+        .badge-warning { background: #fee2e2; color: #991b1b; padding: 4px 8px; border-radius: 4px; font-weight: bold; border: 1px solid #ef4444; margin-left: 5px; font-size: 0.8rem; }
+        
+        [data-theme="dark"] .summary-table td { color: #f1f5f9; border-bottom: 1px solid #334155; }
+        [data-theme="dark"] .summary-table tr { background: #1e293b; }
+        .condition-tag { background: #f8f9fa; padding: 15px; border-top: 1px solid #eee; text-align: left; font-size: 0.85rem; color: #666; }
+        [data-theme="dark"] .condition-tag { background: #0f172a; border-color: #334155; color: #94a3b8; }
     </style>
 </head>
 <body>
@@ -78,163 +41,116 @@
     </header>
 
     <main class="container">
-        <section id="vip-locked-section" class="hero">
+        <section id="vip-locked-section" class="hero" style="display: none;">
             <h1 style="color: #fbbf24;">⭐ VIP Premium Member</h1>
-            <div class="analysis-list-item" style="max-width: 500px; margin: 40px auto; border: 2px solid #fbbf24; text-align: center;">
+            <div class="analysis-list-item" style="max-width: 500px; margin: 40px auto; border: 2px solid #fbbf24; text-align: center; padding: 30px; border-radius: 15px;">
                 <div class="lock-icon" style="font-size: 50px;">🔒</div>
                 <h3>VIP Exclusive Benefits</h3>
-                <p style="font-size: 0.9rem; color: #666; margin-bottom: 20px;">Get access to 80%+ Win Rate AI reports.</p>
-                <a href="https://kongkong79.gumroad.com/l/ai-sports-vip" target="_blank" class="nav-link" style="display: block; background: #fbbf24; color: #000; padding: 15px; border-radius: 12px; font-weight: 800; text-decoration: none; margin: 20px 0;">
-                    Subscribe to VIP on Gumroad ($9.99)
-                </a>
-                <div style="margin-top: 20px; padding-top: 20px; border-top: 1px dashed #ccc;">
-                    <p style="font-size: 0.85rem; margin-bottom: 10px;">Already a member? Enter this month's code:</p>
-                    <div style="display: flex; gap: 5px; justify-content: center;">
-                        <input type="text" id="vip-code-input" placeholder="Enter Access Code" style="padding: 10px; width: 60%; border: 1px solid #ccc; border-radius: 4px;">
-                        <button id="verify-btn" onclick="verifyVipCode()" style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Verify</button>
-                    </div>
-                </div>
+                <p>Get access to 80%+ Win Rate AI reports.</p>
+                <a href="https://kongkong79.gumroad.com/l/ai-sports-vip" target="_blank" class="nav-link" style="display: block; background: #fbbf24; color: #000; padding: 15px; border-radius: 12px; font-weight: 800; text-decoration: none; margin: 20px 0;">Subscribe Now ($9.99)</a>
+                <input type="text" id="vip-code-input" placeholder="Enter Code" style="padding: 10px; width: 60%; border-radius: 4px; border: 1px solid #ccc;">
+                <button onclick="verifyVipCode()" style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">Verify</button>
             </div>
         </section>
 
-        <section id="vip-unlocked-section" style="display: none; text-align: center;">
+        <section id="vip-unlocked-section" style="display: none;">
             <h1 style="color: #007bff;">✅ VIP Member Zone</h1>
-
             <div class="summary-card">
                 <div class="summary-header">
-                    <span>🔥 Today's AI Smart Picks</span>
-                    <span id="current-date-display" style="font-size: 0.8rem; opacity: 0.9;">Loading...</span>
+                    <span>🔥 AI Smart Picks (High Accuracy)</span>
+                    <span id="target-date">Loading Date...</span>
                 </div>
-                <div style="overflow-x: auto;">
-                    <table class="summary-table" id="vip-table">
-                        <thead>
-                            <tr>
-                                <th>Match</th>
-                                <th>AI Recommendation</th>
-                                <th>Exp. Win Rate</th>
-                                <th>Home Odds</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            </tbody>
-                    </table>
-                </div>
-                <div class="condition-tag" style="text-align: left; padding: 15px; font-size: 0.8rem; line-height: 1.5;">
-                    <strong>📊 VIP Filtering Logic:</strong><br>
-                    • <strong>Banker:</strong> Home Odds ≤ 1.1 (Hit Rate 80%+ based on historical data)<br>
-                    • <strong>Draw Alert:</strong> Away Win predicted with Home Odds 1.7~1.9 (High Draw risk)<br>
-                    • <strong>Data Driven:</strong> Matches filtered from latest sports_data.csv
+                <table class="summary-table">
+                    <thead>
+                        <tr>
+                            <th>Match</th>
+                            <th>AI Recommendation</th>
+                            <th>Accuracy</th>
+                            <th>Odds</th>
+                        </tr>
+                    </thead>
+                    <tbody id="vip-data-body">
+                        </tbody>
+                </table>
+                <div class="condition-tag">
+                    <strong>Filtering Logic:</strong><br>
+                    • ⭐ <strong>Banker:</strong> Home Odds ≤ 1.10 (Historical Accuracy 88%+)<br>
+                    • ⚠️ <strong>Draw Risk:</strong> Predicted Away Win with Home Odds 1.7-1.9 (High Draw probability)
                 </div>
             </div>
-
-            <div class="analysis-list-item">
-                <h3>Full Analysis Spreadsheet</h3>
-                <a href="sports_data.xlsx" download class="nav-link" style="display: inline-block; background: #28a745; color: white; padding: 12px 25px; border-radius: 8px; font-weight: bold; text-decoration: none;">
-                    📥 Download sports_data.xlsx
-                </a>
-            </div>
-
-            <button onclick="logoutVip()" style="background: none; border: none; color: gray; cursor: pointer; text-decoration: underline; font-size: 0.8rem; margin-bottom: 40px;">
-                Logout / End Session
-            </button>
+            
+            <button onclick="logoutVip()" style="margin-top: 20px; color: gray; background: none; border: none; text-decoration: underline; cursor: pointer;">Logout</button>
         </section>
     </main>
 
     <script>
-        const CURRENT_MONTH_CODE = "FEB888"; 
+        const VIP_CODE = "FEB888";
 
-        // 1. 엑셀(CSV) 데이터 자동 로드 및 VIP 필터링
-        async function loadVipData() {
+        // 1. 엑셀 데이터 불러오기 및 처리
+        async function initVipPage() {
             try {
-                const response = await fetch('sports_data.csv'); // 파일명이 다르면 수정하세요
-                const csvText = await response.text();
-                const rows = csvText.split('\n').filter(row => row.trim() !== '');
-                const headers = rows[0].split(',');
+                const response = await fetch('sports_data.xlsx');
+                const arrayBuffer = await response.arrayBuffer();
+                const data = new Uint8Array(arrayBuffer);
+                const workbook = XLSX.read(data, { type: 'array' });
+                const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
 
-                // 실제날짜(Index 1), 홈팀(Index 2), 예측스코어(Index 4), 홈승배당(Index 6)
-                const dataRows = rows.slice(1);
-                
-                // 가장 최신 날짜 찾기
-                const dates = dataRows.map(r => parseInt(r.split(',')[1])).filter(d => !isNaN(d));
-                const maxDate = Math.max(...dates);
-                document.getElementById('current-date-display').innerText = `Date: ${maxDate}`;
-
-                const tbody = document.querySelector('#vip-table tbody');
+                const tbody = document.getElementById('vip-data-body');
                 tbody.innerHTML = '';
 
-                dataRows.forEach(row => {
-                    const cols = row.split(',');
-                    const matchDate = parseInt(cols[1]);
-                    
-                    if (matchDate === maxDate) {
-                        const homeTeam = cols[2];
-                        const predScore = cols[4];
-                        const homeOdds = parseFloat(cols[6]);
-                        
-                        // 승/무/패 예측 로직
-                        const scoreArr = predScore.split(':');
-                        const isAwayWinPred = parseInt(scoreArr[1]) > parseInt(scoreArr[0]);
-                        
-                        let pickHtml = isAwayWinPred ? '<span class="badge-away">✈️ Away Win</span>' : '<span class="badge-home">🏠 Home Win</span>';
-                        let winRate = "70.2% ~";
+                // 데이터 행 추출 (헤더 제외)
+                const rows = jsonData.slice(1).filter(r => r.length > 5);
+                
+                // 가장 최신 날짜 찾기 (인덱스 1번: 실제날짜)
+                const maxDate = Math.max(...rows.map(r => parseInt(r[1])).filter(d => !isNaN(d)));
+                document.getElementById('target-date').innerText = `Update: ${maxDate}`;
 
-                        // [VIP 로직 1] Banker (홈배당 1.1 이하)
+                rows.forEach(row => {
+                    const matchDate = parseInt(row[1]);
+                    if (matchDate === maxDate) {
+                        const homeTeam = row[2];
+                        const predScore = String(row[4]);
+                        const homeOdds = parseFloat(row[6]);
+
+                        // 원정승 예측 여부 확인
+                        const scores = predScore.split(':');
+                        const isAwayWinPred = parseInt(scores[1]) > parseInt(scores[0]);
+
+                        let pickHtml = isAwayWinPred ? '<span class="badge-away">✈️ Away Win</span>' : '<span class="badge-home">🏠 Home Win</span>';
+                        let accuracy = "70.2% ~";
+
+                        // 사장님 커스텀 로직 적용
                         if (homeOdds <= 1.1) {
                             pickHtml += '<span class="badge-banker">⭐ Banker</span>';
-                            winRate = "88.1%";
-                        } 
-                        // [VIP 로직 2] Draw Risk (원정승 예측 + 홈배당 1.7~1.9)
-                        else if (isAwayWinPred && homeOdds >= 1.7 && homeOdds <= 1.9) {
+                            accuracy = "88.1%";
+                        } else if (isAwayWinPred && homeOdds >= 1.7 && homeOdds <= 1.9) {
                             pickHtml += '<span class="badge-warning">⚠️ Draw Risk</span>';
-                            winRate = "21~30% (Low)";
+                            accuracy = "Caution";
                         }
 
                         const tr = document.createElement('tr');
                         tr.innerHTML = `
                             <td style="font-weight:bold;">${homeTeam}</td>
                             <td>${pickHtml}</td>
-                            <td>${winRate}</td>
+                            <td style="color:#059669; font-weight:bold;">${accuracy}</td>
                             <td>${homeOdds.toFixed(2)}</td>
-                            <td><span style="color:#10b981;">● Live</span></td>
                         `;
                         tbody.appendChild(tr);
                     }
                 });
             } catch (err) {
-                console.error("Data load error:", err);
+                console.error("Error loading excel:", err);
             }
         }
 
-        // 로그인 확인 및 데이터 로드 실행
-        function checkVipStatus() {
-            const isVip = localStorage.getItem('isVipUser') === 'true';
-            const expireTime = localStorage.getItem('vipExpireDate');
-            const now = new Date().getTime();
-
-            const lockedSec = document.getElementById('vip-locked-section');
-            const unlockedSec = document.getElementById('vip-unlocked-section');
-
-            if (isVip && (!expireTime || now < expireTime)) {
-                lockedSec.style.display = 'none';
-                unlockedSec.style.display = 'block';
-                loadVipData(); // 로그인 성공 시에만 데이터 로드
-            } else {
-                lockedSec.style.display = 'block';
-                unlockedSec.style.display = 'none';
-            }
-        }
-
+        // 로그인 로직
         function verifyVipCode() {
-            const inputCode = document.getElementById('vip-code-input').value.trim();
-            if (inputCode === CURRENT_MONTH_CODE) {
-                const lastDay = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0, 23, 59, 59).getTime();
+            const val = document.getElementById('vip-code-input').value;
+            if (val === VIP_CODE) {
                 localStorage.setItem('isVipUser', 'true');
-                localStorage.setItem('vipExpireDate', lastDay);
                 location.reload();
-            } else {
-                alert("Invalid code.");
-            }
+            } else { alert("Wrong code."); }
         }
 
         function logoutVip() {
@@ -242,10 +158,17 @@
             location.reload();
         }
 
+        function checkStatus() {
+            const isVip = localStorage.getItem('isVipUser') === 'true';
+            document.getElementById('vip-locked-section').style.display = isVip ? 'none' : 'block';
+            document.getElementById('vip-unlocked-section').style.display = isVip ? 'block' : 'none';
+            if (isVip) initVipPage();
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             const savedTheme = localStorage.getItem('theme') || 'light';
             document.documentElement.setAttribute('data-theme', savedTheme);
-            checkVipStatus();
+            checkStatus();
         });
     </script>
 </body>
