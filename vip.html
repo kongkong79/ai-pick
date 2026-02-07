@@ -90,8 +90,23 @@
         const tbody = document.getElementById('vip-data-body');
         const dateDisplay = document.getElementById('target-date');
         
+        // 브라우저 언어 감지 (ko면 한국어, 아니면 영어)
+        const userLang = navigator.language || navigator.userLanguage;
+        const isKo = userLang.includes('ko');
+
+        // 번역 텍스트 설정
+        const texts = {
+            loading: isKo ? "데이터 분석 중..." : "Analyzing Data...",
+            noticeTitle: isKo ? "⚠️ 필독 주의사항:" : "⚠️ Important Notice:",
+            noticeDesc: isKo 
+                ? "원정팀 승리(Away Win) 추천 경기는 단순히 '원정팀이 이긴다'는 접근보다는, <strong>'원정팀이 지지 않는다(무승부 포함)'</strong>는 안정적인 방향으로 접근하시는 것을 권장합니다."
+                : "For 'Away Win' recommendations, we suggest a conservative approach: focus on <strong>'Away Team Not to Lose (Double Chance)'</strong> rather than a straight win.",
+            samples: isKo ? "표본" : "Samples",
+            verified: isKo ? "검증된 픽" : "Verified Picks"
+        };
+
         try {
-            dateDisplay.innerText = "Verified Picks (Sample 10+)";
+            dateDisplay.innerText = texts.loading;
             
             const response = await fetch('sports_data.xlsx?v=' + Math.random());
             const arrayBuffer = await response.arrayBuffer();
@@ -102,13 +117,12 @@
 
             tbody.innerHTML = '';
             
-            // [주의사항 추가] 테이블 상단에 공지 삽입
+            // [주의사항 공지] 유저 언어에 맞춰 자동 번역 출력
             const noticeHtml = `
                 <tr class="notice-row">
                     <td colspan="4" style="background: #fff9db; color: #856404; padding: 15px; font-size: 0.85rem; border-bottom: 2px solid #ffeeba; text-align: left !important;">
-                        <strong>⚠️ 필독 주의사항:</strong> <br>
-                        원정팀 승리(Away Win) 추천 경기는 단순히 "원정팀이 이긴다"는 공격적인 접근보다는, 
-                        <strong>"원정팀이 지지 않는다(무승부 포함)"</strong>는 안정적인 방향으로 접근하시는 것을 권장합니다.
+                        <strong>${texts.noticeTitle}</strong> <br>
+                        ${texts.noticeDesc}
                     </td>
                 </tr>`;
             tbody.insertAdjacentHTML('beforeend', noticeHtml);
@@ -118,7 +132,7 @@
 
             dataRows.forEach(row => {
                 const sampleCount = parseInt(row[11]); 
-                if (sampleCount < 10) return; // 표본 필터링
+                if (sampleCount < 10) return;
 
                 const time = row[0];        
                 const homeTeam = row[1];    
@@ -127,11 +141,11 @@
                 const aiPick = String(row[4]);      
                 const hitRate = row[5];     
 
-                // AI 추천 방향에 따라 강조할 팀 결정
                 const isHomeWin = aiPick.includes("Home");
                 const homeStyle = isHomeWin ? "font-weight:bold; color:var(--text-color);" : "font-weight:normal; color:#888;";
                 const awayStyle = !isHomeWin ? "font-weight:bold; color:var(--text-color);" : "font-weight:normal; color:#888;";
                 
+                // 배지는 이모지가 포함되어 있어 만국 공통으로 이해 가능
                 let pickHtml = isHomeWin 
                     ? '<span class="badge-home">🏠 Home Win</span>' 
                     : '<span class="badge-away">✈️ Away Win</span>';
@@ -152,16 +166,18 @@
                     <td style="color:#059669; font-weight:bold;">${hitRate}%</td>
                     <td>
                         <span style="font-weight:bold;">${homeOdds.toFixed(2)}</span><br>
-                        <small style="color:#999; font-size:0.65rem;">Samples: ${sampleCount}</small>
+                        <small style="color:#999; font-size:0.65rem;">${texts.samples}: ${sampleCount}</small>
                     </td>
                 `;
                 tbody.appendChild(tr);
                 filteredCount++;
             });
 
+            dateDisplay.innerText = `${texts.verified}: ${filteredCount}`;
+
         } catch (err) {
             console.error(err);
-            dateDisplay.innerText = "Filter Error";
+            dateDisplay.innerText = "Error";
         }
     }
     // --- 아래 로그인/로그아웃 함수는 기존과 동일하게 유지 ---
