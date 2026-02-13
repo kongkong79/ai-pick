@@ -1,71 +1,53 @@
-/* === 메뉴 디자인 개편 === */
-nav { 
-    display: flex; 
-    gap: 12px; 
-    align-items: center; 
+/* === 헤더 & 메뉴 정밀 튜닝 === */
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 20px;
 }
+
+nav { display: flex; gap: 8px; flex-wrap: wrap; } /* 메뉴가 많아져도 깨지지 않게 설정 */
 
 .nav-link {
-    color: var(--text-color);
-    text-decoration: none;
-    padding: 8px 18px;
-    border-radius: 50px; /* 둥근 캡슐 모양 */
-    font-size: 0.9rem;
+    padding: 6px 12px;
+    font-size: 0.85rem;
     font-weight: 700;
-    transition: all 0.3s ease;
-    border: 1px solid transparent;
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--text-color);
+    transition: 0.2s;
 }
 
-.nav-link:hover {
-    background: var(--light-blue);
-    color: var(--primary-blue);
-}
+.nav-link:hover { background: var(--light-blue); }
+.nav-link.active { background: var(--primary-blue); color: #fff !important; }
 
-/* 현재 페이지 표시 */
-.nav-link.active {
-    background: var(--primary-blue);
-    color: #fff !important;
-}
-
-/* VIP 메뉴 독보적 강조 */
+/* VIP는 여전히 돋보이게 */
 .vip-link {
-    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    background: #fbbf24;
     color: #000 !important;
-    border: none;
-    box-shadow: 0 4px 12px rgba(251, 191, 36, 0.4);
 }
 
-.vip-link:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(251, 191, 36, 0.6);
+/* === 카드 밀도 최적화 (안 이쁘게 넓은 부분 수정) === */
+#analysis-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* 최소 너비를 줄여서 더 촘촘하게 */
+    gap: 16px; /* 간격 축소 */
+    padding: 20px 0;
 }
 
-/* === 카드 섹션 정밀 튜닝 === */
 .analysis-list-item {
+    padding: 18px; /* 내부 여백 축소 */
+    border-radius: 16px;
     background: var(--card-bg);
-    border-radius: 24px; /* 더 부드러운 곡선 */
-    padding: 24px;
     border: 1px solid var(--header-border);
-    position: relative;
-    overflow: hidden;
+    height: 100%;
     display: flex;
     flex-direction: column;
-    min-height: 180px;
+    justify-content: space-between;
 }
 
-.vip-locked {
-    border: 2px solid #fbbf24 !important; /* VIP 전용 황금 테두리 */
-}
-
-.vip-badge {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background: #fbbf24;
-    color: #000;
-    font-size: 0.7rem;
-    font-weight: 800;
-    padding: 4px 10px;
-    border-radius: 8px;
-    z-index: 2;
+/* 언어 스위처 복구 */
+#language-switcher button {
+    padding: 4px 8px;
+    font-size: 0.75rem;
 }
