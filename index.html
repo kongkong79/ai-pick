@@ -18,18 +18,18 @@
                  </div>
             </a>
             <nav>
-                <a href="index.html" class="nav-link active">Home</a>
-                <a href="about.html" class="nav-link">About</a>
-                <a href="contact.html" class="nav-link">Contact</a>
-                <a href="privacy.html" class="nav-link">Privacy</a>
-                <a href="vip.html" class="nav-link vip-link">VIP</a>
+                <a href="index.html" class="nav-link active" data-i18n="navHome">Home</a>
+                <a href="about.html" class="nav-link" data-i18n="navAbout">About</a>
+                <a href="contact.html" class="nav-link" data-i18n="navContact">Contact</a>
+                <a href="privacy.html" class="nav-link" data-i18n="navPrivacy">Privacy</a>
+                <a href="vip.html" class="nav-link vip-link" data-i18n="navVip">VIP</a>
             </nav>
             <div class="header-controls">
                 <div id="language-switcher">
-                    <button data-lang="en">EN</button>
-                    <button data-lang="ko">KO</button>
-                    <button data-lang="ja">JA</button>
-                    <button data-lang="zh">CN</button>
+                    <button class="lang-btn" data-lang="en">EN</button>
+                    <button class="lang-btn" data-lang="ko">KO</button>
+                    <button class="lang-btn" data-lang="ja">JA</button>
+                    <button class="lang-btn" data-lang="zh">CN</button>
                 </div>
                 <button id="theme-toggle">☀️</button>
             </div>
@@ -38,14 +38,13 @@
 
     <main class="container">
         <section class="hero">
-            <h1>Real-time AI Sports Analysis</h1>
-            <p>Harness the power of AI 365 days a year for smarter insights.</p>
+            <h1 data-i18n="heroTitle">Real-time AI Sports Analysis</h1>
+            <p data-i18n="heroSub">Harness the power of AI 365 days a year for smarter insights.</p>
         </section>
         
-        <div id="loading-indicator" style="display: none; text-align: center; padding: 20px;">Loading Analysis...</div>
+        <div id="loading-indicator" style="display: none; text-align: center; padding: 20px;" data-i18n="loading">Loading Analysis...</div>
         
-        <div id="analysis-list">
-            </div>
+        <div id="analysis-list"></div>
     </main>
 
     <footer>
@@ -53,108 +52,130 @@
             <div class="footer-content" style="text-align: center; padding: 40px 0;">
                 <p><strong>&copy; 2024 AI365PICK. All rights reserved.</strong></p>
                 <div style="font-size: 0.75rem; color: var(--text-muted); max-width: 850px; margin: 20px auto; line-height: 1.6; text-align: justify; border-top: 1px solid var(--header-border); padding-top: 20px;">
-                    <p><strong>Disclaimer:</strong> AI365PICK provides sports data and statistical analysis based on artificial intelligence for informational purposes only. We are not a bookmaker and do not collect bets. Sports betting involves significant risk, and we do not guarantee the accuracy of our AI predictions. Users are solely responsible for their financial decisions. Please gamble responsibly. (19+ Only)</p>
-                    <p>본 사이트는 인공지능을 활용한 스포츠 데이터 분석 정보를 제공하며, 어떠한 형태의 사행성 행위나 직접적인 베팅 서비스를 제공하지 않습니다. 모든 정보는 통계적 참고 자료일 뿐이며, 이를 활용한 결과에 대한 책임은 사용자 본인에게 있습니다. 과도한 게임 몰입은 당신의 삶을 파괴할 수 있습니다.</p>
+                    <p data-i18n="disclaimerEn">Disclaimer: AI365PICK provides sports data and statistical analysis based on artificial intelligence for informational purposes only. We do not facilitate gambling. (19+ Only)</p>
+                    <p data-i18n="disclaimerKo">본 사이트는 인공지능을 활용한 스포츠 데이터 분석 정보를 제공하며, 어떠한 형태의 사행성 행위나 직접적인 베팅 서비스를 제공하지 않습니다.</p>
                 </div>
             </div>
         </div>
     </footer>
 
-    <script src="translations.js"></script>
-    
     <script>
-    async function renderAnalysis() {
-        const container = document.getElementById('analysis-list');
-        const loader = document.getElementById('loading-indicator');
-        const isVip = localStorage.getItem('isVipUser') === 'true'; 
-        
-        loader.style.display = 'block';
-        container.innerHTML = ''; 
-        
-        try {
-            const response = await fetch('sports_data.xlsx');
-            const arrayBuffer = await response.arrayBuffer();
-            const data = new Uint8Array(arrayBuffer);
-            const workbook = XLSX.read(data, {type: 'array'});
-            const sheet = workbook.Sheets[workbook.SheetNames[0]];
-            const rows = XLSX.utils.sheet_to_json(sheet, {header: 1});
+        const translations = {
+            en: {
+                navHome: "Home", navAbout: "About", navContact: "Contact", navPrivacy: "Privacy", navVip: "VIP",
+                heroTitle: "Real-time AI Sports Analysis", heroSub: "Harness the power of AI 365 days a year.",
+                loading: "Loading Analysis...", unlock: "Unlock VIP Analysis", sample: "Sample", pick: "Pick"
+            },
+            ko: {
+                navHome: "홈", navAbout: "소개", navContact: "문의", navPrivacy: "개인정보", navVip: "VIP 전용",
+                heroTitle: "실시간 AI 스포츠 분석", heroSub: "365일 인공지능이 제공하는 스마트한 분석 데이터.",
+                loading: "데이터 로딩 중...", unlock: "VIP 분석 열기", sample: "표본수", pick: "추천"
+            },
+            ja: {
+                navHome: "ホーム", navAbout: "紹介", navContact: "お問い合わせ", navPrivacy: "プライバシー", navVip: "VIP専用",
+                heroTitle: "リアルタイムAIスポーツ分析", heroSub: "365日人工知能が提供するスマートな分析データ。",
+                loading: "読み込み中...", unlock: "VIP分析を解除", sample: "サンプル", pick: "おすすめ"
+            },
+            zh: {
+                navHome: "首页", navAbout: "关于", navContact: "联系我们", navPrivacy: "隐私政策", navVip: "VIP专属",
+                heroTitle: "实时AI体育分析", heroSub: "365天人工智能为您提供智能分析数据。",
+                loading: "加载中...", unlock: "解锁VIP分析", sample: "样本数", pick: "推荐"
+            }
+        };
 
-            // 표본(row[11])이 10개 이상인 경기만 필터링
-            const filteredRows = rows.slice(1).filter(row => parseInt(row[11]) >= 10);
+        let currentLang = localStorage.getItem('selectedLang') || 'en';
 
-            filteredRows.forEach(row => {
-                const hitRate = parseFloat(row[5]) || 0;
-                const winP = parseFloat(row[6]) || 0;
-                const drawP = parseFloat(row[7]) || 0;
-                const lossP = parseFloat(row[8]) || 0;
-                
-                const card = document.createElement('div');
-                
-                if (hitRate >= 80 && !isVip) {
-                    // [VIP 잠금 모드] - 결제 유도를 위해 버튼과 잠금 화면 유지
-                    card.className = 'analysis-list-item vip-locked-card';
-                    card.innerHTML = `
-                        <span class="vip-badge-top">⭐ VIP ONLY</span>
-                        <div class="lock-overlay">
-                            <span style="font-size: 1.5rem; margin-bottom: 8px;">🔒</span>
-                            <p style="font-size: 0.85rem; font-weight: 800; color: #b45309; margin:0;">Accuracy: ${hitRate}%</p>
-                            <a href="vip.html" style="margin-top:12px; background:#fbbf24; color:#000; padding:8px 18px; border-radius:20px; text-decoration:none; font-size:0.75rem; font-weight:bold; box-shadow: 0 4px 10px rgba(251,191,36,0.3);">Unlock VIP Analysis</a>
-                        </div>
-                        <div class="blur-target">
-                            <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:#999;">
+        function updateLanguage() {
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[currentLang][key]) {
+                    el.innerText = translations[currentLang][key];
+                }
+            });
+            renderAnalysis(); // 언어 변경 시 경기 카드 다시 그리기
+        }
+
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                currentLang = btn.getAttribute('data-lang');
+                localStorage.setItem('selectedLang', currentLang);
+                updateLanguage();
+            });
+        });
+
+        async function renderAnalysis() {
+            const container = document.getElementById('analysis-list');
+            const loader = document.getElementById('loading-indicator');
+            const isVip = localStorage.getItem('isVipUser') === 'true'; 
+            const t = translations[currentLang];
+            
+            loader.style.display = 'block';
+            container.innerHTML = ''; 
+            
+            try {
+                const response = await fetch('sports_data.xlsx');
+                const arrayBuffer = await response.arrayBuffer();
+                const data = new Uint8Array(arrayBuffer);
+                const workbook = XLSX.read(data, {type: 'array'});
+                const sheet = workbook.Sheets[workbook.SheetNames[0]];
+                const rows = XLSX.utils.sheet_to_json(sheet, {header: 1});
+
+                const filteredRows = rows.slice(1).filter(row => parseInt(row[11]) >= 10);
+
+                filteredRows.forEach(row => {
+                    const hitRate = parseFloat(row[5]) || 0;
+                    const winP = parseFloat(row[6]) || 0;
+                    const drawP = parseFloat(row[7]) || 0;
+                    const lossP = parseFloat(row[8]) || 0;
+                    const card = document.createElement('div');
+                    
+                    if (hitRate >= 80 && !isVip) {
+                        card.className = 'analysis-list-item vip-locked-card';
+                        card.innerHTML = `
+                            <span class="vip-badge-top">⭐ VIP ONLY</span>
+                            <div class="lock-overlay">
+                                <span style="font-size: 1.5rem;">🔒</span>
+                                <p style="font-weight: 800; margin:5px 0;">Hit Rate: ${hitRate}%</p>
+                                <a href="vip.html" class="unlock-btn">${t.unlock}</a>
+                            </div>
+                            <div class="blur-target">
+                                <div style="font-size:0.75rem; color:#999;">🕒 ${row[0]}</div>
+                                <h3 style="font-size:1.1rem; margin:15px 0;">${row[1]} vs ${row[2]}</h3>
+                                <div class="ai-chart-section"><div class="donut-chart" style="background:#e2e8f0;"></div></div>
+                            </div>`;
+                    } else {
+                        card.className = 'analysis-list-item';
+                        if (isVip && hitRate >= 80) card.style.borderColor = '#fbbf24'; 
+                        card.innerHTML = `
+                            <div style="display:flex; justify-content:space-between; color:var(--text-muted); font-size:0.75rem;">
                                 <span>🕒 ${row[0]}</span>
+                                <span>${t.sample}: ${row[11]}</span>
                             </div>
                             <h3 style="font-size:1.1rem; margin:15px 0;">${row[1]} vs ${row[2]}</h3>
+                            <div style="margin-bottom:8px;"><span style="font-weight:bold; color:var(--primary-blue);">${t.pick}: 🏠 ${row[4]}</span></div>
                             <div class="ai-chart-section">
-                                <div class="donut-chart" style="background: #e2e8f0;"></div>
+                                <div class="donut-chart" style="background: conic-gradient(#2563eb 0% ${winP}%, #94a3b8 ${winP}% ${winP + drawP}%, #ef4444 ${winP + drawP}% 100%);"></div>
+                                <div class="chart-labels">
+                                    <div class="label-row"><span>Win</span> <span>${winP}%</span></div>
+                                    <div class="label-row"><span>Draw</span> <span>${drawP}%</span></div>
+                                    <div class="label-row"><span>Loss</span> <span>${lossP}%</span></div>
+                                </div>
                             </div>
-                        </div>
-                    `;
-                } else {
-                    // [일반 공개 모드] - 버튼 제거, 디자인 슬림화 및 Hit Rate 강조
-                    card.className = 'analysis-list-item';
-                    if (isVip && hitRate >= 80) card.style.borderColor = '#fbbf24'; 
-
-                    card.innerHTML = `
-                        <div style="display:flex; justify-content:space-between; color:var(--text-muted); font-size:0.75rem;">
-                            <span>🕒 ${row[0]}</span>
-                            <span style="font-weight:700; color:var(--primary-blue);">Sample: ${row[11]}</span>
-                        </div>
-                        <h3 style="font-size:1.1rem; margin:15px 0;">${row[1]} vs ${row[2]}</h3>
-                        <div style="margin-bottom:8px;">
-                            <span style="font-size:0.9rem; font-weight:bold; color:var(--primary-blue);">Pick: 🏠 ${row[4]}</span>
-                        </div>
-                        
-                        <div class="ai-chart-section">
-                            <div class="donut-chart" style="background: conic-gradient(
-                                #2563eb 0% ${winP}%, 
-                                #94a3b8 ${winP}% ${winP + drawP}%, 
-                                #ef4444 ${winP + drawP}% 100%
-                            );"></div>
-                            <div class="chart-labels">
-                                <div class="label-row"><span class="label-text"><i class="marker m-win"></i>Win</span> <span>${winP}%</span></div>
-                                <div class="label-row"><span class="label-text"><i class="marker m-draw"></i>Draw</span> <span>${drawP}%</span></div>
-                                <div class="label-row"><span class="label-text"><i class="marker m-loss"></i>Loss</span> <span>${lossP}%</span></div>
-                            </div>
-                        </div>
-
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:auto; padding-top:12px; border-top:1px solid var(--header-border);">
-                            <span style="font-size:0.85rem; font-weight:600;">Hit Rate: <b style="color:#10b981;">${hitRate}%</b></span>
-                            <span style="font-size:0.7rem; color:var(--text-muted); letter-spacing:0.5px;">AI VERIFIED</span>
-                        </div>
-                    `;
-                }
-                container.appendChild(card);
-            });
-        } catch (error) {
-            console.error('Data Loading Error:', error);
-        } finally {
-            loader.style.display = 'none';
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:auto; padding-top:10px; border-top:1px solid var(--header-border);">
+                                <span style="font-size:0.85rem; font-weight:600;">Hit Rate: <b style="color:#10b981;">${hitRate}%</b></span>
+                                <span style="font-size:0.7rem; color:var(--text-muted);">AI VERIFIED</span>
+                            </div>`;
+                    }
+                    container.appendChild(card);
+                });
+            } catch (e) { console.error(e); } finally { loader.style.display = 'none'; }
         }
-    }
 
-    // 페이지 로드 시 단 한 번만 실행 (중복 방지)
-    document.addEventListener('DOMContentLoaded', renderAnalysis);
+        document.addEventListener('DOMContentLoaded', () => {
+            updateLanguage(); // 저장된 언어로 초기화
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        });
     </script>
 </body>
 </html>
