@@ -4,34 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Us - AI365PICK</title>
-    <link rel="stylesheet" href="style.css?v=110">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
         <div class="container">
-            <a href="index.html" class="logo-link" id="logo-link">
-                 <img src="betmetrics.png?v=3" alt="AI365PICK Logo" class="logo-img">
+            <a href="index.html" class="logo-link">
+                 <img src="betmetrics.png" alt="Logo" class="logo-img">
                  <div class="logo-text-group">
                      <span class="logo-main-text">AI365PICK</span>
                      <span class="logo-sub-text">AI Analysis</span>
                  </div>
             </a>
             <nav>
-                <a href="index.html" class="nav-link">Home</a>
-                <a href="about.html" class="nav-link active">About</a>
-                <a href="contact.html" class="nav-link">Contact</a>
-                <a href="privacy.html" class="nav-link">Privacy</a>
-                <a href="vip.html" class="nav-link vip-link">VIP</a>
+                <a href="index.html" class="nav-link" data-i18n="navHome">Home</a>
+                <a href="about.html" class="nav-link active" data-i18n="navAbout">About</a>
+                <a href="contact.html" class="nav-link" data-i18n="navContact">Contact</a>
+                <a href="privacy.html" class="nav-link" data-i18n="navPrivacy">Privacy</a>
+                <a href="vip.html" class="nav-link vip-link" data-i18n="navVip">VIP</a>
             </nav>
+            <div class="header-controls">
+                <div id="language-switcher">
+                    <button class="lang-btn" data-lang="en">EN</button>
+                    <button class="lang-btn" data-lang="ko">KO</button>
+                    <button class="lang-btn" data-lang="ja">JA</button>
+                    <button class="lang-btn" data-lang="zh">CN</button>
+                </div>
+                <button id="theme-toggle">☀️</button>
+            </div>
         </div>
     </header>
 
     <main class="container">
         <section class="hero">
-            <h2>About Us</h2>
+            <h2 data-i18n="aboutTitle">About Us</h2>
             <div class="analysis-list-item" style="text-align: left; line-height: 1.8;">
-                <p>Welcome to AI365PICK. We provide AI-driven sports insights to help you make smarter decisions 365 days a year.</p>
-                <p>Our algorithms analyze historical data, team performance, and player stats to generate high-accuracy predictions based on statistical probability.</p>
+                <p data-i18n="aboutText1">Welcome to AI365PICK. We provide AI-driven sports insights 365 days a year.</p>
+                <p data-i18n="aboutText2">Our algorithms analyze historical data to generate high-accuracy predictions.</p>
             </div>
         </section>
     </main>
@@ -39,18 +48,47 @@
     <footer>
         <div class="container" style="text-align: center; padding: 30px 0;">
             <p>&copy; 2024 AI365PICK. All rights reserved.</p>
-            <p style="font-size: 0.7rem; color: #94a3b8; margin-top: 15px; line-height: 1.4;">
-                Disclaimer: AI365PICK is a data analysis platform. We do not offer gambling services. 
-                Users are responsible for their own decisions. 19+ Only.
-            </p>
         </div>
     </footer>
 
-    <script src="translations.js?v=110"></script>
     <script>
+        const translations = {
+            en: { navHome: "Home", navAbout: "About", navContact: "Contact", navPrivacy: "Privacy", navVip: "VIP", aboutTitle: "About Us", aboutText1: "Welcome to AI365PICK. We provide AI-driven sports insights 365 days a year.", aboutText2: "Our algorithms analyze historical data to generate high-accuracy predictions." },
+            ko: { navHome: "홈", navAbout: "소개", navContact: "문의", navPrivacy: "개인정보", navVip: "VIP 전용", aboutTitle: "회사 소개", aboutText1: "AI365PICK에 오신 것을 환영합니다. 365일 인공지능 스포츠 통계 분석을 제공합니다.", aboutText2: "저희 알고리즘은 과거 데이터를 분석하여 높은 정확도의 예측을 생성합니다." },
+            ja: { navHome: "ホーム", navAbout: "紹介", navContact: "お問い合わせ", navPrivacy: "プライバシー", navVip: "VIP専用", aboutTitle: "紹介", aboutText1: "AI365PICKへようこそ。365日AIスポーツ分析を提供します。", aboutText2: "当社のアルゴリズムは過去のデータを分析し、高精度の予測を生成します。" },
+            zh: { navHome: "首页", navAbout: "关于", navContact: "联系我们", navPrivacy: "隐私政策", navVip: "VIP专属", aboutTitle: "关于我们", aboutText1: "欢迎来到 AI365PICK。我们全天候提供 AI 驱动的体育见解。", aboutText2: "我们的算法分析历史数据以生成高精度的预测。" }
+        };
+
+        function updateLang() {
+            const lang = localStorage.getItem('selectedLang') || 'en';
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang][key]) el.innerText = translations[lang][key];
+            });
+        }
+
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                localStorage.setItem('selectedLang', btn.dataset.lang);
+                updateLang();
+            });
+        });
+
+        // 테마 토글 로직
+        const themeBtn = document.getElementById('theme-toggle');
+        themeBtn.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme');
+            const target = current === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', target);
+            localStorage.setItem('theme', target);
+            themeBtn.innerText = target === 'light' ? '☀️' : '🌙';
+        });
+
         document.addEventListener('DOMContentLoaded', () => {
+            updateLang();
             const savedTheme = localStorage.getItem('theme') || 'light';
             document.documentElement.setAttribute('data-theme', savedTheme);
+            themeBtn.innerText = savedTheme === 'light' ? '☀️' : '🌙';
         });
     </script>
 </body>
