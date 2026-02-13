@@ -9,6 +9,7 @@
     --card-bg: #ffffff;
     --text-muted: #64748b;
     --chart-bg: #f8fafc; /* 그래프 배경용 */
+    --vip-gold: #fbbf24; /* VIP 황금색 추가 */
 }
 
 [data-theme="dark"] {
@@ -19,7 +20,7 @@
     --primary-blue: #3b82f6;
     --light-blue: #1e293b;
     --card-bg: #1e293b;
-    --chart-bg: #0f172a; /* 다크모드 그래프 배경 */
+    --chart-bg: #0f172a;
 }
 
 body { font-family: 'Pretendard', sans-serif; margin: 0; background: var(--bg-color); color: var(--text-color); }
@@ -99,6 +100,8 @@ nav { display: flex; gap: 8px; }
     border: 1px solid var(--header-border);
     border-radius: 16px;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+    overflow: hidden;
 }
 
 .analysis-list-item:hover {
@@ -106,11 +109,43 @@ nav { display: flex; gap: 8px; }
     box-shadow: 0 10px 20px rgba(0,0,0,0.05);
 }
 
-/* === [NEW] AI 확률 그래프 스타일 추가 === */
+/* === [NEW] VIP 잠금 스타일 섹션 === */
+.vip-locked-card {
+    border: 2px solid var(--vip-gold) !important;
+    background: linear-gradient(180deg, var(--card-bg) 0%, #fffdf5 100%) !important;
+}
+
+.lock-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    z-index: 5;
+    backdrop-filter: blur(4px); /* 카드 전체 블러 */
+}
+
+.vip-badge-top {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: var(--vip-gold);
+    color: #000;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.7rem;
+    font-weight: 800;
+}
+
+.blur-target {
+    user-select: none;
+    pointer-events: none;
+}
+
+/* === AI 확률 그래프 스타일 === */
 .ai-chart-section {
     display: flex;
     align-items: center;
-    background: var(--chart-bg); /* 다크/라이트 자동 대응 */
+    background: var(--chart-bg);
     border-radius: 12px;
     padding: 12px;
     margin: 12px 0;
@@ -128,7 +163,6 @@ nav { display: flex; gap: 8px; }
     flex-shrink: 0;
 }
 
-/* 도넛 구멍: 다크모드 배경색에 맞춰 변함 */
 .donut-chart::after {
     content: "";
     position: absolute;
@@ -151,6 +185,6 @@ nav { display: flex; gap: 8px; }
 }
 
 .marker { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 5px; }
-.m-win { background: #007bff; }   /* 승: 파랑 */
-.m-draw { background: #94a3b8; }  /* 무: 회색 */
-.m-loss { background: #ef4444; }  /* 패: 빨강 */
+.m-win { background: #007bff; }
+.m-draw { background: #94a3b8; }
+.m-loss { background: #ef4444; }
