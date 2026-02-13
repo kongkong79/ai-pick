@@ -1,4 +1,4 @@
-/* === 기본 설정 === */
+/* === 기존 설정 유지 === */
 :root {
     --bg-color: #f8fafc;
     --text-color: #0f172a;
@@ -8,6 +8,7 @@
     --light-blue: #eff6ff;
     --card-bg: #ffffff;
     --text-muted: #64748b;
+    --gold: #fbbf24; /* VIP 포인트 컬러 추가 */
 }
 
 [data-theme="dark"] {
@@ -20,94 +21,102 @@
     --card-bg: #1e293b;
 }
 
-body { font-family: 'Pretendard', sans-serif; margin: 0; background: var(--bg-color); color: var(--text-color); }
+body { font-family: 'Pretendard', sans-serif; margin: 0; background: var(--bg-color); color: var(--text-color); line-height: 1.6; }
 .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
 
-/* === 헤더 레이아웃 (버튼 사라짐 방지) === */
-header {
-    background: var(--header-bg);
-    border-bottom: 1px solid var(--header-border);
-    padding: 12px 0;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    backdrop-filter: blur(8px);
+/* === 프리미엄 Hero 섹션 === */
+.hero {
+    text-align: center;
+    padding: 80px 20px;
+    background: linear-gradient(135deg, var(--primary-blue) 0%, #1e40af 100%);
+    color: white;
+    border-radius: 0 0 40px 40px;
+    margin-bottom: 60px;
 }
+.hero h1 { font-size: 2.8rem; font-weight: 800; margin-bottom: 15px; letter-spacing: -1px; }
+.hero p { font-size: 1.1rem; opacity: 0.9; margin-bottom: 30px; }
 
-header .container {
+/* === 통계 대시보드 (Hero 아래 3박스) === */
+.stats-row {
     display: flex;
-    justify-content: space-between; /* 로고 - 메뉴 - 컨트롤 사이 간격 벌리기 */
-    align-items: center;
-}
-
-/* 로고 스타일 */
-.logo-link { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-.logo-img { height: 40px; width: auto; border-radius: 6px; }
-.logo-text-group { display: flex; flex-direction: column; }
-.logo-main-text { font-size: 1.1rem; font-weight: 800; color: var(--text-color); line-height: 1.1; }
-.logo-sub-text { font-size: 0.65rem; font-weight: 600; color: var(--primary-blue); text-transform: uppercase; }
-
-/* 메뉴 스타일 (가로 정렬) */
-nav { display: flex; gap: 8px; }
-.nav-link {
-    color: var(--text-color);
-    text-decoration: none;
-    padding: 8px 12px;
-    border-radius: 6px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    transition: 0.2s;
-}
-.nav-link:hover { background: var(--light-blue); color: var(--primary-blue); }
-
-/* 컨트롤 스타일 */
-.header-controls { display: flex; align-items: center; gap: 10px; }
-#language-switcher { display: flex; border: 1px solid var(--header-border); border-radius: 8px; overflow: hidden; }
-#language-switcher button {
-    border: none; background: var(--card-bg); color: var(--text-muted);
-    padding: 6px 10px; cursor: pointer; font-size: 0.8rem; font-weight: 700;
-}
-#language-switcher button.active { background: var(--primary-blue); color: #fff; }
-
-#theme-toggle {
-    background: var(--card-bg); border: 1px solid var(--header-border);
-    padding: 6px 10px; border-radius: 8px; cursor: pointer;
-}
-
-/* 1. 카드를 감싸는 컨테이너 설정 */
-#analysis-list {
-    display: grid;
-    /* 기본적으로 1줄에 1개 (모바일) */
-    grid-template-columns: 1fr; 
+    justify-content: center;
     gap: 20px;
-    padding: 20px 0;
+    margin-top: -60px;
+    margin-bottom: 40px;
 }
-
-/* 2. 태블릿 (화면 너비 768px 이상) - 1줄에 2개 */
-@media (min-width: 768px) {
-    #analysis-list {
-        grid-template-columns: repeat(2, 1fr);
-    }
+.stat-box {
+    background: var(--card-bg);
+    padding: 20px 30px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    text-align: center;
+    min-width: 150px;
 }
+.stat-box h3 { font-size: 1.8rem; color: var(--primary-blue); margin: 0; }
+.stat-box p { font-size: 0.85rem; color: var(--text-muted); margin: 5px 0 0 0; font-weight: 600; }
 
-/* 3. 데스크탑 (화면 너비 1024px 이상) - 1줄에 3개 */
-@media (min-width: 1024px) {
-    #analysis-list {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
-
-/* 4. 카드 디자인 미세 조정 (크기 최적화) */
+/* === 카드 디자인 업그레이드 === */
 .analysis-list-item {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between; /* 내용이 적어도 버튼/메시지가 아래 고정되도록 */
-    height: 100%; /* 모든 카드의 높이를 통일 */
-    padding: 20px;
-    margin-bottom: 0; /* Grid Gap을 사용하므로 여백 제거 */
-    transition: transform 0.2s ease;
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 24px;
+    border: 1px solid var(--header-border);
+    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
 }
 
-.analysis-list-item:hover {
-    transform: translateY(-5px); /* 마우스 올렸을 때 살짝 들리는 효과 */
+/* VIP 티저 (잠금) 스타일 */
+.vip-locked {
+    border: 2px solid var(--gold) !important;
+}
+.vip-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: var(--gold);
+    color: #000;
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 4px 10px;
+    border-radius: 20px;
+}
+.blur-content {
+    filter: blur(6px);
+    opacity: 0.4;
+    pointer-events: none;
+    user-select: none;
+}
+.unlock-overlay {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    z-index: 10;
+}
+.btn-primary {
+    background: var(--primary-blue);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    width: 100%;
+    text-decoration: none;
+    display: block;
+    text-align: center;
+}
+.btn-gold {
+    background: var(--gold);
+    color: #000;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    font-weight: 800;
+    cursor: pointer;
+    width: 100%;
+    text-decoration: none;
+    display: block;
+    text-align: center;
 }
