@@ -4,37 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Privacy Policy - AI365PICK</title>
-    <link rel="stylesheet" href="style.css?v=110">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
         <div class="container">
-            <a href="index.html" class="logo-link" id="logo-link">
-                 <img src="betmetrics.png?v=3" alt="AI365PICK Logo" class="logo-img">
+            <a href="index.html" class="logo-link">
+                 <img src="betmetrics.png" alt="Logo" class="logo-img">
                  <div class="logo-text-group">
                      <span class="logo-main-text">AI365PICK</span>
                      <span class="logo-sub-text">AI Analysis</span>
                  </div>
             </a>
             <nav>
-                <a href="index.html" class="nav-link">Home</a>
-                <a href="about.html" class="nav-link">About</a>
-                <a href="contact.html" class="nav-link">Contact</a>
-                <a href="privacy.html" class="nav-link active">Privacy</a>
-                <a href="vip.html" class="nav-link vip-link">VIP</a>
+                <a href="index.html" class="nav-link" data-i18n="navHome">Home</a>
+                <a href="about.html" class="nav-link" data-i18n="navAbout">About</a>
+                <a href="contact.html" class="nav-link" data-i18n="navContact">Contact</a>
+                <a href="privacy.html" class="nav-link active" data-i18n="navPrivacy">Privacy</a>
+                <a href="vip.html" class="nav-link vip-link" data-i18n="navVip">VIP</a>
             </nav>
+            <div class="header-controls">
+                <div id="language-switcher">
+                    <button class="lang-btn" data-lang="en">EN</button>
+                    <button class="lang-btn" data-lang="ko">KO</button>
+                    <button class="lang-btn" data-lang="ja">JA</button>
+                    <button class="lang-btn" data-lang="zh">CN</button>
+                </div>
+                <button id="theme-toggle">☀️</button>
+            </div>
         </div>
     </header>
 
     <main class="container">
         <section class="hero">
-            <h1>Privacy Policy</h1>
+            <h1 data-i18n="privacyTitle">Privacy Policy</h1>
             <div class="analysis-list-item" style="text-align: left; line-height: 1.6;">
-                <h3>Data Collection</h3>
-                <p>At AI365PICK, we do not collect personal information unless explicitly provided by you (e.g., via email inquiry).</p>
-                <p>Your privacy is important to us. We use industry-standard measures to protect any data shared with us.</p>
-                <h3>Cookies</h3>
-                <p>We use local storage only to remember your theme preferences (Dark/Light mode) and VIP status.</p>
+                <h3 data-i18n="privData">Data Collection</h3>
+                <p data-i18n="privDesc1">At AI365PICK, we do not collect personal information unless explicitly provided by you.</p>
+                <p data-i18n="privDesc2">We use industry-standard measures to protect any data shared with us.</p>
             </div>
         </section>
     </main>
@@ -42,17 +49,46 @@
     <footer>
         <div class="container" style="text-align: center; padding: 30px 0;">
             <p>&copy; 2024 AI365PICK. All rights reserved.</p>
-            <p style="font-size: 0.7rem; color: #94a3b8; margin-top: 15px;">
-                Responsible Gaming: AI365PICK promotes safe and responsible data usage.
-            </p>
         </div>
     </footer>
 
-    <script src="translations.js?v=110"></script>
     <script>
+        const translations = {
+            en: { navHome: "Home", navAbout: "About", navContact: "Contact", navPrivacy: "Privacy", navVip: "VIP", privacyTitle: "Privacy Policy", privData: "Data Collection", privDesc1: "At AI365PICK, we do not collect personal information unless explicitly provided by you.", privDesc2: "We use industry-standard measures to protect any data shared with us." },
+            ko: { navHome: "홈", navAbout: "소개", navContact: "문의", navPrivacy: "개인정보", navVip: "VIP 전용", privacyTitle: "개인정보 처리방침", privData: "데이터 수집", privDesc1: "AI365PICK은 사용자가 직접 제공하지 않는 한 어떠한 개인정보도 수집하지 않습니다.", privDesc2: "제공된 모든 데이터는 업계 표준 보안 조치를 통해 보호됩니다." },
+            ja: { navHome: "ホーム", navAbout: "紹介", navContact: "お問い合わせ", navPrivacy: "プライバシー", navVip: "VIP専用", privacyTitle: "プライバシーポリシー", privData: "データ収集", privDesc1: "AI365PICKは、明示的に提供されない限り個人情報を収集しません。", privDesc2: "共有されたデータは業界標準のセキュリティ措置で保護されます。" },
+            zh: { navHome: "首页", navAbout: "关于", navContact: "联系我们", navPrivacy: "隐私政策", navVip: "VIP专属", privacyTitle: "隐私政策", privData: "数据收集", privDesc1: "AI365PICK 除非您明确提供，否则不会收集任何个人信息。", privDesc2: "我们使用行业标准措施来保护与我们共享的任何数据。" }
+        };
+
+        function updateLang() {
+            const lang = localStorage.getItem('selectedLang') || 'en';
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang][key]) el.innerText = translations[lang][key];
+            });
+        }
+
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                localStorage.setItem('selectedLang', btn.dataset.lang);
+                updateLang();
+            });
+        });
+
+        const themeBtn = document.getElementById('theme-toggle');
+        themeBtn.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme');
+            const target = current === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', target);
+            localStorage.setItem('theme', target);
+            themeBtn.innerText = target === 'light' ? '☀️' : '🌙';
+        });
+
         document.addEventListener('DOMContentLoaded', () => {
+            updateLang();
             const savedTheme = localStorage.getItem('theme') || 'light';
             document.documentElement.setAttribute('data-theme', savedTheme);
+            themeBtn.innerText = savedTheme === 'light' ? '☀️' : '🌙';
         });
     </script>
 </body>
