@@ -60,6 +60,7 @@
     </footer>
 
     <script>
+        // 1. 번역 데이터
         const translations = {
             en: {
                 navHome: "Home", navAbout: "About", navContact: "Contact", navPrivacy: "Privacy", navVip: "VIP",
@@ -73,7 +74,7 @@
             },
             ja: {
                 navHome: "ホーム", navAbout: "紹介", navContact: "お問い合わせ", navPrivacy: "プライバシー", navVip: "VIP専用",
-                heroTitle: "リアルタイムAIスポーツ分析", heroSub: "365日人工知能が提供するスマートな分析データ。",
+                heroTitle: "リアルタイムAIスポーツ分析", heroSub: "365日人工知能が提供するスマートな分析 데이터。",
                 loading: "読み込み中...", unlock: "VIP分析を解除", sample: "サンプル", pick: "おすすめ"
             },
             zh: {
@@ -85,6 +86,7 @@
 
         let currentLang = localStorage.getItem('selectedLang') || 'en';
 
+        // 2. 언어 업데이트 기능
         function updateLanguage() {
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
@@ -92,7 +94,7 @@
                     el.innerText = translations[currentLang][key];
                 }
             });
-            renderAnalysis(); // 언어 변경 시 경기 카드 다시 그리기
+            renderAnalysis(); 
         }
 
         document.querySelectorAll('.lang-btn').forEach(btn => {
@@ -103,6 +105,19 @@
             });
         });
 
+        // 3. 테마 토글 기능 (이 부분이 중요합니다!)
+        const themeBtn = document.getElementById('theme-toggle');
+        if (themeBtn) {
+            themeBtn.addEventListener('click', () => {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                const targetTheme = currentTheme === 'light' ? 'dark' : 'light';
+                document.documentElement.setAttribute('data-theme', targetTheme);
+                localStorage.setItem('theme', targetTheme);
+                themeBtn.innerText = targetTheme === 'light' ? '☀️' : '🌙';
+            });
+        }
+
+        // 4. 엑셀 데이터 렌더링 기능
         async function renderAnalysis() {
             const container = document.getElementById('analysis-list');
             const loader = document.getElementById('loading-indicator');
@@ -163,7 +178,7 @@
                             </div>
                             <div style="display:flex; justify-content:space-between; align-items:center; margin-top:auto; padding-top:10px; border-top:1px solid var(--header-border);">
                                 <span style="font-size:0.85rem; font-weight:600;">Hit Rate: <b style="color:#10b981;">${hitRate}%</b></span>
-                                <span style="font-size:0.7rem; color:var(--text-muted);">AI VERIFIED</span>
+                                <span style="font-size:0.7rem; color:var(--text-muted);">AI365 CORE</span>
                             </div>`;
                     }
                     container.appendChild(card);
@@ -171,10 +186,15 @@
             } catch (e) { console.error(e); } finally { loader.style.display = 'none'; }
         }
 
+        // 5. 초기 실행
         document.addEventListener('DOMContentLoaded', () => {
-            updateLanguage(); // 저장된 언어로 초기화
+            // 테마 복원
             const savedTheme = localStorage.getItem('theme') || 'light';
             document.documentElement.setAttribute('data-theme', savedTheme);
+            if (themeBtn) themeBtn.innerText = savedTheme === 'light' ? '☀️' : '🌙';
+
+            // 언어 및 분석 데이터 로드
+            updateLanguage(); 
         });
     </script>
 </body>
