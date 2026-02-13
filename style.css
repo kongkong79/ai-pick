@@ -1,53 +1,113 @@
-/* === 헤더 & 메뉴 정밀 튜닝 === */
+/* === 기본 설정 === */
+:root {
+    --bg-color: #f8fafc;
+    --text-color: #0f172a;
+    --header-bg: rgba(255, 255, 255, 0.95);
+    --header-border: #e2e8f0;
+    --primary-blue: #2563eb;
+    --light-blue: #eff6ff;
+    --card-bg: #ffffff;
+    --text-muted: #64748b;
+}
+
+[data-theme="dark"] {
+    --bg-color: #0f172a;
+    --text-color: #f8fafc;
+    --header-bg: rgba(15, 23, 42, 0.95);
+    --header-border: #1e293b;
+    --primary-blue: #3b82f6;
+    --light-blue: #1e293b;
+    --card-bg: #1e293b;
+}
+
+body { font-family: 'Pretendard', sans-serif; margin: 0; background: var(--bg-color); color: var(--text-color); }
+.container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+
+/* === 헤더 레이아웃 (버튼 사라짐 방지) === */
+header {
+    background: var(--header-bg);
+    border-bottom: 1px solid var(--header-border);
+    padding: 12px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    backdrop-filter: blur(8px);
+}
+
 header .container {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-between; /* 로고 - 메뉴 - 컨트롤 사이 간격 벌리기 */
     align-items: center;
-    padding: 5px 20px;
 }
 
-nav { display: flex; gap: 8px; flex-wrap: wrap; } /* 메뉴가 많아져도 깨지지 않게 설정 */
+/* 로고 스타일 */
+.logo-link { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.logo-img { height: 40px; width: auto; border-radius: 6px; }
+.logo-text-group { display: flex; flex-direction: column; }
+.logo-main-text { font-size: 1.1rem; font-weight: 800; color: var(--text-color); line-height: 1.1; }
+.logo-sub-text { font-size: 0.65rem; font-weight: 600; color: var(--primary-blue); text-transform: uppercase; }
 
+/* 메뉴 스타일 (가로 정렬) */
+nav { display: flex; gap: 8px; }
 .nav-link {
-    padding: 6px 12px;
-    font-size: 0.85rem;
-    font-weight: 700;
-    border-radius: 8px;
-    text-decoration: none;
     color: var(--text-color);
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
     transition: 0.2s;
 }
+.nav-link:hover { background: var(--light-blue); color: var(--primary-blue); }
 
-.nav-link:hover { background: var(--light-blue); }
-.nav-link.active { background: var(--primary-blue); color: #fff !important; }
+/* 컨트롤 스타일 */
+.header-controls { display: flex; align-items: center; gap: 10px; }
+#language-switcher { display: flex; border: 1px solid var(--header-border); border-radius: 8px; overflow: hidden; }
+#language-switcher button {
+    border: none; background: var(--card-bg); color: var(--text-muted);
+    padding: 6px 10px; cursor: pointer; font-size: 0.8rem; font-weight: 700;
+}
+#language-switcher button.active { background: var(--primary-blue); color: #fff; }
 
-/* VIP는 여전히 돋보이게 */
-.vip-link {
-    background: #fbbf24;
-    color: #000 !important;
+#theme-toggle {
+    background: var(--card-bg); border: 1px solid var(--header-border);
+    padding: 6px 10px; border-radius: 8px; cursor: pointer;
 }
 
-/* === 카드 밀도 최적화 (안 이쁘게 넓은 부분 수정) === */
+/* 1. 카드를 감싸는 컨테이너 설정 */
 #analysis-list {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* 최소 너비를 줄여서 더 촘촘하게 */
-    gap: 16px; /* 간격 축소 */
+    /* 기본적으로 1줄에 1개 (모바일) */
+    grid-template-columns: 1fr; 
+    gap: 20px;
     padding: 20px 0;
 }
 
-.analysis-list-item {
-    padding: 18px; /* 내부 여백 축소 */
-    border-radius: 16px;
-    background: var(--card-bg);
-    border: 1px solid var(--header-border);
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+/* 2. 태블릿 (화면 너비 768px 이상) - 1줄에 2개 */
+@media (min-width: 768px) {
+    #analysis-list {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
-/* 언어 스위처 복구 */
-#language-switcher button {
-    padding: 4px 8px;
-    font-size: 0.75rem;
+/* 3. 데스크탑 (화면 너비 1024px 이상) - 1줄에 3개 */
+@media (min-width: 1024px) {
+    #analysis-list {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* 4. 카드 디자인 미세 조정 (크기 최적화) */
+.analysis-list-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* 내용이 적어도 버튼/메시지가 아래 고정되도록 */
+    height: 100%; /* 모든 카드의 높이를 통일 */
+    padding: 20px;
+    margin-bottom: 0; /* Grid Gap을 사용하므로 여백 제거 */
+    transition: transform 0.2s ease;
+}
+
+.analysis-list-item:hover {
+    transform: translateY(-5px); /* 마우스 올렸을 때 살짝 들리는 효과 */
 }
