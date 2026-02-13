@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-i18n-key="appTitle">BetMetrics AI Analysis</title>
+    <title>AI365PICK - Smart AI Sports Analysis</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
@@ -11,18 +11,17 @@
     <header>
         <div class="container">
             <a href="index.html" class="logo-link" id="logo-link">
-                 <img src="betmetrics.png?v=2" alt="BetMetrics Logo" class="logo-img">
+                 <img src="betmetrics.png?v=2" alt="AI365PICK Logo" class="logo-img">
                  <div class="logo-text-group">
-                     <span class="logo-main-text">BetMetrics</span>
-                     <span class="logo-sub-text">AI Analysis</span>
+                     <span class="logo-main-text">AI365PICK</span>
+                     <span class="logo-sub-text">Smart AI Analysis</span>
                  </div>
             </a>
             <nav>
-                <a href="index.html" data-i18n-key="navHome" class="nav-link active">Home</a>
-                <a href="about.html" data-i18n-key="navAbout" class="nav-link">About</a>
-                <a href="contact.html" data-i18n-key="navContact" class="nav-link">Contact</a>
-                <a href="privacy.html" data-i18n-key="navPrivacy" class="nav-link">Privacy</a>
-                <a href="vip.html" class="nav-link vip-link" data-i18n-key="navVip">VIP</a>
+                <a href="index.html" class="nav-link active">Home</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+                <a href="vip.html" class="nav-link vip-link">VIP</a>
             </nav>
             <div class="header-controls">
                 <div id="language-switcher">
@@ -38,11 +37,11 @@
 
     <main class="container">
         <section class="hero">
-            <h1 data-i18n-key="headerTitle">Sports Betting Analysis</h1>
-            <p data-i18n-key="headerSubtitle">Harness the power of AI for smarter sports betting.</p>
+            <h1>Real-time AI Sports Analysis</h1>
+            <p>Harness the power of AI 365 days a year for smarter insights.</p>
         </section>
         
-        <div id="loading-indicator" style="display: none; text-align: center; padding: 20px;" data-i18n-key="loading">Loading...</div>
+        <div id="loading-indicator" style="display: none; text-align: center; padding: 20px;">Loading Analysis...</div>
         
         <div id="analysis-list">
             </div>
@@ -50,14 +49,20 @@
 
     <footer>
         <div class="container">
-            <p data-i18n-key="footerText">&copy; 2024 BetMetrics. All rights reserved.</p>
+            <div class="footer-content" style="text-align: center; padding: 40px 0;">
+                <p><strong>&copy; 2024 AI365PICK. All rights reserved.</strong></p>
+                <div style="font-size: 0.75rem; color: var(--text-muted); max-width: 850px; margin: 20px auto; line-height: 1.6; text-align: justify; border-top: 1px solid var(--header-border); padding-top: 20px;">
+                    <p><strong>Disclaimer:</strong> AI365PICK provides sports data and statistical analysis based on artificial intelligence for informational purposes only. We are not a bookmaker and do not collect bets. Sports betting involves significant risk, and we do not guarantee the accuracy of our AI predictions. Users are solely responsible for their financial decisions. Please gamble responsibly. (19+ Only)</p>
+                    <p>본 사이트는 인공지능을 활용한 스포츠 데이터 분석 정보를 제공하며, 어떠한 형태의 사행성 행위나 직접적인 베팅 서비스를 제공하지 않습니다. 모든 정보는 통계적 참고 자료일 뿐이며, 이를 활용한 결과에 대한 책임은 사용자 본인에게 있습니다.</p>
+                </div>
+            </div>
         </div>
     </footer>
 
     <script src="translations.js"></script>
     
     <script>
-async function renderAnalysis() {
+    async function renderAnalysis() {
         const container = document.getElementById('analysis-list');
         const loader = document.getElementById('loading-indicator');
         const isVip = localStorage.getItem('isVipUser') === 'true'; 
@@ -84,27 +89,25 @@ async function renderAnalysis() {
                 const card = document.createElement('div');
                 
                 if (hitRate >= 80 && !isVip) {
-                    // [VIP 잠긴 카드] - 여기는 유인을 위해 버튼이 필요합니다.
+                    // [VIP 잠금 모드] - 결제 유도 버튼 유지
                     card.className = 'analysis-list-item vip-locked-card';
                     card.innerHTML = `
                         <span class="vip-badge-top">⭐ VIP ONLY</span>
                         <div class="lock-overlay">
                             <span style="font-size: 1.5rem; margin-bottom: 8px;">🔒</span>
                             <p style="font-size: 0.85rem; font-weight: 800; color: #b45309; margin:0;">Accuracy: ${hitRate}%</p>
-                            <a href="vip.html" style="margin-top:12px; background:#fbbf24; color:#000; padding:8px 18px; border-radius:20px; text-decoration:none; font-size:0.75rem; font-weight:bold; box-shadow: 0 4px 10px rgba(251,191,36,0.3);">Unlock VIP Analysis</a>
+                            <a href="vip.html" style="margin-top:12px; background:#fbbf24; color:#000; padding:8px 18px; border-radius:20px; text-decoration:none; font-size:0.75rem; font-weight:bold;">Unlock VIP Analysis</a>
                         </div>
                         <div class="blur-target">
                             <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:#999;">
                                 <span>🕒 ${row[0]}</span>
                             </div>
                             <h3 style="font-size:1.1rem; margin:15px 0;">${row[1]} vs ${row[2]}</h3>
-                            <div class="ai-chart-section">
-                                <div class="donut-chart" style="background: #e2e8f0;"></div>
-                            </div>
+                            <div class="ai-chart-section"><div class="donut-chart" style="background: #e2e8f0;"></div></div>
                         </div>
                     `;
                 } else {
-                    // [일반 공개 카드] - 버튼을 없애고 정보를 더 크게 보여줍니다.
+                    // [일반 공개 모드] - 버튼 제거, 디자인 슬림화
                     card.className = 'analysis-list-item';
                     if (isVip && hitRate >= 80) card.style.borderColor = '#fbbf24'; 
 
@@ -133,21 +136,14 @@ async function renderAnalysis() {
 
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-top:auto; padding-top:10px; border-top:1px solid var(--header-border);">
                             <span style="font-size:0.85rem; font-weight:600;">Hit Rate: <b style="color:#10b981;">${hitRate}%</b></span>
-                            <span style="font-size:0.75rem; color:var(--text-muted); font-style:italic;">AI Verified</span>
+                            <span style="font-size:0.7rem; color:var(--text-muted);">AI VERIFIED</span>
                         </div>
                     `;
                 }
                 container.appendChild(card);
             });
         } catch (error) {
-            console.error('Excel Loading Error:', error);
+            console.error('Data Loading Error:', error);
         } finally {
             loader.style.display = 'none';
         }
-    }
-
-    // 페이지 로드 시 단 한 번만 실행
-    document.addEventListener('DOMContentLoaded', renderAnalysis);
-    </script>
-</body>
-</html>
