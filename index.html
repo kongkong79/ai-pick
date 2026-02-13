@@ -4,28 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-i18n-key="appTitle">BetMetrics AI Analysis</title>
-    <link rel="stylesheet" href="style.css?v=4.0">
+    <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
     <header>
         <div class="container">
-            <a href="index.html" class="logo-link">
+            <a href="index.html" class="logo-link" id="logo-link">
                  <img src="betmetrics.png?v=2" alt="BetMetrics Logo" class="logo-img">
                  <div class="logo-text-group">
                      <span class="logo-main-text">BetMetrics</span>
                      <span class="logo-sub-text">AI Analysis</span>
                  </div>
             </a>
-            
             <nav>
-                <a href="index.html" class="nav-link active" data-i18n-key="navHome">Home</a>
-                <a href="about.html" class="nav-link" data-i18n-key="navAbout">About</a>
-                <a href="contact.html" class="nav-link" data-i18n-key="navContact">Contact</a>
-                <a href="privacy.html" class="nav-link" data-i18n-key="navPrivacy">Privacy</a>
+                <a href="index.html" data-i18n-key="navHome" class="nav-link active">Home</a>
+                <a href="about.html" data-i18n-key="navAbout" class="nav-link">About</a>
+                <a href="contact.html" data-i18n-key="navContact" class="nav-link">Contact</a>
+                <a href="privacy.html" data-i18n-key="navPrivacy" class="nav-link">Privacy</a>
                 <a href="vip.html" class="nav-link vip-link" data-i18n-key="navVip">VIP</a>
             </nav>
-
             <div class="header-controls">
                 <div id="language-switcher">
                     <button data-lang="en">EN</button>
@@ -33,84 +31,64 @@
                     <button data-lang="ja">JA</button>
                     <button data-lang="zh">CN</button>
                 </div>
-                <button id="theme-toggle" onclick="toggleTheme()">☀️</button>
+                <button id="theme-toggle">☀️</button>
             </div>
         </div>
     </header>
 
-    <main>
-        <section class="hero" style="padding: 40px 20px; text-align: center; background: linear-gradient(135deg, #2563eb, #1e40af); color: white; border-radius: 0 0 30px 30px;">
-            <div class="container">
-                <h1 style="font-size: 2rem; margin-bottom: 10px;">High-Confidence Picks</h1>
-                <p style="font-size: 0.9rem; opacity: 0.8;">Exclusive analysis for matches with 10+ data samples.</p>
+    <main class="container">
+        <section class="hero">
+            <h1 data-i18n-key="headerTitle">Sports Betting Analysis</h1>
+            <p data-i18n-key="headerSubtitle">Harness the power of AI for smarter sports betting.</p>
+        </section>
+        
+        <div id="loading-indicator" style="display: none; text-align: center; padding: 20px;" data-i18n-key="loading">Loading...</div>
+        
+        <div id="analysis-list">
             </div>
-        </section>
-
-        <section class="container" style="margin-top: 30px;">
-            <h2 style="font-size: 1.2rem; font-weight: 800; margin-bottom: 20px;" data-i18n-key="todayMatch">Today's Premium Analysis</h2>
-            
-            <div id="analysis-list">
-                </div>
-        </section>
     </main>
 
-    <script>
-        async function loadData() {
-            const container = document.getElementById('analysis-list');
-            try {
-                const response = await fetch('sports_data.xlsx?v=' + Math.random());
-                const arrayBuffer = await response.arrayBuffer();
-                const workbook = XLSX.read(new Uint8Array(arrayBuffer), { type: 'array' });
-                const rows = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], { header: 1 });
-
-                container.innerHTML = '';
-                
-                // ★ 사장님 요청: 표본(Sample Count) 10개 이상인 경기만 선별
-                const premiumRows = rows.slice(1).filter(row => parseInt(row[11]) >= 10);
-
-                premiumRows.forEach(row => {
-                    const card = document.createElement('div');
-                    card.className = 'analysis-list-item';
-                    
-                    // VIP 잠금 상태 디자인 (메인에선 티저로 보여줌)
-                    card.innerHTML = `
-                        <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:12px;">
-                            <span style="font-size:0.75rem; color:#64748b;">🕒 ${row[0]}</span>
-                            <span style="background:#fef3c7; color:#92400e; font-size:0.7rem; padding:2px 6px; border-radius:4px; font-weight:bold;">Samples: ${row[11]}</span>
-                        </div>
-                        <h3 style="font-size:1rem; margin:0 0 15px 0; color:var(--text-color);">${row[1]} <span style="color:#cbd5e1; font-weight:400;">vs</span> ${row[2]}</h3>
-                        <div style="filter:blur(4px); opacity:0.3; user-select:none;">
-                            <div style="height:10px; background:#e2e8f0; width:80%; margin-bottom:8px;"></div>
-                            <div style="height:10px; background:#e2e8f0; width:50%;"></div>
-                        </div>
-                        <a href="vip.html" style="margin-top:auto; background:var(--primary-blue); color:white; text-align:center; padding:10px; border-radius:8px; text-decoration:none; font-size:0.85rem; font-weight:bold;">Unlock Analysis</a>
-                    `;
-                    container.appendChild(card);
-                });
-
-                if(premiumRows.length === 0) {
-                    container.innerHTML = `<p style="grid-column:1/-1; text-align:center; padding:50px; color:#94a3b8;">High-confidence matches are being analyzed. Please check back later.</p>`;
-                }
-            } catch (e) { console.error("Error loading data:", e); }
-        }
-
-        document.addEventListener('DOMContentLoaded', loadData);
-
-        function toggleTheme() {
-            const current = document.documentElement.getAttribute('data-theme');
-            const target = current === 'light' ? 'dark' : 'light';
-            document.documentElement.setAttribute('data-theme', target);
-            localStorage.setItem('theme', target);
-        }
-    </script>
-
-    <footer style="margin-top: 60px; border-top: 1px solid var(--header-border); padding: 30px 0; text-align: center;">
+    <footer>
         <div class="container">
-            <p style="font-size: 0.8rem; color: var(--text-muted);">&copy; 2026 BetMetrics. All rights reserved.</p>
+            <p data-i18n-key="footerText">&copy; 2024 BetMetrics. All rights reserved.</p>
         </div>
     </footer>
 
     <script src="translations.js"></script>
     <script src="main.js"></script>
+    <script>
+    // 페이지가 로드될 때 VIP 상태를 확인하여 화면을 변경합니다.
+    document.addEventListener('DOMContentLoaded', function() {
+        const isVip = localStorage.getItem('isVipUser'); // VIP 인증 여부 확인
+        
+        if (isVip === 'true') {
+            // 1. 모든 'VIP Exclusive' 텍스트를 'VIP Unlocked'로 변경
+            document.querySelectorAll('.analysis-list-item h3').forEach(el => {
+                if (el.textContent.includes('VIP Exclusive')) {
+                    el.textContent = '✅ VIP Unlocked';
+                }
+            });
+
+            // 2. 모든 자물쇠 아이콘(🔒)을 체크 아이콘(🔓 또는 ✅)으로 변경
+            document.querySelectorAll('.lock-icon').forEach(el => {
+                el.textContent = '🔓'; 
+            });
+
+            // 3. 'Unlock Now' 버튼을 'View Analysis'로 변경하고 VIP 페이지로 연결
+            document.querySelectorAll('.unlock-link, .nav-link').forEach(el => {
+                if (el.textContent.toLowerCase().includes('unlock')) {
+                    el.textContent = 'View Report';
+                    el.href = 'vip.html'; // 이미 인증됐으니 VIP 페이지로 바로 보냄
+                }
+            });
+            
+            // 4. 메인 페이지의 잠긴 카드 스타일 변경 (선택 사항)
+            document.querySelectorAll('.analysis-list-item').forEach(el => {
+                el.style.borderColor = '#3b82f6'; // 파란색 테두리로 변경
+                el.style.background = 'rgba(59, 130, 246, 0.05)'; // 연한 파란색 배경
+            });
+        }
+    });
+</script>
 </body>
 </html>
