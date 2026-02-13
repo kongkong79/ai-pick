@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-i18n-key="appTitle">BetMetrics AI Analysis</title>
-    <link rel="stylesheet" href="style.css?v=3.0">
+    <link rel="stylesheet" href="style.css?v=4.0">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
@@ -17,14 +17,21 @@
                      <span class="logo-sub-text">AI Analysis</span>
                  </div>
             </a>
+            
             <nav>
                 <a href="index.html" class="nav-link active" data-i18n-key="navHome">Home</a>
-                <a href="vip.html" class="nav-link vip-link" data-i18n-key="navVip">VIP Access</a>
+                <a href="about.html" class="nav-link" data-i18n-key="navAbout">About</a>
+                <a href="contact.html" class="nav-link" data-i18n-key="navContact">Contact</a>
+                <a href="privacy.html" class="nav-link" data-i18n-key="navPrivacy">Privacy</a>
+                <a href="vip.html" class="nav-link vip-link" data-i18n-key="navVip">VIP</a>
             </nav>
+
             <div class="header-controls">
                 <div id="language-switcher">
                     <button data-lang="en">EN</button>
                     <button data-lang="ko">KO</button>
+                    <button data-lang="ja">JA</button>
+                    <button data-lang="zh">CN</button>
                 </div>
                 <button id="theme-toggle" onclick="toggleTheme()">☀️</button>
             </div>
@@ -32,80 +39,62 @@
     </header>
 
     <main>
-        <section class="hero">
-            <div class="container" style="text-align:center;">
-                <h1 data-i18n-key="headerTitle">High-Confidence AI Predictions</h1>
-                <p data-i18n-key="headerSubtitle">We only show matches with 10+ historical data points for maximum accuracy.</p>
-                <a href="vip.html" class="btn-gold" style="display:inline-block; margin-top:10px; padding:16px 40px; font-size:1rem; border-radius:50px;">Join VIP Membership</a>
+        <section class="hero" style="padding: 40px 20px; text-align: center; background: linear-gradient(135deg, #2563eb, #1e40af); color: white; border-radius: 0 0 30px 30px;">
+            <div class="container">
+                <h1 style="font-size: 2rem; margin-bottom: 10px;">High-Confidence Picks</h1>
+                <p style="font-size: 0.9rem; opacity: 0.8;">Exclusive analysis for matches with 10+ data samples.</p>
             </div>
         </section>
 
-        <div class="container">
-            <div class="stats-row" style="display:flex; gap:15px; margin-top:-50px; margin-bottom:40px;">
-                <div class="stat-box" style="flex:1; background:var(--card-bg); padding:20px; border-radius:20px; text-align:center; box-shadow:0 8px 20px rgba(0,0,0,0.05);">
-                    <h3 style="color:var(--primary-blue); margin:0;">88.4%</h3>
-                    <p style="font-size:0.8rem; color:var(--text-muted); margin:5px 0 0 0;">Avg. Win Rate</p>
-                </div>
-                <div class="stat-box" style="flex:1; background:var(--card-bg); padding:20px; border-radius:20px; text-align:center; box-shadow:0 8px 20px rgba(0,0,0,0.05);">
-                    <h3 style="color:var(--primary-blue); margin:0;">10+</h3>
-                    <p style="font-size:0.8rem; color:var(--text-muted); margin:5px 0 0 0;">Min. Samples</p>
-                </div>
-                <div class="stat-box" style="flex:1; background:var(--card-bg); padding:20px; border-radius:20px; text-align:center; box-shadow:0 8px 20px rgba(0,0,0,0.05);">
-                    <h3 style="color:var(--primary-blue); margin:0;">Premium</h3>
-                    <p style="font-size:0.8rem; color:var(--text-muted); margin:5px 0 0 0;">Analysis Level</p>
-                </div>
-            </div>
-        </div>
-
-        <section class="container">
-            <h2 style="margin-bottom:20px; font-weight:800;">Top Verified Picks</h2>
-            <div id="analysis-list" class="match-grid">
+        <section class="container" style="margin-top: 30px;">
+            <h2 style="font-size: 1.2rem; font-weight: 800; margin-bottom: 20px;" data-i18n-key="todayMatch">Today's Premium Analysis</h2>
+            
+            <div id="analysis-list">
                 </div>
         </section>
     </main>
 
     <script>
-        async function loadPremiumData() {
+        async function loadData() {
             const container = document.getElementById('analysis-list');
             try {
                 const response = await fetch('sports_data.xlsx?v=' + Math.random());
-                const data = new Uint8Array(await response.arrayBuffer());
-                const workbook = XLSX.read(data, {type: 'array'});
-                const rows = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {header: 1});
+                const arrayBuffer = await response.arrayBuffer();
+                const workbook = XLSX.read(new Uint8Array(arrayBuffer), { type: 'array' });
+                const rows = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], { header: 1 });
 
                 container.innerHTML = '';
                 
-                // ★ 핵심: 표본 10개 이상인 고퀄리티 데이터만 추출
-                const premiumMatches = rows.slice(1).filter(row => parseInt(row[11]) >= 10);
+                // ★ 사장님 요청: 표본(Sample Count) 10개 이상인 경기만 선별
+                const premiumRows = rows.slice(1).filter(row => parseInt(row[11]) >= 10);
 
-                premiumMatches.forEach(row => {
+                premiumRows.forEach(row => {
                     const card = document.createElement('div');
-                    card.className = 'analysis-list-item vip-locked'; // 메인에선 모두 잠금(티저) 처리
+                    card.className = 'analysis-list-item';
                     
+                    // VIP 잠금 상태 디자인 (메인에선 티저로 보여줌)
                     card.innerHTML = `
-                        <span class="vip-badge">⭐ HIGH ACCURACY</span>
-                        <div class="blur-content" style="filter: blur(5px); opacity: 0.3;">
-                            <p style="font-size:0.8rem; margin:0;">🕒 ${row[0]}</p>
-                            <h3 style="margin:10px 0;">${row[1]} vs ${row[2]}</h3>
-                            <div style="background:#ddd; height:12px; width:100%; border-radius:10px;"></div>
+                        <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:12px;">
+                            <span style="font-size:0.75rem; color:#64748b;">🕒 ${row[0]}</span>
+                            <span style="background:#fef3c7; color:#92400e; font-size:0.7rem; padding:2px 6px; border-radius:4px; font-weight:bold;">Samples: ${row[11]}</span>
                         </div>
-                        <div class="unlock-overlay" style="position:absolute; top:0; left:0; width:100%; height:100%; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:20px; text-align:center; box-sizing:border-box;">
-                            <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:5px;">Verified with ${row[11]} samples</p>
-                            <h4 style="margin:0 0 15px 0; font-size:1rem;">${row[1]} vs ${row[2]}</h4>
-                            <a href="vip.html" class="btn-gold" style="font-size:0.85rem; padding:10px 20px;">Unlock AI Prediction</a>
+                        <h3 style="font-size:1rem; margin:0 0 15px 0; color:var(--text-color);">${row[1]} <span style="color:#cbd5e1; font-weight:400;">vs</span> ${row[2]}</h3>
+                        <div style="filter:blur(4px); opacity:0.3; user-select:none;">
+                            <div style="height:10px; background:#e2e8f0; width:80%; margin-bottom:8px;"></div>
+                            <div style="height:10px; background:#e2e8f0; width:50%;"></div>
                         </div>
+                        <a href="vip.html" style="margin-top:auto; background:var(--primary-blue); color:white; text-align:center; padding:10px; border-radius:8px; text-decoration:none; font-size:0.85rem; font-weight:bold;">Unlock Analysis</a>
                     `;
                     container.appendChild(card);
                 });
 
-                if (premiumMatches.length === 0) {
-                    container.innerHTML = '<p style="text-align:center; grid-column:1/-1; padding:60px; color:#999;">No high-confidence matches at the moment. Checking soon...</p>';
+                if(premiumRows.length === 0) {
+                    container.innerHTML = `<p style="grid-column:1/-1; text-align:center; padding:50px; color:#94a3b8;">High-confidence matches are being analyzed. Please check back later.</p>`;
                 }
-
-            } catch (err) { console.error(err); }
+            } catch (e) { console.error("Error loading data:", e); }
         }
 
-        document.addEventListener('DOMContentLoaded', loadPremiumData);
+        document.addEventListener('DOMContentLoaded', loadData);
 
         function toggleTheme() {
             const current = document.documentElement.getAttribute('data-theme');
@@ -115,9 +104,12 @@
         }
     </script>
 
-    <footer style="text-align:center; padding:50px 0; opacity:0.6; font-size:0.8rem;">
-        &copy; 2026 BetMetrics. All rights reserved.
+    <footer style="margin-top: 60px; border-top: 1px solid var(--header-border); padding: 30px 0; text-align: center;">
+        <div class="container">
+            <p style="font-size: 0.8rem; color: var(--text-muted);">&copy; 2026 BetMetrics. All rights reserved.</p>
+        </div>
     </footer>
+
     <script src="translations.js"></script>
     <script src="main.js"></script>
 </body>
