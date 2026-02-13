@@ -8,6 +8,7 @@
     --light-blue: #eff6ff;
     --card-bg: #ffffff;
     --text-muted: #64748b;
+    --chart-bg: #f8fafc; /* 그래프 배경용 */
 }
 
 [data-theme="dark"] {
@@ -18,12 +19,13 @@
     --primary-blue: #3b82f6;
     --light-blue: #1e293b;
     --card-bg: #1e293b;
+    --chart-bg: #0f172a; /* 다크모드 그래프 배경 */
 }
 
 body { font-family: 'Pretendard', sans-serif; margin: 0; background: var(--bg-color); color: var(--text-color); }
 .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
 
-/* === 헤더 레이아웃 (버튼 사라짐 방지) === */
+/* === 헤더 레이아웃 === */
 header {
     background: var(--header-bg);
     border-bottom: 1px solid var(--header-border);
@@ -36,18 +38,16 @@ header {
 
 header .container {
     display: flex;
-    justify-content: space-between; /* 로고 - 메뉴 - 컨트롤 사이 간격 벌리기 */
+    justify-content: space-between;
     align-items: center;
 }
 
-/* 로고 스타일 */
 .logo-link { display: flex; align-items: center; gap: 10px; text-decoration: none; }
 .logo-img { height: 40px; width: auto; border-radius: 6px; }
 .logo-text-group { display: flex; flex-direction: column; }
 .logo-main-text { font-size: 1.1rem; font-weight: 800; color: var(--text-color); line-height: 1.1; }
 .logo-sub-text { font-size: 0.65rem; font-weight: 600; color: var(--primary-blue); text-transform: uppercase; }
 
-/* 메뉴 스타일 (가로 정렬) */
 nav { display: flex; gap: 8px; }
 .nav-link {
     color: var(--text-color);
@@ -60,7 +60,6 @@ nav { display: flex; gap: 8px; }
 }
 .nav-link:hover { background: var(--light-blue); color: var(--primary-blue); }
 
-/* 컨트롤 스타일 */
 .header-controls { display: flex; align-items: center; gap: 10px; }
 #language-switcher { display: flex; border: 1px solid var(--header-border); border-radius: 8px; overflow: hidden; }
 #language-switcher button {
@@ -74,40 +73,84 @@ nav { display: flex; gap: 8px; }
     padding: 6px 10px; border-radius: 8px; cursor: pointer;
 }
 
-/* 1. 카드를 감싸는 컨테이너 설정 */
+/* === 카드 리스트 레이아웃 === */
 #analysis-list {
     display: grid;
-    /* 기본적으로 1줄에 1개 (모바일) */
     grid-template-columns: 1fr; 
     gap: 20px;
     padding: 20px 0;
 }
 
-/* 2. 태블릿 (화면 너비 768px 이상) - 1줄에 2개 */
 @media (min-width: 768px) {
-    #analysis-list {
-        grid-template-columns: repeat(2, 1fr);
-    }
+    #analysis-list { grid-template-columns: repeat(2, 1fr); }
 }
 
-/* 3. 데스크탑 (화면 너비 1024px 이상) - 1줄에 3개 */
 @media (min-width: 1024px) {
-    #analysis-list {
-        grid-template-columns: repeat(3, 1fr);
-    }
+    #analysis-list { grid-template-columns: repeat(3, 1fr); }
 }
 
-/* 4. 카드 디자인 미세 조정 (크기 최적화) */
 .analysis-list-item {
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* 내용이 적어도 버튼/메시지가 아래 고정되도록 */
-    height: 100%; /* 모든 카드의 높이를 통일 */
+    justify-content: space-between;
+    height: 100%;
     padding: 20px;
-    margin-bottom: 0; /* Grid Gap을 사용하므로 여백 제거 */
-    transition: transform 0.2s ease;
+    background: var(--card-bg);
+    border: 1px solid var(--header-border);
+    border-radius: 16px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .analysis-list-item:hover {
-    transform: translateY(-5px); /* 마우스 올렸을 때 살짝 들리는 효과 */
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
 }
+
+/* === [NEW] AI 확률 그래프 스타일 추가 === */
+.ai-chart-section {
+    display: flex;
+    align-items: center;
+    background: var(--chart-bg); /* 다크/라이트 자동 대응 */
+    border-radius: 12px;
+    padding: 12px;
+    margin: 12px 0;
+    gap: 15px;
+}
+
+.donut-chart {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+/* 도넛 구멍: 다크모드 배경색에 맞춰 변함 */
+.donut-chart::after {
+    content: "";
+    position: absolute;
+    width: 38px;
+    height: 38px;
+    background: var(--chart-bg);
+    border-radius: 50%;
+}
+
+.chart-labels {
+    flex: 1;
+    font-size: 0.75rem;
+    line-height: 1.6;
+}
+
+.label-row {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 600;
+}
+
+.marker { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 5px; }
+.m-win { background: #007bff; }   /* 승: 파랑 */
+.m-draw { background: #94a3b8; }  /* 무: 회색 */
+.m-loss { background: #ef4444; }  /* 패: 빨강 */
