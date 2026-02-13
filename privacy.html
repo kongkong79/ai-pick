@@ -3,72 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-i18n-key="appTitle">Privacy Policy - BetMetrics</title>
+    <title>Privacy Policy - AI365PICK</title>
     <link rel="stylesheet" href="style.css?v=110">
 </head>
 <body>
     <header>
         <div class="container">
             <a href="index.html" class="logo-link" id="logo-link">
-                 <img src="betmetrics.png?v=3" alt="BetMetrics Logo" class="logo-img">
+                 <img src="betmetrics.png?v=3" alt="AI365PICK Logo" class="logo-img">
                  <div class="logo-text-group">
-                     <span class="logo-main-text">BetMetrics</span>
+                     <span class="logo-main-text">AI365PICK</span>
                      <span class="logo-sub-text">AI Analysis</span>
                  </div>
             </a>
             <nav>
-                <a href="index.html" data-i18n-key="navHome" class="nav-link">Home</a>
-                <a href="about.html" data-i18n-key="navAbout" class="nav-link">About</a>
-                <a href="contact.html" data-i18n-key="navContact" class="nav-link">Contact</a>
-                <a href="privacy.html" data-i18n-key="navPrivacy" class="nav-link active">Privacy</a>
-                <a href="vip.html" class="nav-link vip-link" data-i18n-key="navVip">VIP</a>
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+                <a href="privacy.html" class="nav-link active">Privacy</a>
+                <a href="vip.html" class="nav-link vip-link">VIP</a>
             </nav>
-            <div class="header-controls">
-                <div id="language-switcher">
-                    <button data-lang="en">EN</button>
-                    <button data-lang="ko">KO</button>
-                    <button data-lang="ja">JA</button>
-                    <button data-lang="zh">CN</button>
-                </div>
-                <button id="theme-toggle">☀️</button>
-            </div>
         </div>
     </header>
 
     <main class="container">
         <section class="hero">
-            <h1 data-i18n-key="privacyTitle">Privacy Policy</h1>
-            <div class="analysis-list-item" style="text-align: left;">
-                <h3 data-i18n-key="privacyDataTitle">Data Collection</h3>
-                <p data-i18n-key="privacyDataDesc">We do not collect personal information unless explicitly provided by you.</p>
-                <p data-i18n-key="privacyIntro">Your privacy is important to us. This policy explains how we handle your data.</p>
+            <h1>Privacy Policy</h1>
+            <div class="analysis-list-item" style="text-align: left; line-height: 1.6;">
+                <h3>Data Collection</h3>
+                <p>At AI365PICK, we do not collect personal information unless explicitly provided by you (e.g., via email inquiry).</p>
+                <p>Your privacy is important to us. We use industry-standard measures to protect any data shared with us.</p>
+                <h3>Cookies</h3>
+                <p>We use local storage only to remember your theme preferences (Dark/Light mode) and VIP status.</p>
             </div>
         </section>
     </main>
 
     <footer>
-        <div class="container">
-            <p data-i18n-key="footerText">&copy; 2024 BetMetrics. All rights reserved.</p>
+        <div class="container" style="text-align: center; padding: 30px 0;">
+            <p>&copy; 2024 AI365PICK. All rights reserved.</p>
+            <p style="font-size: 0.7rem; color: #94a3b8; margin-top: 15px;">
+                Responsible Gaming: AI365PICK promotes safe and responsible data usage.
+            </p>
         </div>
     </footer>
 
     <script src="translations.js?v=110"></script>
-    <script src="main.js?v=110"></script>
     <script>
-    // 1. 페이지 로드 시 저장된 테마 적용
-    document.addEventListener('DOMContentLoaded', () => {
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        document.documentElement.setAttribute('data-theme', savedTheme);
-    });
-
-    // 2. 테마 토글 함수 (버튼에 연결된 경우)
-    function toggleTheme() {
-        const currentTheme = document.documentElement.getAttribute('data-theme');
-        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-        
-        document.documentElement.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-    }
-</script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        });
+    </script>
 </body>
 </html>
