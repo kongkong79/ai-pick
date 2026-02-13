@@ -1,121 +1,52 @@
-/* === 기존 설정 유지 및 변수 추가 === */
-:root {
-    --bg-color: #f8fafc;
-    --text-color: #0f172a;
-    --header-bg: rgba(255, 255, 255, 0.95);
-    --header-border: #e2e8f0;
-    --primary-blue: #2563eb;
-    --light-blue: #eff6ff;
-    --card-bg: #ffffff;
-    --text-muted: #64748b;
-    --gold: #fbbf24; /* VIP 포인트 컬러 */
+/* === 메뉴 디자인 개선 === */
+nav { display: flex; gap: 15px; align-items: center; }
+
+.nav-link {
+    color: var(--text-color);
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 50px; /* 둥근 버튼 형태 */
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: 0.3s;
 }
 
-[data-theme="dark"] {
-    --bg-color: #0f172a;
-    --text-color: #f8fafc;
-    --header-bg: rgba(15, 23, 42, 0.95);
-    --header-border: #1e293b;
-    --primary-blue: #3b82f6;
-    --light-blue: #1e293b;
-    --card-bg: #1e293b;
+.nav-link:hover {
+    background: var(--light-blue);
+    color: var(--primary-blue);
 }
 
-body { font-family: 'Pretendard', sans-serif; margin: 0; background: var(--bg-color); color: var(--text-color); line-height: 1.6; }
-.container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
-
-/* === 프리미엄 Hero 섹션 === */
-.hero {
-    text-align: center;
-    padding: 80px 20px;
-    background: linear-gradient(135deg, var(--primary-blue) 0%, #1e40af 100%);
-    color: white;
-    border-radius: 0 0 40px 40px;
-    margin-bottom: 60px;
+.nav-link.active {
+    background: var(--primary-blue);
+    color: #fff !important;
 }
-.hero h1 { font-size: 2.8rem; font-weight: 800; margin-bottom: 15px; letter-spacing: -1px; }
-.hero p { font-size: 1.1rem; opacity: 0.9; margin-bottom: 30px; }
 
-/* === 통계 대시보드 (Hero 아래 3박스) === */
-.stats-row {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin-top: -60px;
-    margin-bottom: 40px;
+/* VIP 메뉴 특별 강조 */
+.vip-link {
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    color: #000 !important;
+    box-shadow: 0 4px 10px rgba(251, 191, 36, 0.3);
 }
-.stat-box {
-    background: var(--card-bg);
-    padding: 20px 30px;
-    border-radius: 16px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    text-align: center;
-    min-width: 150px;
-    flex: 1;
-    max-width: 250px;
+.vip-link:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 15px rgba(251, 191, 36, 0.5);
 }
-.stat-box h3 { font-size: 1.8rem; color: var(--primary-blue); margin: 0; }
-.stat-box p { font-size: 0.85rem; color: var(--text-muted); margin: 5px 0 0 0; font-weight: 600; }
 
-/* === 카드 디자인 업그레이드 === */
+/* === 카드 섹션 여백 조정 === */
+.match-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 25px;
+    padding: 30px 0;
+}
+
 .analysis-list-item {
+    border: 1px solid rgba(0,0,0,0.05);
     background: var(--card-bg);
     border-radius: 20px;
     padding: 24px;
-    border: 1px solid var(--header-border);
-    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.02);
     display: flex;
     flex-direction: column;
-}
-
-/* VIP 티저 (잠금) 스타일 */
-.vip-locked {
-    border: 2px solid var(--gold) !important;
-}
-.vip-badge {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background: var(--gold);
-    color: #000;
-    font-size: 0.7rem;
-    font-weight: 800;
-    padding: 4px 10px;
-    border-radius: 20px;
-}
-.blur-content {
-    filter: blur(6px);
-    opacity: 0.4;
-    pointer-events: none;
-    user-select: none;
-}
-.unlock-overlay {
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    box-sizing: border-box;
-    background: rgba(var(--card-bg), 0.1);
-}
-.btn-gold {
-    background: var(--gold);
-    color: #000;
-    border: none;
-    padding: 12px 20px;
-    border-radius: 10px;
-    font-weight: 800;
-    cursor: pointer;
-    text-decoration: none;
-    text-align: center;
-}
-
-@media (max-width: 768px) {
-    .hero h1 { font-size: 2rem; }
-    .stats-row { flex-wrap: wrap; padding: 0 20px; }
-    .stat-box { min-width: 40%; }
+    min-height: 180px;
 }
