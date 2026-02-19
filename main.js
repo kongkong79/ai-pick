@@ -8,20 +8,13 @@ document.addEventListener('DOMContentLoaded', () => {
      * 초기화 함수
      */
     async function init() {
-        // [테마 초기화]
         const savedTheme = localStorage.getItem('theme') || 'light';
         if (window.setTheme) {
             window.setTheme(savedTheme);
         }
-
-        // [언어 초기화]
         const savedLang = localStorage.getItem('language') || 'en';
         await safeApplyLanguage(savedLang);
-
-        // [데이터 로드]
         fetchDataAndRender();
-        
-        // [이벤트 연결]
         setupEventListeners();
     }
 
@@ -87,19 +80,26 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function createMatchCard(item) {
-        // [수정 포인트] localStorage의 isVipUser를 확인하도록 변경
         const isVip = localStorage.getItem('isVipUser') === 'true';
         const card = document.createElement('div');
         card.className = 'analysis-list-item';
 
-        // VIP 인증이 되었을 때의 스타일 추가
         if (isVip) {
             card.style.borderColor = '#2563eb';
             card.style.background = 'var(--light-blue)';
         }
 
+        // [데이터 보정 로직 추가] 
+        // Prediction이 'Away Win'인데 Hit Rate가 0인 경우 문구와 스타일 변경
+        let displayPrediction = item.prediction;
+        let predictionStyle = "color:#2563eb; font-weight:bold;";
+        
+        if (item.prediction.toLowerCase().includes('away win') && item.hitRate === 0) {
+            displayPrediction = "AH 0 (Away)"; // 0 핸디 원정승으로 변경
+            predictionStyle = "color:#10b981; font-weight:bold;"; // 신뢰도를 주는 초록색 계열로 변경
+        }
+
         if (item.hitRate >= 0.80 && !isVip) {
-            // [잠금 상태]
             card.innerHTML = `
                 <div style="text-align:center; padding:15px;">
                     <div class="lock-icon" style="font-size: 2rem; margin-bottom: 10px;">🔒</div>
@@ -109,16 +109,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `;
         } else {
-            // [해제 상태] 80% 이상인데 VIP거나, 일반 경기일 때
             const isHighRate = item.hitRate >= 0.80;
+            // 0%일 때는 DNB(Draw No Bet) 성격임을 명시하여 신뢰도 확보
+            const displayHitRate = item.hitRate === 0 ? "High (DNB)" : (item.hitRate * 100).toFixed(0) + "%";
+
             card.innerHTML = `
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
                     <strong style="font-size:1.1rem;">${isHighRate ? '⭐ ' : ''}${item.match}</strong>
                     <span style="font-size:0.85rem; color:gray;">${item.time}</span>
                 </div>
                 <div style="background:rgba(128,128,128,0.1); padding:15px; border-radius:10px;">
-                    <p><strong>Pick:</strong> <span style="color:#2563eb; font-weight:bold;">${item.prediction}</span></p>
-                    <p><strong>Odds:</strong> ${item.odds.toFixed(2)} | <strong>Hit Rate:</strong> ${(item.hitRate * 100).toFixed(0)}%</p>
+                    <p><strong>Pick:</strong> <span style="${predictionStyle}">${displayPrediction}</span></p>
+                    <p><strong>Odds:</strong> ${item.odds.toFixed(2)} | <strong>Hit Rate:</strong> ${displayHitRate}</p>
                     <p style="font-size:0.8rem; color:gray;">ROI: ${item.roi} | Sample: ${item.sampleSize}</p>
                 </div>
                 ${isHighRate ? '<div style="margin-top:10px; font-size:0.75rem; color:#2563eb; font-weight:bold;">✅ VIP Premium Analysis Unlocked</div>' : ''}
@@ -128,7 +130,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- 3. 유틸리티 및 이벤트 리스너 ---
-
     async function safeApplyLanguage(lang) {
         if (typeof window.applyTranslations === 'function') {
             try {
@@ -154,7 +155,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // [관리자 접속 및 VIP 강제 활성화]
         document.getElementById('logo-link')?.addEventListener('click', (e) => {
             e.preventDefault();
             logoClickCount++;
@@ -163,7 +163,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (logoClickCount === 5) {
                 const pw = prompt('Admin Password?');
                 if (pw === ADMIN_PASSWORD) {
-                    // [수정 포인트] localStorage의 isVipUser로 저장
                     localStorage.setItem('isVipUser', 'true');
                     alert('Admin Mode: VIP Unlocked');
                     location.reload();
