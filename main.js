@@ -4,14 +4,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let logoClickCount = 0;
     let logoClickTimer = null;
 
-    /**
-     * 초기화 함수
-     */
     async function init() {
         const savedTheme = localStorage.getItem('theme') || 'light';
-        if (window.setTheme) {
-            window.setTheme(savedTheme);
-        }
+        if (window.setTheme) window.setTheme(savedTheme);
         const savedLang = localStorage.getItem('language') || 'en';
         await safeApplyLanguage(savedLang);
         fetchDataAndRender();
@@ -21,11 +16,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- 2. 데이터 로드 및 렌더링 ---
     async function fetchDataAndRender() {
         const analysisList = document.getElementById('analysis-list');
+        const comboContainer = document.getElementById('vip-combo-container'); // VIP 조합 박스
         const loadingIndicator = document.getElementById('loading-indicator');
         if (!analysisList) return;
 
         if (loadingIndicator) loadingIndicator.style.display = 'block';
         analysisList.innerHTML = '';
+        if (comboContainer) comboContainer.innerHTML = '';
 
         try {
             const response = await fetch('sports_data.xlsx?v=' + new Date().getTime());
@@ -47,6 +44,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 return {
                     time: row[0],
+                    home: row[1],
+                    away: row[2],
                     match: `${row[1]} vs ${row[2]}`,
                     prediction: row[4],
                     odds: parseFloat(row[3]) || 0,
@@ -60,6 +59,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 const hasValidPick = item.prediction && item.prediction !== '-' && item.prediction.trim() !== '';
                 return hasValidPick && item.roi >= 1.0 && item.sampleSize >= 10;
             });
+
+            // [VIP 3배 조합 생성 로직 실행]
+            const isVip = localStorage.getItem('isVipUser') === 'true';
+            if (isVip && comboContainer) {
+                renderVipCombo(filteredMatches, comboContainer);
+            }
 
             if (filteredMatches.length === 0) {
                 analysisList.innerHTML = `<p data-i18n-key="noMatches" style="text-align:center; padding:2rem;">No matches found.</p>`;
@@ -79,6 +84,60 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    /**
+     * VIP 전용 3배 조합 렌더링 함수
+     */
+    function renderVipCombo(matches, container) {
+        // 1. 적중률 70% 이상, 배당 1.4~2.2 사이의 안정적인 경기 선별
+        const candidates = matches.filter(m => m.hitRate >= 0.70 && m.odds >= 1.4 && m.odds <= 2.2);
+        
+        let bestCombo = null;
+        let closestToTarget = 999;
+
+        // 2. 두 경기를 조합하여 합산 배당이 3.0에 가장 가까운 세트 찾기
+        for (let i = 0; i < candidates.length; i++) {
+            for (let j = i + 1; j < candidates.length; j++) {
+                const totalOdds = candidates[i].odds * candidates[j].odds;
+                const diff = Math.abs(totalOdds - 3.0);
+                if (totalOdds >= 2.7 && totalOdds <= 3.6 && diff < closestToTarget) {
+                    closestToTarget = diff;
+                    bestCombo = [candidates[i], candidates[j], totalOdds];
+                }
+            }
+        }
+
+        if (bestCombo) {
+            const [m1, m2, finalOdds] = bestCombo;
+            
+            // 데이터 보정 적용 (Away Win 0% 처리)
+            const getPick = (m) => (m.prediction.toLowerCase().includes('away win') && m.hitRate === 0) ? "AH 0 (Away)" : m.prediction;
+
+            container.innerHTML = `
+                <div class="vip-combo-card" style="background: linear-gradient(135deg, #1e3a8a, #2563eb); color: white; padding: 20px; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(37,99,235,0.3);">
+                    <div style="text-align:center; margin-bottom:15px;">
+                        <span style="background:rgba(255,255,255,0.2); padding:4px 12px; border-radius:20px; font-size:0.8rem; font-weight:bold;">AI STRATEGY</span>
+                        <h2 style="margin:10px 0; font-size:1.4rem;">🎯 Today's 300% Target Combo</h2>
+                    </div>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; border-top:1px solid rgba(255,255,255,0.2); padding-top:15px;">
+                        <div style="background:rgba(255,255,255,0.1); padding:10px; border-radius:8px;">
+                            <div style="font-size:0.75rem; opacity:0.8;">Match 1</div>
+                            <div style="font-weight:bold; font-size:0.9rem; margin:4px 0;">${m1.match}</div>
+                            <div style="color:#4ade80; font-weight:bold;">${getPick(m1)}</div>
+                        </div>
+                        <div style="background:rgba(255,255,255,0.1); padding:10px; border-radius:8px;">
+                            <div style="font-size:0.75rem; opacity:0.8;">Match 2</div>
+                            <div style="font-weight:bold; font-size:0.9rem; margin:4px 0;">${m2.match}</div>
+                            <div style="color:#4ade80; font-weight:bold;">${getPick(m2)}</div>
+                        </div>
+                    </div>
+                    <div style="text-align:center; margin-top:15px; font-size:1.2rem; font-weight:bold;">
+                        Total Odds: <span style="font-size:1.5rem; color:#facc15;">${finalOdds.toFixed(2)}x</span>
+                    </div>
+                </div>
+            `;
+        }
+    }
+
     function createMatchCard(item) {
         const isVip = localStorage.getItem('isVipUser') === 'true';
         const card = document.createElement('div');
@@ -89,14 +148,12 @@ document.addEventListener('DOMContentLoaded', () => {
             card.style.background = 'var(--light-blue)';
         }
 
-        // [데이터 보정 로직 추가] 
-        // Prediction이 'Away Win'인데 Hit Rate가 0인 경우 문구와 스타일 변경
         let displayPrediction = item.prediction;
         let predictionStyle = "color:#2563eb; font-weight:bold;";
         
         if (item.prediction.toLowerCase().includes('away win') && item.hitRate === 0) {
-            displayPrediction = "AH 0 (Away)"; // 0 핸디 원정승으로 변경
-            predictionStyle = "color:#10b981; font-weight:bold;"; // 신뢰도를 주는 초록색 계열로 변경
+            displayPrediction = "AH 0 (Away)";
+            predictionStyle = "color:#10b981; font-weight:bold;";
         }
 
         if (item.hitRate >= 0.80 && !isVip) {
@@ -110,7 +167,6 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
         } else {
             const isHighRate = item.hitRate >= 0.80;
-            // 0%일 때는 DNB(Draw No Bet) 성격임을 명시하여 신뢰도 확보
             const displayHitRate = item.hitRate === 0 ? "High (DNB)" : (item.hitRate * 100).toFixed(0) + "%";
 
             card.innerHTML = `
@@ -132,11 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- 3. 유틸리티 및 이벤트 리스너 ---
     async function safeApplyLanguage(lang) {
         if (typeof window.applyTranslations === 'function') {
-            try {
-                await window.applyTranslations(lang);
-            } catch (e) {
-                console.error("Translation Error:", e);
-            }
+            try { await window.applyTranslations(lang); } catch (e) { console.error("Translation Error:", e); }
         }
     }
 
