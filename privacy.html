@@ -40,10 +40,26 @@
     <main class="container">
         <section class="hero">
             <h1 data-i18n="privacyTitle">Privacy Policy</h1>
-            <div class="analysis-list-item" style="text-align: left; line-height: 1.6;">
-                <h3 data-i18n="privData">Data Collection</h3>
-                <p data-i18n="privDesc1">At AI365PICK, we do not collect personal information unless explicitly provided by you.</p>
-                <p data-i18n="privDesc2">We use industry-standard measures to protect any data shared with us.</p>
+            <div class="analysis-list-item" style="text-align: left; line-height: 1.8; padding: 30px; font-size: 0.95rem;">
+                <div id="privacy-content">
+                    <p><strong>Effective Date: December 20, 2024</strong></p>
+                    <p>At <strong>AI365PICK</strong>, accessible from ai365pick.com, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by AI365PICK and how we use it.</p>
+
+                    <h3 style="margin-top:20px;">1. Log Files and Analytics</h3>
+                    <p>AI365PICK follows a standard procedure of using log files. These files log visitors when they visit websites. The information collected by log files includes internet protocol (IP) addresses, browser type, Internet Service Provider (ISP), date and time stamp, referring/exit pages, and possibly the number of clicks. These are not linked to any information that is personally identifiable.</p>
+
+                    <h3 style="margin-top:20px;">2. Google DoubleClick DART Cookie</h3>
+                    <p>Google is one of a third-party vendor on our site. It also uses cookies, known as DART cookies, to serve ads to our site visitors based upon their visit to our site and other sites on the internet. However, visitors may choose to decline the use of DART cookies by visiting the Google ad and content network Privacy Policy.</p>
+
+                    <h3 style="margin-top:20px;">3. Advertising Partners Privacy Policies</h3>
+                    <p>Third-party ad servers or ad networks uses technologies like cookies, JavaScript, or Web Beacons that are used in their respective advertisements and links that appear on AI365PICK, which are sent directly to users' browser. They automatically receive your IP address when this occurs. These technologies are used to measure the effectiveness of their advertising campaigns and/or to personalize the advertising content that you see on websites that you visit.</p>
+
+                    <h3 style="margin-top:20px;">4. Third Party Privacy Policies</h3>
+                    <p>AI365PICK's Privacy Policy does not apply to other advertisers or websites. Thus, we are advising you to consult the respective Privacy Policies of these third-party ad servers for more detailed information.</p>
+
+                    <h3 style="margin-top:20px;">5. Children's Information</h3>
+                    <p>Another part of our priority is adding protection for children while using the internet. We encourage parents and guardians to observe, participate in, and/or monitor and guide their online activity. AI365PICK does not knowingly collect any Personal Identifiable Information from children under the age of 13.</p>
+                </div>
             </div>
         </section>
     </main>
@@ -56,11 +72,22 @@
 
     <script>
         const translations = {
-            en: { navHome: "Home", navAbout: "About", navContact: "Contact", navPrivacy: "Privacy", navVip: "VIP", privacyTitle: "Privacy Policy", privData: "Data Collection", privDesc1: "At AI365PICK, we do not collect personal information unless explicitly provided by you.", privDesc2: "We use industry-standard measures to protect any data shared with us." },
-            ko: { navHome: "홈", navAbout: "소개", navContact: "문의", navPrivacy: "개인정보", navVip: "VIP 전용", privacyTitle: "개인정보 처리방침", privData: "데이터 수집", privDesc1: "AI365PICK은 사용자가 직접 제공하지 않는 한 어떠한 개인정보도 수집하지 않습니다.", privDesc2: "제공된 모든 데이터는 업계 표준 보안 조치를 통해 보호됩니다." },
-            ja: { navHome: "ホーム", navAbout: "紹介", navContact: "お問い合わせ", navPrivacy: "プライバシー", navVip: "VIP専用", privacyTitle: "プライバシーポリシー", privData: "データ収集", privDesc1: "AI365PICKは、明示的に提供されない限り個人情報を収集しません。", privDesc2: "共有されたデータは業界標準のセキュリティ措置で保護されます。" },
-            zh: { navHome: "首页", navAbout: "关于", navContact: "联系我们", navPrivacy: "隐私政策", navVip: "VIP专属", privacyTitle: "隐私政策", privData: "数据收集", privDesc1: "AI365PICK 除非您明确提供，否则不会收集任何个人信息。", privDesc2: "我们使用行业标准措施来保护与我们共享的任何数据。" }
+            en: { navHome: "Home", navAbout: "About", navContact: "Contact", navPrivacy: "Privacy", navVip: "VIP", privacyTitle: "Privacy Policy" },
+            ko: { navHome: "홈", navAbout: "소개", navContact: "문의", navPrivacy: "개인정보", navVip: "VIP 전용", privacyTitle: "개인정보 처리방침" },
+            ja: { navHome: "ホーム", navAbout: "紹介", navContact: "お問い合わせ", navPrivacy: "プライバシー", navVip: "VIP専用", privacyTitle: "プライバシーポリシー" },
+            zh: { navHome: "首页", navAbout: "关于", navContact: "联系我们", navPrivacy: "隐私政策", navVip: "VIP专属", privacyTitle: "隐私政策" }
         };
+
+        const koPrivacy = `
+            <p><strong>시행일: 2024년 12월 20일</strong></p>
+            <p><strong>AI365PICK</strong>은 방문자의 개인정보 보호를 최우선 과제로 삼고 있습니다. 본 정책은 당사가 수집하는 정보의 종류와 사용 방법을 설명합니다.</p>
+            <h3 style="margin-top:20px;">1. 정보 수집 및 사용</h3>
+            <p>당사는 서비스 개선을 위해 로그 파일을 사용합니다. 여기에는 IP 주소, 브라우저 유형, 접속 시간 등이 포함되지만 개인을 식별할 수 있는 정보와는 연결되지 않습니다.</p>
+            <h3 style="margin-top:20px;">2. 쿠키 및 광고 정책</h3>
+            <p>구글을 포함한 제3자 제공업체는 쿠키를 사용하여 사용자의 과거 방문 기록을 바탕으로 광고를 게재합니다. 사용자는 구글 광고 설정을 통해 이를 거부할 수 있습니다.</p>
+            <h3 style="margin-top:20px;">3. 제3자 정책</h3>
+            <p>본 정책은 AI365PICK에만 적용되며 다른 광고주나 웹사이트에는 적용되지 않습니다. 각 광고 서비스의 개인정보 정책을 별도로 확인하시기 바랍니다.</p>
+        `;
 
         function updateLang() {
             const lang = localStorage.getItem('selectedLang') || 'en';
@@ -68,12 +95,20 @@
                 const key = el.getAttribute('data-i18n');
                 if (translations[lang][key]) el.innerText = translations[lang][key];
             });
+            
+            const contentDiv = document.getElementById('privacy-content');
+            if (lang === 'ko') {
+                contentDiv.innerHTML = koPrivacy;
+            } else if (lang !== 'en') {
+                // 다른 언어일 때도 기본 영문은 유지하여 구글 승인 텍스트 확보
+            }
         }
 
         document.querySelectorAll('.lang-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 localStorage.setItem('selectedLang', btn.dataset.lang);
                 updateLang();
+                if(btn.dataset.lang !== 'ko') location.reload();
             });
         });
 
