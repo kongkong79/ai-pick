@@ -12,7 +12,7 @@
         .summary-header { background: #007bff; color: white; padding: 15px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
         .summary-table { width: 100%; border-collapse: collapse; }
         .summary-table th, .summary-table td { padding: 15px 10px; text-align: center !important; border-bottom: 1px solid #eee; }
-        .badge-banker { background: #d1fae5; color: #065f46; padding: 4px 8px; border-radius: 4px; font-weight: bold; border: 1px solid #10b981; margin-left: 5px; font-size: 0.8rem; }
+        .badge-banker { background: #d1fae5; color: #065f46; padding: 2px 6px; border-radius: 4px; font-weight: bold; border: 1px solid #10b981; margin-left: 5px; font-size: 0.65rem; }
         [data-theme="dark"] .summary-table td { color: #f1f5f9; border-bottom: 1px solid #334155; }
         [data-theme="dark"] .summary-table tr { background: #1e293b; }
         #more-btn-container { padding: 20px; background: var(--card-bg); border-top: 1px solid #eee; }
@@ -22,7 +22,7 @@
         
         /* VIP 콤보 스타일 */
         .vip-combo-container { width: 95%; max-width: 900px; margin: 20px auto; }
-        .vip-combo-card { background: linear-gradient(135deg, #1e3a8a, #2563eb); color: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(37,99,235,0.3); }
+        .vip-combo-card { background: linear-gradient(135deg, #1e3a8a, #2563eb); color: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(37,99,235,0.3); border: 2px solid #facc15; }
     </style>
 </head>
 <body>
@@ -80,7 +80,6 @@
 <script>
     const VIP_CODE = "FEB888";
 
-    // ✅ 초기 실행 함수
     document.addEventListener('DOMContentLoaded', () => {
         const savedTheme = localStorage.getItem('theme') || 'light';
         document.documentElement.setAttribute('data-theme', savedTheme);
@@ -97,15 +96,15 @@
     async function initVipPage() {
         const tbody = document.getElementById('vip-data-body');
         const comboDiv = document.getElementById('vip-combo-display');
-        const userLang = navigator.language || navigator.userLanguage;
-        const isKo = userLang.includes('ko');
-
+        
+        // 영어 문구로 고정
         const texts = {
-            noticeTitle: isKo ? "⚠️ 필독 주의사항:" : "⚠️ Important Notice:",
-            noticeDesc: isKo ? "원정팀 승리(Away Win) 추천 경기는 '원정 지지 않음' 위주로 접근하세요." : "For 'Away Win' picks, we suggest 'Away Team Not to Lose'.",
-            comboTitle: isKo ? "🎯 오늘의 AI VIP 3배 수익 조합" : "🎯 Today's AI VIP 300% Combo",
-            more: isKo ? "+ 더 많은 경기 보기" : "+ View More Matches",
-            download: isKo ? "📥 엑셀 다운로드" : "📥 Download Excel"
+            noticeTitle: "⚠️ IMPORTANT NOTICE:",
+            noticeDesc: "For 'Away Win' picks, we suggest 'Away Team Not to Lose (AH 0)' for safety.",
+            comboTitle: "Today's AI VIP 300% Combo",
+            totalOdds: "Total Odds:",
+            banker: "Banker",
+            samples: "Samples"
         };
 
         try {
@@ -118,7 +117,6 @@
 
             if (rows.length <= 1) return;
 
-            // 1. 데이터 안전 파싱
             const dataRows = [];
             for(let i = 1; i < rows.length; i++) {
                 const row = rows[i];
@@ -141,7 +139,7 @@
 
             const filteredRows = dataRows.filter(r => r.samples >= 10);
 
-            // 2. 3배 조합 추출 (범위 최적화: 2.6 ~ 4.5)
+            // AI Combo Extraction
             const candidates = filteredRows.filter(r => r.hitRate >= 60 && r.odds >= 1.4);
             let bestCombo = null;
             if (candidates.length >= 2) {
@@ -157,27 +155,27 @@
                 }
             }
 
-            // 3. 조합 렌더링 (대진 전체 표기 버전)
+            // Render AI Combo
             if (bestCombo && comboDiv) {
                 const [m1, m2, finalOdds] = bestCombo;
                 const getFinalPick = (m) => (m.pick.includes("Away") && m.hitRate <= 5) ? "🛡️ AH 0 (Away)" : m.pick;
                 
                 comboDiv.innerHTML = `
-                    <div class="vip-combo-card" style="margin-bottom: 25px; border: 2px solid #facc15; padding: 20px; border-radius: 15px;">
+                    <div class="vip-combo-card" style="margin-bottom: 25px;">
                         <div style="text-align:center; margin-bottom:15px;">
                             <span style="background:#facc15; color:#000; padding:4px 12px; border-radius:20px; font-size:0.75rem; font-weight:bold;">AI COMBO</span>
                             <h2 style="margin:8px 0; font-size:1.2rem; color:#fff;">${texts.comboTitle}</h2>
                         </div>
                         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
                             <div style="background:rgba(255,255,255,0.1); padding:12px; border-radius:10px; text-align:center; display:flex; flex-direction:column; justify-content:center;">
-                                <div style="font-size:0.7rem; color:rgba(255,255,255,0.7); margin-bottom:4px;">MATCH 01</div>
+                                <div style="font-size:0.65rem; color:rgba(255,255,255,0.6); margin-bottom:4px;">MATCH 01</div>
                                 <div style="font-size:0.85rem; font-weight:500; line-height:1.2; margin-bottom:6px;">
                                     ${m1.home} <span style="color:#facc15; font-size:0.7rem;">vs</span> ${m1.away}
                                 </div>
                                 <div style="color:#4ade80; font-weight:bold; font-size:1rem;">${getFinalPick(m1)}</div>
                             </div>
                             <div style="background:rgba(255,255,255,0.1); padding:12px; border-radius:10px; text-align:center; display:flex; flex-direction:column; justify-content:center;">
-                                <div style="font-size:0.7rem; color:rgba(255,255,255,0.7); margin-bottom:4px;">MATCH 02</div>
+                                <div style="font-size:0.65rem; color:rgba(255,255,255,0.6); margin-bottom:4px;">MATCH 02</div>
                                 <div style="font-size:0.85rem; font-weight:500; line-height:1.2; margin-bottom:6px;">
                                     ${m2.home} <span style="color:#facc15; font-size:0.7rem;">vs</span> ${m2.away}
                                 </div>
@@ -185,30 +183,37 @@
                             </div>
                         </div>
                         <div style="text-align:center; margin-top:15px; padding-top:10px; border-top:1px solid rgba(255,255,255,0.1);">
-                            <span style="font-size:1rem; vertical-align:middle;">Total Odds: </span>
+                            <span style="font-size:0.9rem; vertical-align:middle; color:rgba(255,255,255,0.8);">${texts.totalOdds}</span>
                             <span style="font-size:1.6rem; color:#facc15; font-weight:900; vertical-align:middle; margin-left:5px;">${finalOdds.toFixed(2)}x</span>
                         </div>
                     </div>`;
             }
 
-            // 4. 리스트 렌더링
-            let html = `<tr class="notice-row"><td colspan="4" style="background: #fff9db; color: #856404; padding: 15px; font-size: 0.85rem; text-align: left !important;"><strong>${texts.noticeTitle}</strong> <br>${texts.noticeDesc}</td></tr>`;
+            // Render List
+            let html = `<tr class="notice-row"><td colspan="4" style="background: #fff9db; color: #856404; padding: 15px; font-size: 0.8rem; text-align: left !important; line-height:1.4;"><strong>${texts.noticeTitle}</strong> <br>${texts.noticeDesc}</td></tr>`;
             
             filteredRows.forEach((row, index) => {
                 const isHomeWin = row.pick.includes("Home");
                 let displayPick = isHomeWin ? '🏠 Home Win' : '✈️ Away Win';
                 if (!isHomeWin && row.hitRate <= 5) displayPick = '🛡️ AH 0 (Away)';
-                if (row.odds > 0 && row.odds <= 1.15) displayPick += ' <span class="badge-banker">⭐ Banker</span>';
+                if (row.odds > 0 && row.odds <= 1.15) displayPick += ` <span class="badge-banker">${texts.banker}</span>`;
 
                 html += `
                     <tr ${index >= 7 ? 'class="hidden-row"' : ''}>
-                        <td style="text-align:left !important; padding-left:20px;">
-                            <small style="color:gray; display:block;">${row.time}</small>
-                            <span style="${isHomeWin?'font-weight:bold':''}">${row.home}</span> vs <span style="${!isHomeWin?'font-weight:bold':''}">${row.away}</span>
+                        <td style="text-align:left !important; padding-left:15px;">
+                            <small style="color:gray; font-size:0.65rem; display:block;">${row.time}</small>
+                            <div style="font-size:0.85rem;">
+                                <span style="${isHomeWin?'font-weight:bold':''}">${row.home}</span> 
+                                <span style="color:#ccc; font-size:0.7rem;">vs</span> 
+                                <span style="${!isHomeWin?'font-weight:bold':''}">${row.away}</span>
+                            </div>
                         </td>
-                        <td>${displayPick}</td>
+                        <td style="font-size:0.85rem;">${displayPick}</td>
                         <td style="color:#059669; font-weight:bold;">${row.hitRate <= 5 ? "High(DNB)" : row.hitRate.toFixed(0) + "%"}</td>
-                        <td><b>${row.odds.toFixed(2)}</b><br><small style="font-size:0.6rem; color:#999;">Samples:${row.samples}</small></td>
+                        <td style="font-size:0.85rem;">
+                            <b>${row.odds.toFixed(2)}</b><br>
+                            <small style="font-size:0.55rem; color:#999;">${texts.samples}: ${row.samples}</small>
+                        </td>
                     </tr>`;
             });
             tbody.innerHTML = html;
@@ -220,7 +225,7 @@
     function toggleMoreMatches() {
         const rows = document.querySelectorAll('.hidden-row');
         const btn = document.getElementById('more-btn');
-        const isHidden = rows[0].style.display !== 'table-row';
+        const isHidden = rows.length > 0 && rows[0].style.display !== 'table-row';
         rows.forEach(r => r.style.display = isHidden ? 'table-row' : 'none');
         btn.innerText = isHidden ? "▲ Close" : "+ View More Matches";
     }
