@@ -1,44 +1,58 @@
 async function fetchDataAndRender() {
     const analysisList = document.getElementById('analysis-list');
+    const loadingIndicator = document.getElementById('loading-indicator');
     if (!analysisList) return;
 
-    analysisList.innerHTML = '<p style="text-align:center;">데이터를 분석 중입니다...</p>';
+    if (loadingIndicator) loadingIndicator.style.display = 'block';
+    analysisList.innerHTML = '';
 
     try {
-        // 캐시를 무시하고 최신 파일을 가져옵니다.
+        // 캐시 방지를 위해 타임스탬프 추가
         const response = await fetch('./sports_data.xlsx?v=' + new Date().getTime());
+        if (!response.ok) throw new Error('파일을 찾을 수 없습니다.');
+
         const arrayBuffer = await response.arrayBuffer();
         const workbook = XLSX.read(new Uint8Array(arrayBuffer), { type: 'array' });
         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
         
-        // 중요: 데이터를 객체 배열로 가져와서 컬럼명으로 접근합니다.
+        // 엑셀 헤더 이름을 키(Key)로 사용하는 객체 배열로 변환
         const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
-        console.log("✅ 로드된 데이터 첫 줄:", jsonData[0]); // 콘솔에서 컬럼명 확인용
-
         if (jsonData.length === 0) {
-            analysisList.innerHTML = '<p style="text-align:center;">분석된 경기 결과가 없습니다.</p>';
+            analysisList.innerHTML = '<p style="text-align:center; padding:2rem;">분석된 데이터가 없습니다.</p>';
             return;
         }
 
-        analysisList.innerHTML = ''; // 초기화
+        console.log("✅ 엑셀 데이터 확인 완료:", jsonData[0]);
 
         jsonData.forEach(row => {
-            // 파이썬 엑셀 헤더 이름에 맞춰 가져오기 (파일의 첫 줄 제목과 똑같아야 함)
-            const home = row['홈팀'] || row['Home'] || '';
-            const away = row['어웨이팀'] || row['Away'] || '';
-            const prediction = row['예측'] || row['Prediction'] || '-';
-            const odds = row['배당'] || row['Odds'] || '0.00';
-            const hitRate = row['적중률'] || row['Hit Rate'] || '0%';
+            // 실제 엑셀 파일의 영문 헤더명과 100% 일치시킴
+            const home = row['Home Team'] || '';
+            const away = row['Away Team'] || '';
+            const prediction = row['AI Recommendation'] || '-';
+            const odds = row['Home Odds'] || '0.00';
+            const hitRate = row['Hit rate'] || '0';
+            const time = row['Time'] || '';
+            const roi = row['Expected ROI'] || '0';
+            const sample = row['Sample Count'] || '0';
 
+            // 홈팀과 어웨이팀 정보가 있는 경우에만 카드 생성
             if (home && away) {
                 const card = document.createElement('div');
                 card.className = 'analysis-list-item';
+                
+                // 적중률 표시 처리 (숫자일 경우 % 추가)
+                const displayHitRate = typeof hitRate === 'number' ? hitRate + "%" : hitRate;
+
                 card.innerHTML = `
-                    <div style="font-weight:bold; font-size:1.1rem; margin-bottom:8px;">${home} vs ${away}</div>
-                    <div style="background:rgba(37,99,235,0.05); padding:10px; border-radius:8px;">
-                        <p style="margin:4px 0;">🎯 <b>Pick:</b> <span style="color:#2563eb;">${prediction}</span></p>
-                        <p style="margin:4px 0;">📈 <b>Odds:</b> ${odds} | <b>Hit Rate:</b> ${hitRate}</p>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                        <strong style="font-size:1.1rem;">${home} vs ${away}</strong>
+                        <span style="font-size:0.85rem; color:gray;">${time}</span>
+                    </div>
+                    <div style="background:rgba(128,128,128,0.05); padding:15px; border-radius:10px;">
+                        <p style="margin:5px 0;"><strong>🎯 Pick:</strong> <span style="color:#2563eb; font-weight:bold;">${prediction}</span></p>
+                        <p style="margin:5px 0;"><strong>📈 Odds:</strong> ${odds} | <strong>Hit Rate:</strong> ${displayHitRate}</p>
+                        <p style="margin:5px 0; font-size:0.8rem; color:gray;">ROI: ${roi} | Sample: ${sample}</p>
                     </div>
                 `;
                 analysisList.appendChild(card);
@@ -46,7 +60,9 @@ async function fetchDataAndRender() {
         });
 
     } catch (error) {
-        console.error('❌ 데이터 처리 에러:', error);
-        analysisList.innerHTML = `<p style="text-align:center; color:red;">데이터 처리 중 오류 발생</p>`;
+        console.error('❌ 에러 발생:', error);
+        analysisList.innerHTML = `<p style="text-align:center; color:red; padding:2rem;">데이터 로드 중 오류: ${error.message}</p>`;
+    } finally {
+        if (loadingIndicator) loadingIndicator.style.display = 'none';
     }
 }
