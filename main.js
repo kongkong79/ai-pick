@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- 1. 설정 및 상태 ---
     const ADMIN_PASSWORD = 'MGB_ADMIN_2024';
     let logoClickCount = 0;
     let logoClickTimer = null;
@@ -13,7 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
         setupEventListeners();
     }
 
-    // --- 2. 데이터 로드 및 렌더링 ---
     async function fetchDataAndRender() {
         const analysisList = document.getElementById('analysis-list');
         const comboContainer = document.getElementById('vip-combo-container');
@@ -22,29 +20,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (loadingIndicator) loadingIndicator.style.display = 'block';
         analysisList.innerHTML = '';
-        if (comboContainer) comboContainer.innerHTML = '';
 
         try {
-            // 파일명을 sports_data.xlsx로 고정 (대소문자 주의!)
-            const fileName = 'sports_data.xlsx';
-            console.log(`[시도] ${fileName} 파일을 불러오는 중...`);
-
-            const response = await fetch(`${fileName}?v=${new Date().getTime()}`);
-            
-            if (!response.ok) {
-                console.error(`[에러] 파일을 찾을 수 없습니다. 상태 코드: ${response.status}`);
-                throw new Error('Excel file not found.');
-            }
+            // 캐시 방지를 위해 타임스탬프 추가
+            const response = await fetch('sports_data.xlsx?v=' + new Date().getTime());
+            if (!response.ok) throw new Error('엑셀 파일을 찾을 수 없습니다 (404).');
 
             const arrayBuffer = await response.arrayBuffer();
             const workbook = XLSX.read(new Uint8Array(arrayBuffer), { type: 'array' });
             const worksheet = workbook.Sheets[workbook.SheetNames[0]];
             const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
-            console.log("[성공] 엑셀 원본 데이터 로드 완료:", jsonData);
+            console.log("엑셀 데이터 로드 성공! 총 라인 수:", jsonData.length);
 
             const allMatches = jsonData.slice(1).map((row, index) => {
-                // 데이터 파싱 및 안전한 변환
+                // 파이썬 결과 파일 구조에 맞게 인덱스 재설정 필요 (예시 기준)
                 let hitRate = 0;
                 let rawHit = row[5]; 
                 if (typeof rawHit === 'string') {
@@ -55,35 +45,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 return {
                     time: row[0] || '-',
-                    home: row[1] || 'Unknown',
-                    away: row[2] || 'Unknown',
+                    home: row[1] || '',
+                    away: row[2] || '',
                     match: `${row[1]} vs ${row[2]}`,
                     prediction: row[4] || '-',
                     odds: parseFloat(row[3]) || 0,
                     hitRate: hitRate || 0,
-                    roi: parseFloat(row[10]) || 0,
-                    sampleSize: parseInt(row[11]) || 0
+                    roi: parseFloat(row[10]) || 0,      // 11번째 열
+                    sampleSize: parseInt(row[11]) || 0  // 12번째 열
                 };
             });
 
-            // --- 필터링 조건 완화 (디버깅용) ---
-            // 일단 홈팀과 어웨이팀 이름만 있으면 모두 표시하도록 수정했습니다.
-            // 데이터가 잘 나오는 것을 확인한 후 다시 조건을 강화하세요.
+            // --- [중요] 필터 조건 완화: 데이터가 뜨는지 먼저 확인하기 위함 ---
             const filteredMatches = allMatches.filter(item => {
-                return item.home !== 'Unknown' && item.away !== 'Unknown';
-                // 원래 조건: return item.prediction && item.roi >= 1.0 && item.sampleSize >= 10;
+                // 팀 이름이 있고, 예측 값이 존재하는 모든 경기를 일단 표시
+                return item.home && item.away && item.prediction !== '-';
             });
 
-            console.log(`[결과] 표시할 경기 수: ${filteredMatches.length}개`);
+            console.log("필터링 후 표시될 경기 수:", filteredMatches.length);
 
-            // [VIP 3배 조합 생성]
             const isVip = localStorage.getItem('isVipUser') === 'true';
             if (isVip && comboContainer) {
                 renderVipCombo(filteredMatches, comboContainer);
             }
 
             if (filteredMatches.length === 0) {
-                analysisList.innerHTML = `<p style="text-align:center; padding:2rem;">표시할 데이터가 없습니다. (필터 조건 확인 필요)</p>`;
+                analysisList.innerHTML = `<p style="text-align:center; padding:2rem;">표시할 분석 데이터가 없습니다. 엑셀 파일 내용을 확인해주세요.</p>`;
             } else {
                 filteredMatches.forEach(item => {
                     analysisList.appendChild(createMatchCard(item));
@@ -94,11 +81,57 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (error) {
             console.error('Data Load Error:', error);
-            analysisList.innerHTML = `<p style="text-align:center; color:red;">데이터 로딩 실패: ${error.message}</p>`;
+            analysisList.innerHTML = `<p style="text-align:center; color:red; padding:2rem;">데이터 로드 중 오류 발생: ${error.message}</p>`;
         } finally {
             if (loadingIndicator) loadingIndicator.style.display = 'none';
         }
     }
 
-    // (나머지 renderVipCombo, createMatchCard, setupEventListeners 함수들은 기존과 동일)
-    // ... [기존 코드 유지] ...
+    // --- 나머지 유틸리티 함수 (기존과 동일) ---
+    function createMatchCard(item) {
+        const isVip = localStorage.getItem('isVipUser') === 'true';
+        const card = document.createElement('div');
+        card.className = 'analysis-list-item';
+        if (isVip) card.style.borderColor = '#2563eb';
+
+        const displayHitRate = (item.hitRate * 100).toFixed(0) + "%";
+        
+        card.innerHTML = `
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                <strong style="font-size:1.1rem;">${item.match}</strong>
+                <span style="font-size:0.85rem; color:gray;">${item.time}</span>
+            </div>
+            <div style="background:rgba(128,128,128,0.05); padding:15px; border-radius:10px;">
+                <p><strong>Pick:</strong> <span style="color:#2563eb; font-weight:bold;">${item.prediction}</span></p>
+                <p><strong>Odds:</strong> ${item.odds.toFixed(2)} | <strong>Hit Rate:</strong> ${displayHitRate}</p>
+                <p style="font-size:0.8rem; color:gray;">ROI: ${item.roi.toFixed(2)} | Sample: ${item.sampleSize}</p>
+            </div>
+        `;
+        return card;
+    }
+
+    async function safeApplyLanguage(lang) {
+        if (typeof window.applyTranslations === 'function') {
+            try { await window.applyTranslations(lang); } catch (e) { console.error("Translation Error:", e); }
+        }
+    }
+
+    function setupEventListeners() {
+        document.getElementById('logo-link')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            logoClickCount++;
+            clearTimeout(logoClickTimer);
+            logoClickTimer = setTimeout(() => { logoClickCount = 0; }, 2000);
+            if (logoClickCount === 5) {
+                const pw = prompt('Admin Password?');
+                if (pw === ADMIN_PASSWORD) {
+                    localStorage.setItem('isVipUser', 'true');
+                    alert('VIP Mode Unlocked');
+                    location.reload();
+                }
+            }
+        });
+    }
+
+    init();
+});
