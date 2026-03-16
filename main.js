@@ -1,64 +1,52 @@
 async function fetchDataAndRender() {
     const analysisList = document.getElementById('analysis-list');
-    const loadingIndicator = document.getElementById('loading-indicator');
     if (!analysisList) return;
 
-    analysisList.innerHTML = '<p style="text-align:center;">분석 데이터를 동기화 중입니다...</p>';
+    analysisList.innerHTML = '<p style="text-align:center;">데이터를 분석 중입니다...</p>';
 
     try {
-        // Netlify 환경에서 가장 안전한 상대 경로 호출
+        // 캐시를 무시하고 최신 파일을 가져옵니다.
         const response = await fetch('./sports_data.xlsx?v=' + new Date().getTime());
-        
-        if (!response.ok) {
-            throw new Error(`파일을 찾을 수 없습니다. (상태 코드: ${response.status})`);
-        }
-
         const arrayBuffer = await response.arrayBuffer();
         const workbook = XLSX.read(new Uint8Array(arrayBuffer), { type: 'array' });
         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
         
-        // 헤더를 포함한 전체 데이터를 가져옴
-        const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+        // 중요: 데이터를 객체 배열로 가져와서 컬럼명으로 접근합니다.
+        const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
-        if (!jsonData || jsonData.length <= 1) {
-            analysisList.innerHTML = '<p style="text-align:center;">데이터가 비어 있습니다. 파이썬 분석기를 먼저 실행해 주세요.</p>';
+        console.log("✅ 로드된 데이터 첫 줄:", jsonData[0]); // 콘솔에서 컬럼명 확인용
+
+        if (jsonData.length === 0) {
+            analysisList.innerHTML = '<p style="text-align:center;">분석된 경기 결과가 없습니다.</p>';
             return;
         }
 
-        console.log("데이터 로드 성공! 샘플 데이터:", jsonData[1]);
-
         analysisList.innerHTML = ''; // 초기화
 
-        // 파이썬 파일의 저장 순서에 맞게 인덱스 매핑 (이미지 기반 추정)
-        jsonData.slice(1).forEach((row) => {
-            // row[1]: 홈팀, row[2]: 어웨이팀, row[4]: 예측, row[3]: 배당
-            if (!row[1] || !row[2]) return; 
+        jsonData.forEach(row => {
+            // 파이썬 엑셀 헤더 이름에 맞춰 가져오기 (파일의 첫 줄 제목과 똑같아야 함)
+            const home = row['홈팀'] || row['Home'] || '';
+            const away = row['어웨이팀'] || row['Away'] || '';
+            const prediction = row['예측'] || row['Prediction'] || '-';
+            const odds = row['배당'] || row['Odds'] || '0.00';
+            const hitRate = row['적중률'] || row['Hit Rate'] || '0%';
 
-            const matchCard = document.createElement('div');
-            matchCard.className = 'analysis-list-item';
-            
-            // 적중률(row[5]) 처리: 0.85 또는 "85%" 형태 모두 대응
-            let hitRate = row[5];
-            if (typeof hitRate === 'string') hitRate = hitRate.replace('%', '');
-            const displayHitRate = hitRate ? parseFloat(hitRate).toFixed(0) + "%" : "0%";
-
-            matchCard.innerHTML = `
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <span style="font-weight:bold; font-size:1.1rem;">${row[1]} vs ${row[2]}</span>
-                    <span style="font-size:0.8rem; color:gray;">${row[0] || ''}</span>
-                </div>
-                <div style="margin-top:10px; padding:10px; background:rgba(0,0,0,0.03); border-radius:5px;">
-                    <p style="margin:5px 0;">🎯 <b>Pick:</b> <span style="color:#2563eb;">${row[4] || '-'}</span></p>
-                    <p style="margin:5px 0;">📈 <b>Odds:</b> ${row[3] || '0.00'} | <b>Hit Rate:</b> ${displayHitRate}</p>
-                </div>
-            `;
-            analysisList.appendChild(matchCard);
+            if (home && away) {
+                const card = document.createElement('div');
+                card.className = 'analysis-list-item';
+                card.innerHTML = `
+                    <div style="font-weight:bold; font-size:1.1rem; margin-bottom:8px;">${home} vs ${away}</div>
+                    <div style="background:rgba(37,99,235,0.05); padding:10px; border-radius:8px;">
+                        <p style="margin:4px 0;">🎯 <b>Pick:</b> <span style="color:#2563eb;">${prediction}</span></p>
+                        <p style="margin:4px 0;">📈 <b>Odds:</b> ${odds} | <b>Hit Rate:</b> ${hitRate}</p>
+                    </div>
+                `;
+                analysisList.appendChild(card);
+            }
         });
 
     } catch (error) {
-        console.error('Error:', error);
-        analysisList.innerHTML = `<p style="text-align:center; color:red;">로드 실패: ${error.message}</p>`;
-    } finally {
-        if (loadingIndicator) loadingIndicator.style.display = 'none';
+        console.error('❌ 데이터 처리 에러:', error);
+        analysisList.innerHTML = `<p style="text-align:center; color:red;">데이터 처리 중 오류 발생</p>`;
     }
 }
