@@ -8,57 +8,62 @@ async function fetchDataAndRender() {
     analysisList.innerHTML = '';
 
     try {
-        // 캐시 방지를 위해 타임스탬프 추가
-        const response = await fetch('sports_data.xlsx?v=' + new Date().getTime());
-        if (!response.ok) throw new Error('Excel file not found.');
+        // 1. 현재 주소를 기반으로 파일의 전체 경로를 생성합니다.
+        const fileName = 'sports_data.xlsx';
+        const fileUrl = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1) + fileName;
+        
+        console.log("🧐 시도 중인 파일 URL:", window.location.origin + fileUrl);
+
+        // 2. fetch 시 cache: 'no-store'를 사용하여 깃허브의 이전 기록을 무시합니다.
+        const response = await fetch(fileUrl + '?t=' + new Date().getTime(), {
+            cache: 'no-store'
+        });
+
+        if (!response.ok) {
+            // 404 에러 등이 발생하면 어떤 파일명을 찾으려 했는지 화면에 표시합니다.
+            throw new Error(`파일을 찾을 수 없습니다 (상태: ${response.status}). 깃허브에 '${fileName}'이 있는지 확인해 주세요.`);
+        }
 
         const arrayBuffer = await response.arrayBuffer();
         const workbook = XLSX.read(new Uint8Array(arrayBuffer), { type: 'array' });
         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-        
-        // header: 1 대신 객체 형태로 가져와서 열 이름으로 접근 (더 안전함)
-        const jsonData = XLSX.utils.sheet_to_json(worksheet);
+        const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
-        console.log("로드된 원본 데이터 첫 줄:", jsonData[0]);
+        console.log("✅ 데이터 로드 성공! 첫 번째 행:", jsonData[0]);
 
-        const allMatches = jsonData.map(row => {
-            // 엑셀 컬럼명에 맞춰 매핑 (컬럼명이 다르면 이 부분을 수정하세요)
-            return {
-                time: row['시간'] || row['Time'] || '-',
-                home: row['홈팀'] || row['Home'] || '',
-                away: row['어웨이팀'] || row['Away'] || '',
-                match: `${row['홈팀'] || 'Home'} vs ${row['어웨이팀'] || 'Away'}`,
-                prediction: row['예측'] || row['Prediction'] || '-',
-                odds: parseFloat(row['배당'] || row['Odds']) || 0,
-                hitRate: parseFloat(row['적중률'] || row['Hit Rate']) || 0,
-                roi: parseFloat(row['ROI']) || 0,
-                sampleSize: parseInt(row['샘플'] || row['Sample']) || 0
-            };
-        });
+        // --- 이후 렌더링 로직 (allMatches 변환 및 필터링) ---
+        const allMatches = jsonData.slice(1).map(row => ({
+            time: row[0] || '-',
+            home: row[1] || '',
+            away: row[2] || '',
+            match: `${row[1]} vs ${row[2]}`,
+            prediction: row[4] || '-',
+            odds: parseFloat(row[3]) || 0,
+            hitRate: (typeof row[5] === 'string' ? parseFloat(row[5]) / 100 : row[5]) || 0,
+            roi: parseFloat(row[10]) || 0,
+            sampleSize: parseInt(row[11]) || 0
+        }));
 
-        // --- 필터 조건 완화 (디버깅용) ---
-        // 일단 데이터가 뜨는지 확인하기 위해 모든 경기를 허용합니다.
+        // 데이터가 뜨는지 확인하기 위해 필터 조건을 최소화합니다.
         const filteredMatches = allMatches.filter(item => item.home && item.away);
 
-        console.log("표시될 경기 수:", filteredMatches.length);
-
         if (filteredMatches.length === 0) {
-            analysisList.innerHTML = `<p style="text-align:center; padding:2rem;">분석된 경기 데이터가 없습니다.</p>`;
+            analysisList.innerHTML = `<p style="text-align:center; padding:2rem;">표시할 데이터가 없습니다. (엑셀 내용 확인 필요)</p>`;
         } else {
             filteredMatches.forEach(item => {
                 analysisList.appendChild(createMatchCard(item));
             });
         }
 
-        // VIP 로직 실행
-        const isVip = localStorage.getItem('isVipUser') === 'true';
-        if (isVip && comboContainer) {
-            renderVipCombo(filteredMatches, comboContainer);
-        }
-
     } catch (error) {
-        console.error('Data Load Error:', error);
-        analysisList.innerHTML = `<p style="text-align:center; color:red;">데이터 로드 오류: ${error.message}</p>`;
+        console.error('❌ 최종 로드 에러:', error.message);
+        analysisList.innerHTML = `
+            <div style="text-align:center; padding:2rem; color:#ef4444;">
+                <h3>⚠️ 데이터 로딩 실패</h3>
+                <p>${error.message}</p>
+                <small style="color:#666;">콘솔 창(F12)에서 '시도 중인 파일 URL'을 클릭해 보세요.</small>
+            </div>
+        `;
     } finally {
         if (loadingIndicator) loadingIndicator.style.display = 'none';
     }
