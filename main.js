@@ -1,27 +1,26 @@
 async function fetchDataAndRender() {
     const analysisList = document.getElementById('analysis-list');
-    const comboContainer = document.getElementById('vip-combo-container');
     const loadingIndicator = document.getElementById('loading-indicator');
     if (!analysisList) return;
 
     if (loadingIndicator) loadingIndicator.style.display = 'block';
-    analysisList.innerHTML = '';
+    analysisList.innerHTML = '<p style="text-align:center;">데이터를 불러오는 중...</p>';
 
     try {
-        // 1. 현재 주소를 기반으로 파일의 전체 경로를 생성합니다.
+        // [중요] 현재 도메인 루트부터 파일을 찾도록 절대 경로 방식으로 접근
         const fileName = 'sports_data.xlsx';
-        const fileUrl = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1) + fileName;
-        
-        console.log("🧐 시도 중인 파일 URL:", window.location.origin + fileUrl);
+        const baseUrl = window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '/');
+        const finalUrl = baseUrl + fileName;
 
-        // 2. fetch 시 cache: 'no-store'를 사용하여 깃허브의 이전 기록을 무시합니다.
-        const response = await fetch(fileUrl + '?t=' + new Date().getTime(), {
+        console.log("🔍 시도 중인 전체 경로:", finalUrl);
+
+        // 캐시를 무시하고 서버의 최신 파일을 강제 호출
+        const response = await fetch(finalUrl + '?v=' + new Date().getTime(), {
             cache: 'no-store'
         });
 
         if (!response.ok) {
-            // 404 에러 등이 발생하면 어떤 파일명을 찾으려 했는지 화면에 표시합니다.
-            throw new Error(`파일을 찾을 수 없습니다 (상태: ${response.status}). 깃허브에 '${fileName}'이 있는지 확인해 주세요.`);
+            throw new Error(`파일 응답 실패 (코드: ${response.status}). 파일이 해당 경로에 존재하지 않습니다.`);
         }
 
         const arrayBuffer = await response.arrayBuffer();
@@ -29,42 +28,43 @@ async function fetchDataAndRender() {
         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
         const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
-        console.log("✅ 데이터 로드 성공! 첫 번째 행:", jsonData[0]);
+        console.log("✅ 데이터 로드 성공! 총 줄 수:", jsonData.length);
 
-        // --- 이후 렌더링 로직 (allMatches 변환 및 필터링) ---
-        const allMatches = jsonData.slice(1).map(row => ({
-            time: row[0] || '-',
-            home: row[1] || '',
-            away: row[2] || '',
-            match: `${row[1]} vs ${row[2]}`,
-            prediction: row[4] || '-',
-            odds: parseFloat(row[3]) || 0,
-            hitRate: (typeof row[5] === 'string' ? parseFloat(row[5]) / 100 : row[5]) || 0,
-            roi: parseFloat(row[10]) || 0,
-            sampleSize: parseInt(row[11]) || 0
-        }));
-
-        // 데이터가 뜨는지 확인하기 위해 필터 조건을 최소화합니다.
-        const filteredMatches = allMatches.filter(item => item.home && item.away);
-
-        if (filteredMatches.length === 0) {
-            analysisList.innerHTML = `<p style="text-align:center; padding:2rem;">표시할 데이터가 없습니다. (엑셀 내용 확인 필요)</p>`;
-        } else {
-            filteredMatches.forEach(item => {
-                analysisList.appendChild(createMatchCard(item));
-            });
+        if (!jsonData || jsonData.length <= 1) {
+            analysisList.innerHTML = '<p style="text-align:center;">엑셀 파일에 분석 데이터가 없습니다.</p>';
+            return;
         }
 
+        // 렌더링 함수 실행 (기존 logic 사용)
+        renderMatches(jsonData.slice(1));
+
     } catch (error) {
-        console.error('❌ 최종 로드 에러:', error.message);
+        console.error('❌ 최종 에러:', error.message);
         analysisList.innerHTML = `
-            <div style="text-align:center; padding:2rem; color:#ef4444;">
-                <h3>⚠️ 데이터 로딩 실패</h3>
-                <p>${error.message}</p>
-                <small style="color:#666;">콘솔 창(F12)에서 '시도 중인 파일 URL'을 클릭해 보세요.</small>
+            <div style="text-align:center; color:#ef4444; padding:20px; border:1px solid #ef4444; border-radius:8px;">
+                <strong>⚠️ 로딩 실패</strong><br>
+                <small>${error.message}</small><br>
+                <button onclick="location.reload()" style="margin-top:10px; padding:5px 10px; cursor:pointer;">새로고침</button>
             </div>
         `;
     } finally {
         if (loadingIndicator) loadingIndicator.style.display = 'none';
     }
+}
+
+// 데이터를 화면에 그리는 보조 함수
+function renderMatches(data) {
+    const analysisList = document.getElementById('analysis-list');
+    analysisList.innerHTML = '';
+    
+    data.forEach(row => {
+        if (!row[1] || !row[2]) return; // 홈팀, 어웨이팀 없으면 스킵
+        const card = document.createElement('div');
+        card.className = 'analysis-list-item';
+        card.innerHTML = `
+            <div style="font-weight:bold; margin-bottom:5px;">${row[1]} vs ${row[2]}</div>
+            <div style="font-size:0.9rem; color:#2563eb;">Pick: ${row[4] || '-'} (${row[3] || '0.00'})</div>
+        `;
+        analysisList.appendChild(card);
+    });
 }
