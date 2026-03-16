@@ -1,223 +1,101 @@
-<!DOCTYPE html>
-<html lang="en" data-theme="light">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="google-site-verification" content="eTJI1wtccrg5Vuuqr4maeaUgLbR3ohPQrMrM0" />
+async function renderAnalysis() {
+    const container = document.getElementById('analysis-list');
+    const loader = document.getElementById('loading-indicator');
+    const isVip = localStorage.getItem('isVipUser') === 'true'; 
+    const t = translations[currentLang];
     
-    <title>AI365PICK - Smart AI Sports Analysis & Football Predictions</title>
-    <meta name="description" content="Get daily AI-powered sports betting tips and high-accuracy football predictions. Verified 70% hit rate analysis updated 365 days a year.">
+    loader.style.display = 'block';
+    container.innerHTML = ''; 
     
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4466358200851184" crossorigin="anonymous"></script>
-    
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-TV2YRZP330"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-TV2YRZP330');
-    </script>
-
-    <style>
-        .high-accuracy-card {
-            border: 2px solid #22c55e !important;
-            box-shadow: 0 10px 15px -3px rgba(34, 197, 94, 0.15) !important;
-            position: relative;
-            background-color: #f0fdf4;
-        }
-        .hot-badge {
-            background: #22c55e;
-            color: white;
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            padding: 3px 10px;
-            border-radius: 20px;
-            font-size: 10px;
-            font-weight: bold;
-            z-index: 10;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-    </style>
-</head>
-<body>
-    <header>
-        <div class="container">
-            <a href="index.html" class="logo-link" id="logo-link">
-                 <img src="betmetrics.png?v=2" alt="AI365PICK Logo" class="logo-img">
-                 <div class="logo-text-group">
-                     <span class="logo-main-text">AI365PICK</span>
-                     <span class="logo-sub-text">Smart AI Analysis</span>
-                 </div>
-            </a>
-            <nav>
-                <a href="index.html" class="nav-link active" data-i18n="navHome">Home</a>
-                <a href="about.html" class="nav-link" data-i18n="navAbout">About</a>
-                <a href="contact.html" class="nav-link" data-i18n="navContact">Contact</a>
-                <a href="privacy.html" class="nav-link" data-i18n="navPrivacy">Privacy</a>
-                <a href="vip.html" class="nav-link vip-link" data-i18n="navVip">VIP</a>
-            </nav>
-            <div class="header-controls">
-                <div id="language-switcher">
-                    <button class="lang-btn" data-lang="en">EN</button>
-                    <button class="lang-btn" data-lang="ko">KO</button>
-                    <button class="lang-btn" data-lang="ja">JA</button>
-                    <button class="lang-btn" data-lang="zh">CN</button>
-                </div>
-                <button id="theme-toggle">☀️</button>
-            </div>
-        </div>
-    </header>
-
-    <main class="container">
-        <section class="hero">
-            <h1 data-i18n="heroTitle">Real-time AI Sports Analysis</h1>
-            <p data-i18n="heroSub">Harness the power of AI 365 days a year for smarter insights.</p>
-        </section>
+    try {
+        // 1. 엑셀 파일 로드 (캐시 방지 v=Date.now 추가)
+        const response = await fetch('sports_data.xlsx?v=' + Date.now());
+        const arrayBuffer = await response.arrayBuffer();
+        const data = new Uint8Array(arrayBuffer);
+        const workbook = XLSX.read(data, {type: 'array'});
+        const sheet = workbook.Sheets[workbook.SheetNames[0]];
         
-        <div id="loading-indicator" style="display: none; text-align: center; padding: 20px;" data-i18n="loading">Loading Analysis...</div>
-        
-        <div id="analysis-list"></div>
+        // 2. 데이터를 배열 형태로 가져오기
+        const rows = XLSX.utils.sheet_to_json(sheet, {header: 1});
 
-        <section style="margin-top: 50px; padding: 30px; background: var(--header-bg); border-radius: 12px; border: 1px solid var(--header-border);">
-            <h2 style="font-size: 1.5rem; margin-bottom: 15px;">Advanced AI Sports Betting Analysis</h2>
-            <p style="line-height: 1.7; color: var(--text-muted); font-size: 0.95rem;">
-                Welcome to <strong>AI365PICK</strong>, your premier destination for data-driven sports predictions. Our advanced <strong>AI sports analysis</strong> system processes thousands of data points daily to provide you with the most accurate <strong>football predictions</strong> and betting insights. We specialize in identifying high-value opportunities with a verified hit rate of over 70%. 
-            </p>
-            <p style="line-height: 1.7; color: var(--text-muted); font-size: 0.95rem; margin-top: 10px;">
-                Our machine learning model focuses on sample-based reliability, ensuring that every <strong>betting tip</strong> is backed by historical performance. Whether you're looking for match results, over/under analysis, or VIP combo picks, AI365PICK provides real-time updates 365 days a year to help you stay ahead of the game.
-            </p>
-        </section>
-    </main>
-
-    <footer>
-        <div class="container">
-            <div class="footer-content" style="text-align: center; padding: 40px 0;">
-                <p><strong>&copy; 2024 AI365PICK. All rights reserved.</strong></p>
-                <div style="font-size: 0.75rem; color: var(--text-muted); max-width: 850px; margin: 20px auto; line-height: 1.6; text-align: justify; border-top: 1px solid var(--header-border); padding-top: 20px;">
-                    <p data-i18n="disclaimerEn">Disclaimer: AI365PICK provides sports data and statistical analysis based on artificial intelligence for informational purposes only. We do not facilitate gambling. (19+ Only)</p>
-                    <p data-i18n="disclaimerKo">본 사이트는 인공지능을 활용한 스포츠 데이터 분석 정보를 제공하며, 어떠한 형태의 사행성 행위나 직접적인 베팅 서비스를 제공하지 않습니다.</p>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <script>
-        // (기존 스크립트 내용과 동일하므로 생략하지 않고 사장님 코드 그대로 유지했습니다)
-        const translations = {
-            en: { navHome: "Home", navAbout: "About", navContact: "Contact", navPrivacy: "Privacy", navVip: "VIP", heroTitle: "Real-time AI Sports Analysis", heroSub: "Harness the power of AI 365 days a year.", loading: "Loading Analysis...", unlock: "Unlock VIP Analysis", sample: "Sample", pick: "Pick", highAcc: "HIGH ACCURACY" },
-            ko: { navHome: "홈", navAbout: "소개", navContact: "문의", navPrivacy: "개인정보", navVip: "VIP 전용", heroTitle: "실시간 AI 스포츠 분석", heroSub: "365일 인공지능이 제공하는 스마트한 분석 데이터.", loading: "데이터 로딩 중...", unlock: "VIP 분석 열기", sample: "표본수", pick: "추천", highAcc: "높은 적중률" },
-            ja: { navHome: "ホーム", navAbout: "紹介", navContact: "お問い合わせ", navPrivacy: "プライバシー", navVip: "VIP専用", heroTitle: "リアルタイムAIスポーツ分析", heroSub: "365일人工知能が提供するスマートな分析 데이터。", loading: "読み込み中...", unlock: "VIP分析を解除", sample: "サンプル", pick: "おすすめ", highAcc: "高い命中率" },
-            zh: { navHome: "首页", navAbout: "关于", navContact: "联系我们", navPrivacy: "隐私政策", navVip: "VIP专属", heroTitle: "实时AI体育分析", heroSub: "365天人工智能为您提供智能分析数据。", loading: "加载中...", unlock: "解锁VIP分析", sample: "样本数", pick: "推荐", highAcc: "高命中率" }
-        };
-
-        let currentLang = localStorage.getItem('selectedLang') || 'en';
-
-        function updateLanguage() {
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (translations[currentLang][key]) { el.innerText = translations[currentLang][key]; }
-            });
-            renderAnalysis(); 
-        }
-
-        document.querySelectorAll('.lang-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                currentLang = btn.getAttribute('data-lang');
-                localStorage.setItem('selectedLang', currentLang);
-                updateLanguage();
-            });
+        // 3. 필터 조건 수정: 샘플 수가 1개 이상이면 무조건 표시 (기존 10개에서 완화)
+        const filteredRows = rows.slice(1).filter(row => {
+            const sampleCount = parseInt(row[11]);
+            return row[1] && row[2] && sampleCount >= 1; 
         });
 
-        const themeBtn = document.getElementById('theme-toggle');
-        if (themeBtn) {
-            themeBtn.addEventListener('click', () => {
-                const currentTheme = document.documentElement.getAttribute('data-theme');
-                const targetTheme = currentTheme === 'light' ? 'dark' : 'light';
-                document.documentElement.setAttribute('data-theme', targetTheme);
-                localStorage.setItem('theme', targetTheme);
-                themeBtn.innerText = targetTheme === 'light' ? '☀️' : '🌙';
-            });
+        if (filteredRows.length === 0) {
+            container.innerHTML = '<p style="text-align:center; padding:20px;">분석 데이터가 없거나 조건에 맞는 경기가 없습니다.</p>';
+            return;
         }
 
-        async function renderAnalysis() {
-            const container = document.getElementById('analysis-list');
-            const loader = document.getElementById('loading-indicator');
-            const isVip = localStorage.getItem('isVipUser') === 'true'; 
-            const t = translations[currentLang];
+        console.log("표시할 경기 수:", filteredRows.length);
+
+        filteredRows.forEach(row => {
+            // [데이터 매핑] 엑셀 열 순서 기준
+            // 0:Time, 1:Home, 2:Away, 3:Odds, 4:Recommendation, 5:HitRate, 6:Win%, 7:Draw%, 8:Loss%, 11:Sample
+            const time = row[0] || '';
+            const home = row[1] || '';
+            const away = row[2] || '';
+            const odds = row[3] || '0.00';
+            const pick = row[4] || '-';
+            const hitRate = parseFloat(row[5]) || 0;
+            const winP = parseFloat(row[6]) || 0;
+            const drawP = parseFloat(row[7]) || 0;
+            const lossP = parseFloat(row[8]) || 0;
+            const sample = row[11] || '0';
+
+            const isHighAcc = hitRate >= 70;
+            const card = document.createElement('div');
             
-            loader.style.display = 'block';
-            container.innerHTML = ''; 
-            
-            try {
-                const response = await fetch('sports_data.xlsx');
-                const arrayBuffer = await response.arrayBuffer();
-                const data = new Uint8Array(arrayBuffer);
-                const workbook = XLSX.read(data, {type: 'array'});
-                const sheet = workbook.Sheets[workbook.SheetNames[0]];
-                const rows = XLSX.utils.sheet_to_json(sheet, {header: 1});
-
-                const filteredRows = rows.slice(1).filter(row => parseInt(row[11]) >= 10);
-
-                filteredRows.forEach(row => {
-                    const hitRate = parseFloat(row[5]) || 0;
-                    const winP = parseFloat(row[6]) || 0;
-                    const drawP = parseFloat(row[7]) || 0;
-                    const lossP = parseFloat(row[8]) || 0;
-                    const isHighAcc = hitRate >= 70;
-                    const card = document.createElement('div');
-                    
-                    if (hitRate >= 80 && !isVip) {
-                        card.className = 'analysis-list-item vip-locked-card';
-                        card.innerHTML = `
-                            <span class="vip-badge-top">⭐ VIP ONLY</span>
-                            <div class="lock-overlay">
-                                <span style="font-size: 1.5rem;">🔒</span>
-                                <p style="font-weight: 800; margin:5px 0;">Hit Rate: ${hitRate}%</p>
-                                <a href="vip.html" class="unlock-btn">${t.unlock}</a>
-                            </div>
-                            <div class="blur-target">
-                                <div style="font-size:0.75rem; color:#999;">🕒 ${row[0]}</div>
-                                <h3 style="font-size:1.1rem; margin:15px 0;">${row[1]} vs ${row[2]}</h3>
-                                <div class="ai-chart-section"><div class="donut-chart" style="background:#e2e8f0;"></div></div>
-                            </div>`;
-                    } else {
-                        card.className = `analysis-list-item ${isHighAcc ? 'high-accuracy-card' : ''}`;
-                        card.innerHTML = `
-                            ${isHighAcc ? `<span class="hot-badge">${t.highAcc}</span>` : ''}
-                            <div style="display:flex; justify-content:space-between; color:var(--text-muted); font-size:0.75rem;">
-                                <span>🕒 ${row[0]}</span>
-                                <span>${t.sample}: ${row[11]}</span>
-                            </div>
-                            <h3 style="font-size:1.1rem; margin:15px 0;">${row[1]} vs ${row[2]}</h3>
-                            <div style="margin-bottom:8px;"><span style="font-weight:bold; color:var(--primary-blue);">${t.pick}: 🏠 ${row[4]}</span></div>
-                            <div class="ai-chart-section">
-                                <div class="donut-chart" style="background: conic-gradient(#2563eb 0% ${winP}%, #94a3b8 ${winP}% ${winP + drawP}%, #ef4444 ${winP + drawP}% 100%);"></div>
-                                <div class="chart-labels">
-                                    <div class="label-row"><span>Win</span> <span>${winP}%</span></div>
-                                    <div class="label-row"><span>Draw</span> <span>${drawP}%</span></div>
-                                    <div class="label-row"><span>Loss</span> <span>${lossP}%</span></div>
-                                </div>
-                            </div>
-                            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:auto; padding-top:10px; border-top:1px solid var(--header-border);">
-                                <span style="font-size:0.85rem; font-weight:600;">Hit Rate: <b style="color:${isHighAcc ? '#15803d' : '#10b981'}; font-size:${isHighAcc ? '1.1rem' : '0.85rem'};">${hitRate}%</b></span>
-                                <span style="font-size:0.7rem; color:var(--text-muted);">AI365PICK.com</span>
-                            </div>`;
-                    }
-                    container.appendChild(card);
-                });
-            } catch (e) { console.error(e); } finally { loader.style.display = 'none'; }
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-            if (themeBtn) themeBtn.innerText = savedTheme === 'light' ? '☀️' : '🌙';
-            updateLanguage(); 
+            // VIP 로직: 적중률 80% 이상이면서 VIP가 아닌 경우 잠금
+            if (hitRate >= 80 && !isVip) {
+                card.className = 'analysis-list-item vip-locked-card';
+                card.innerHTML = `
+                    <span class="vip-badge-top">⭐ VIP ONLY</span>
+                    <div class="lock-overlay">
+                        <span style="font-size: 1.5rem;">🔒</span>
+                        <p style="font-weight: 800; margin:5px 0;">Hit Rate: ${hitRate}%</p>
+                        <a href="vip.html" class="unlock-btn">${t.unlock}</a>
+                    </div>
+                    <div class="blur-target">
+                        <div style="font-size:0.75rem; color:#999;">🕒 ${time}</div>
+                        <h3 style="font-size:1.1rem; margin:15px 0;">${home} vs ${away}</h3>
+                        <div class="ai-chart-section"><div class="donut-chart" style="background:#e2e8f0;"></div></div>
+                    </div>`;
+            } else {
+                card.className = `analysis-list-item ${isHighAcc ? 'high-accuracy-card' : ''}`;
+                card.innerHTML = `
+                    ${isHighAcc ? `<span class="hot-badge">${t.highAcc}</span>` : ''}
+                    <div style="display:flex; justify-content:space-between; color:var(--text-muted); font-size:0.75rem;">
+                        <span>🕒 ${time}</span>
+                        <span>${t.sample}: ${sample}</span>
+                    </div>
+                    <h3 style="font-size:1.1rem; margin:15px 0;">${home} vs ${away}</h3>
+                    <div style="margin-bottom:8px;">
+                        <span style="font-weight:bold; color:var(--primary-blue);">${t.pick}: ${pick}</span>
+                        <span style="margin-left:10px; font-size:0.9rem; color:#666;">(${odds})</span>
+                    </div>
+                    <div class="ai-chart-section">
+                        <div class="donut-chart" style="background: conic-gradient(#2563eb 0% ${winP}%, #94a3b8 ${winP}% ${winP + drawP}%, #ef4444 ${winP + drawP}% 100%);"></div>
+                        <div class="chart-labels">
+                            <div class="label-row"><span>Win</span> <span>${winP}%</span></div>
+                            <div class="label-row"><span>Draw</span> <span>${drawP}%</span></div>
+                            <div class="label-row"><span>Loss</span> <span>${lossP}%</span></div>
+                        </div>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:auto; padding-top:10px; border-top:1px solid var(--header-border);">
+                        <span style="font-size:0.85rem; font-weight:600;">Hit Rate: <b style="color:${isHighAcc ? '#15803d' : '#10b981'}; font-size:${isHighAcc ? '1.1rem' : '0.85rem'};">${hitRate}%</b></span>
+                        <span style="font-size:0.7rem; color:var(--text-muted);">AI365PICK.com</span>
+                    </div>`;
+            }
+            container.appendChild(card);
         });
-    </script>
-</body>
-</html>
+
+    } catch (e) { 
+        console.error("렌더링 에러:", e); 
+        container.innerHTML = `<p style="text-align:center; color:red; padding:20px;">에러: ${e.message}</p>`;
+    } finally { 
+        loader.style.display = 'none'; 
+    }
+}
