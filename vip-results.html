@@ -2,122 +2,96 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIP 적중 게시판 - AI365PICK</title>
+    <title>VIP 적중 관리 시스템</title>
     <style>
-        body { font-family: 'Malgun Gothic', sans-serif; background: #f0f2f5; margin: 0; padding: 20px; }
-        .board-container { max-width: 900px; margin: 0 auto; background: #fff; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); overflow: hidden; }
-        
-        /* 게시판 헤더 */
-        .board-header { padding: 20px; border-bottom: 2px solid #2563eb; display: flex; justify-content: space-between; align-items: center; }
-        .board-header h2 { margin: 0; color: #1e293b; font-size: 1.25rem; }
-
-        /* 게시판 테이블 */
-        table { width: 100%; border-collapse: collapse; }
-        th { background: #f8fafc; padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0; color: #64748b; font-size: 0.85rem; }
-        td { padding: 15px 12px; border-bottom: 1px solid #f1f5f9; cursor: pointer; font-size: 0.95rem; }
-        tr:hover { background: #f8faff; }
-        
-        .col-no { width: 60px; text-align: center; color: #94a3b8; }
-        .col-date { width: 100px; color: #64748b; text-align: center; }
-        .col-result { width: 80px; text-align: center; }
-        .hit-badge { background: #fee2e2; color: #ef4444; padding: 3px 8px; border-radius: 4px; font-weight: bold; font-size: 0.8rem; }
-
-        /* 상세보기 (글 읽기 화면) */
-        #detail-view { display: none; padding: 30px; }
-        .btn-list { background: #f1f5f9; border: 1px solid #cbd5e1; padding: 8px 15px; border-radius: 4px; cursor: pointer; margin-bottom: 20px; font-size: 0.9rem; }
-        .view-title { font-size: 1.6rem; font-weight: bold; margin-bottom: 15px; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px; }
-        .view-content { line-height: 1.8; color: #334155; white-space: pre-wrap; }
-        .view-img { max-width: 100%; border-radius: 8px; margin-top: 20px; border: 1px solid #e2e8f0; }
+        body { font-family: sans-serif; background: #f4f7f6; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; background: #fff; padding: 20px; border-radius: 10px; shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border-bottom: 1px solid #ddd; padding: 12px; text-align: left; }
+        .btn { padding: 8px 16px; cursor: pointer; border: none; border-radius: 4px; }
+        .btn-write { background: #2563eb; color: white; margin-bottom: 10px; }
+        .btn-delete { background: #ef4444; color: white; font-size: 0.8rem; }
+        .modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border: 1px solid #ccc; box-shadow: 0 5px 15px rgba(0,0,0,0.3); z-index: 10; width: 400px; }
+        input, textarea { width: 100%; margin-bottom: 10px; padding: 8px; box-sizing: border-box; }
     </style>
 </head>
 <body>
 
-<div class="board-container">
-    <div id="list-view">
-        <div class="board-header">
-            <h2>🏆 VIP 적중 게시판</h2>
-            <span style="font-size: 0.8rem; color: #94a3b8;">AI365PICK Official Results</span>
-        </div>
-        <table>
-            <thead>
-                <tr>
-                    <th class="col-no">번호</th>
-                    <th>제목</th>
-                    <th class="col-date">날짜</th>
-                    <th class="col-result">결과</th>
-                </tr>
-            </thead>
-            <tbody id="board-list">
-                </tbody>
-        </table>
-    </div>
+<div class="container">
+    <h2>🏆 VIP 적중 결과 관리</h2>
+    <button class="btn btn-write" onclick="openModal()">➕ 새 결과 등록</button>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>날짜</th>
+                <th>제목</th>
+                <th>관리</th>
+            </tr>
+        </thead>
+        <tbody id="post-list">
+            <!-- 글 목록이 여기에 표시됩니다 -->
+        </tbody>
+    </table>
+</div>
 
-    <div id="detail-view">
-        <button class="btn-list" onclick="showList()">← 목록으로</button>
-        <div class="view-title" id="v-title"></div>
-        <div id="v-date" style="color:#94a3b8; margin-bottom:20px;"></div>
-        <div class="view-content" id="v-content"></div>
-        <img src="" alt="인증샷" class="view-img" id="v-img">
-    </div>
+<!-- 글쓰기 모달 창 -->
+<div id="modal" class="modal">
+    <h3>새 적중 결과 작성</h3>
+    <input type="date" id="post-date">
+    <input type="text" id="post-title" placeholder="제목을 입력하세요 (예: 3월 20일 올킬)">
+    <textarea id="post-content" rows="5" placeholder="내용을 입력하세요"></textarea>
+    <button class="btn btn-write" onclick="savePost()">저장하기</button>
+    <button class="btn" onclick="closeModal()">취소</button>
 </div>
 
 <script>
-    /* ★ 관리자 글쓰기 영역 ★
-       새 글을 쓰려면 아래 [ ] 사이에 { } 내용을 추가하세요. 
-       맨 위에 넣을수록 최신글이 됩니다.
-    */
-    const myPosts = [
-        {
-            no: 2,
-            title: "3월 18일 VIP 분석 결과 - 2경기 올킬 적중!",
-            date: "2024-03-18",
-            content: "오늘 경기 결과입니다.\nAI가 분석한 두 경기 모두 깔끔하게 승리했습니다.\n수익 보신 분들 축하드립니다!",
-            image: "img/hit_0318.png" // 캡처 이미지 경로
-        },
-        {
-            no: 1,
-            title: "3월 17일 VIP 분석 결과 - 고배당 적중 완료",
-            date: "2024-03-17",
-            content: "어제 경기 적중 인증샷입니다.\n내일도 좋은 픽으로 찾아뵙겠습니다.",
-            image: "img/hit_0317.png"
-        }
-    ];
+    // 1. 데이터 불러오기
+    let posts = JSON.parse(localStorage.getItem('vip_posts')) || [];
 
-    // 게시판 목록 그리기
-    function renderBoard() {
-        const listBody = document.getElementById('board-list');
-        listBody.innerHTML = myPosts.map(post => `
-            <tr onclick="readPost(${post.no})">
-                <td class="col-no">${post.no}</td>
-                <td style="font-weight:500;">${post.title}</td>
-                <td class="col-date">${post.date}</td>
-                <td class="col-result"><span class="hit-badge">HIT</span></td>
+    function render() {
+        const list = document.getElementById('post-list');
+        list.innerHTML = posts.map((post, index) => `
+            <tr>
+                <td>${post.date}</td>
+                <td><strong>${post.title}</strong></td>
+                <td><button class="btn btn-delete" onclick="deletePost(${index})">삭제</button></td>
             </tr>
         `).join('');
     }
 
-    // 글 읽기 기능
-    function readPost(no) {
-        const post = myPosts.find(p => p.no === no);
-        if(!post) return;
+    // 2. 글 저장하기
+    function savePost() {
+        const date = document.getElementById('post-date').value;
+        const title = document.getElementById('post-title').value;
+        const content = document.getElementById('post-content').value;
 
-        document.getElementById('v-title').innerText = post.title;
-        document.getElementById('v-date').innerText = "작성일: " + post.date;
-        document.getElementById('v-content').innerText = post.content;
-        document.getElementById('v-img').src = post.image;
+        if(!date || !title) return alert("날짜와 제목을 입력해주세요!");
 
-        document.getElementById('list-view').style.display = 'none';
-        document.getElementById('detail-view').style.display = 'block';
+        posts.unshift({ date, title, content }); // 최신글을 위로
+        localStorage.setItem('vip_posts', JSON.stringify(posts));
+        
+        closeModal();
+        render();
+        // 입력창 비우기
+        document.getElementById('post-title').value = '';
+        document.getElementById('post-content').value = '';
     }
 
-    function showList() {
-        document.getElementById('list-view').style.display = 'block';
-        document.getElementById('detail-view').style.display = 'none';
+    // 3. 글 삭제하기
+    function deletePost(index) {
+        if(confirm("정말 삭제하시겠습니까?")) {
+            posts.splice(index, 1);
+            localStorage.setItem('vip_posts', JSON.stringify(posts));
+            render();
+        }
     }
 
-    // 페이지 로드 시 실행
-    renderBoard();
+    function openModal() { document.getElementById('modal').style.display = 'block'; }
+    function closeModal() { document.getElementById('modal').style.display = 'none'; }
+
+    // 초기 실행
+    render();
 </script>
 
 </body>
