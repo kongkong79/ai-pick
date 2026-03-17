@@ -7,57 +7,26 @@
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
-        :root {
-            --header-border: #e2e8f0;
-            --card-bg: #ffffff;
-            --primary-blue: #2563eb;
-            --vip-gold: #facc15;
-        }
-        [data-theme='dark'] {
-            --header-border: #334155;
-            --card-bg: #1e293b;
-        }
-        .vip-combo-card { transition: transform 0.3s ease; }
-        .vip-combo-card:hover { transform: translateY(-5px); }
-        .analysis-list-item { 
-            border: 1px solid var(--header-border); 
-            border-radius: 12px; 
-            padding: 20px; 
-            margin-bottom: 15px; 
-            background: var(--card-bg); 
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-        .subscribe-button { 
-            display: inline-block; 
-            margin-top: 10px; 
-            padding: 10px 25px; 
-            background: var(--primary-blue); 
-            color: white; 
-            border-radius: 8px; 
-            text-decoration: none; 
-            font-weight: bold; 
-            transition: opacity 0.2s;
-        }
-        .subscribe-button:hover { opacity: 0.9; }
-        .badge-vip { background: var(--primary-blue); color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; }
-        .badge-normal { background: #e2e8f0; color: #475569; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; }
+        /* 기본 스타일 유지 */
+        :root { --header-border: #e2e8f0; --card-bg: #ffffff; --primary-blue: #2563eb; }
+        [data-theme='dark'] { --header-border: #334155; --card-bg: #1e293b; }
+        .analysis-list-item { border: 1px solid var(--header-border); border-radius: 12px; padding: 20px; margin-bottom: 15px; background: var(--card-bg); }
+        .subscribe-button { display: inline-block; padding: 10px 20px; background: var(--primary-blue); color: white; border-radius: 8px; text-decoration: none; font-weight: bold; }
+        .lang-btn { cursor: pointer; border: none; background: none; font-size: 0.9rem; transition: 0.3s; }
     </style>
 </head>
 <body>
     <header style="border-bottom: 1px solid var(--header-border); padding: 15px 0;">
         <div class="container" style="display:flex; justify-content:space-between; align-items:center; max-width:1200px; margin:0 auto; padding:0 20px;">
-            <a href="#" class="logo-link" id="logo-link" style="text-decoration:none; color:inherit; display:flex; align-items:center; gap:10px;">
-                 <img src="betmetrics.png" alt="Logo" class="logo-img" style="width:35px; height:35px;">
-                 <span class="logo-main-text" style="font-weight:bold; font-size:1.3rem; letter-spacing:-0.5px;">AI365PICK</span>
+            <a href="index.html" id="logo-link" style="text-decoration:none; color:inherit; display:flex; align-items:center; gap:10px;">
+                 <img src="betmetrics.png" alt="Logo" style="width:35px; height:35px;">
+                 <span style="font-weight:bold; font-size:1.3rem;">AI365PICK</span>
             </a>
-            <nav style="display:flex; gap:25px; font-weight:500;">
-                <a href="index.html" class="nav-link active">Home</a>
-                <a href="vip.html" class="nav-link vip-link" style="color:var(--primary-blue);">VIP Analysis</a>
-            </nav>
             <div class="header-controls" style="display:flex; align-items:center; gap:15px;">
                 <div id="language-switcher">
-                    <button class="lang-btn" data-lang="ko" style="cursor:pointer; border:none; background:none; font-weight:bold;">KO</button>
-                    <button class="lang-btn" data-lang="en" style="cursor:pointer; border:none; background:none; opacity:0.5;">EN</button>
+                    <button class="lang-btn" data-lang="ko" onclick="changeLang('ko')">KO</button>
+                    <span style="color:#ccc">|</span>
+                    <button class="lang-btn" data-lang="en" onclick="changeLang('en')">EN</button>
                 </div>
                 <button id="theme-toggle" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">☀️</button>
             </div>
@@ -65,136 +34,145 @@
     </header>
 
     <main class="container" style="max-width:800px; margin:0 auto; padding:40px 20px;">
-        <section class="hero" style="text-align:center; margin-bottom: 50px;">
-            <h1 style="font-size:2rem; margin-bottom:10px;">실시간 AI 스포츠 분석</h1>
-            <p style="color:#64748b;">빅데이터 기반 AI가 365일 정교한 예측을 제공합니다.</p>
+        <section style="text-align:center; margin-bottom: 40px;">
+            <h1 id="txt-hero-title" style="font-size:2rem; margin-bottom:10px;">실시간 AI 스포츠 분석</h1>
+            <p id="txt-hero-sub" style="color:#64748b;">빅데이터 기반 AI가 365일 정교한 예측을 제공합니다.</p>
         </section>
 
-        <div id="vip-combo-container"></div>
         <div id="loading-indicator" style="text-align: center; padding: 30px;">데이터 분석 중...</div>
         <div id="analysis-list"></div>
     </main>
 
     <script>
+        // 1. 번역 데이터 객체
+        const translations = {
+            ko: {
+                heroTitle: "실시간 AI 스포츠 분석",
+                heroSub: "빅데이터 기반 AI가 365일 정교한 예측을 제공합니다.",
+                loading: "데이터 분석 중...",
+                aiPick: "AI 추천",
+                sample: "표본수",
+                odds: "배당",
+                vipLock: "🔒 VIP 전용 분석",
+                vipDesc: "승률 85% 이상의 VIP 전용 경기입니다.",
+                vipBtn: "VIP 전용 픽 확인하기",
+                noData: "현재 기준을 충족하는 경기가 없습니다."
+            },
+            en: {
+                heroTitle: "Real-time AI Analysis",
+                heroSub: "AI provides precise predictions based on Big Data.",
+                loading: "Analyzing Data...",
+                aiPick: "AI Pick",
+                sample: "Sample",
+                odds: "Odds",
+                vipLock: "🔒 VIP Exclusive",
+                vipDesc: "This is a VIP match with 85%+ win rate.",
+                vipBtn: "Unlock VIP Picks",
+                noData: "No matches found."
+            }
+        };
+
+        let currentLang = localStorage.getItem('lang') || 'ko';
+
         document.addEventListener('DOMContentLoaded', () => {
-            const ADMIN_PASSWORD = 'MGB_ADMIN_2024';
-            let logoClickCount = 0;
-            let logoClickTimer = null;
-
-            async function init() {
-                const savedTheme = localStorage.getItem('theme') || 'light';
-                document.documentElement.setAttribute('data-theme', savedTheme);
-                document.getElementById('theme-toggle').innerText = savedTheme === 'light' ? '☀️' : '🌙';
-                
-                fetchDataAndRender();
-                setupEventListeners();
-            }
-
-            async function fetchDataAndRender() {
-                const analysisList = document.getElementById('analysis-list');
-                const loadingIndicator = document.getElementById('loading-indicator');
-                const isVipUser = localStorage.getItem('isVipUser') === 'true';
-
-                try {
-                    // 데이터 파일을 가져옵니다. (캐시 방지 파라미터 포함)
-                    const response = await fetch('today_ai_all_picks.xlsx?v=' + new Date().getTime());
-                    if (!response.ok) throw new Error('데이터 파일을 찾을 수 없습니다.');
-
-                    const arrayBuffer = await response.arrayBuffer();
-                    const workbook = XLSX.read(new Uint8Array(arrayBuffer), { type: 'array' });
-                    const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-                    const jsonData = XLSX.utils.sheet_to_json(worksheet);
-
-                    analysisList.innerHTML = '';
-
-                    // 70% 이상의 데이터만 필터링 및 렌더링
-                    const validMatches = jsonData.filter(row => (parseFloat(row['예상확률']) || 0) >= 70);
-
-                    if (validMatches.length === 0) {
-                        analysisList.innerHTML = `<p style="text-align:center; padding:3rem; color:#64748b;">현재 분석 기준(70% 이상)을 충족하는 경기가 없습니다.</p>`;
-                    } else {
-                        validMatches.forEach(row => {
-                            const hitRate = parseFloat(row['예상확률']) || 0;
-                            const isVipMatch = hitRate >= 85;
-                            const card = document.createElement('div');
-                            card.className = 'analysis-list-item';
-
-                            if (isVipMatch && !isVipUser) {
-                                // [VIP 잠금 화면]
-                                card.style.border = "2px dashed #cbd5e1";
-                                card.innerHTML = `
-                                    <div style="text-align:center; padding:10px;">
-                                        <div style="font-size: 1.8rem; margin-bottom: 10px;">🔒</div>
-                                        <h3 style="margin-bottom:8px; font-size:1.1rem;">${row['홈팀']} vs ${row['원정팀']}</h3>
-                                        <p style="font-size:0.85rem; color:#64748b; margin-bottom:15px;">
-                                            승률 <strong>${hitRate.toFixed(1)}%</strong>의 VIP 전용 분석 경급입니다.
-                                        </p>
-                                        <a href="vip.html" class="subscribe-button">VIP 전용 픽 확인하기</a>
-                                    </div>`;
-                            } else {
-                                // [일반 공개 및 VIP 결제 유저 화면]
-                                const badgeClass = isVipMatch ? 'badge-vip' : 'badge-normal';
-                                const badgeText = isVipMatch ? `VIP ${hitRate.toFixed(1)}%` : `추천 ${hitRate.toFixed(1)}%`;
-                                
-                                card.innerHTML = `
-                                    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
-                                        <div>
-                                            <strong style="font-size:1.15rem; display:block;">${row['홈팀']} <small style="color:#94a3b8">vs</small> ${row['원정팀']}</strong>
-                                            <span style="font-size:0.8rem; color:#94a3b8;">🕒 ${row['시간'] || '시간 미정'}</span>
-                                        </div>
-                                        <span class="${badgeClass}">${badgeText}</span>
-                                    </div>
-                                    <div style="background:${isVipMatch ? '#f0f7ff' : '#f8fafc'}; padding:15px; border-radius:10px; border-left:4px solid ${isVipMatch ? '#2563eb' : '#94a3b8'};">
-                                        <p style="margin:0 0 8px 0;"><strong>AI 추천:</strong> <span style="color:#2563eb; font-weight:bold; font-size:1.1rem;">${row['AI추천']}</span></p>
-                                        <div style="display:flex; gap:15px; font-size:0.85rem; color:#475569;">
-                                            <span><strong>홈배당:</strong> ${parseFloat(row['홈승배당']).toFixed(2)}</span>
-                                            <span><strong>무배당:</strong> ${parseFloat(row['무승부배당']).toFixed(2)}</span>
-                                            <span><strong>표본수:</strong> ${row['총경기수']}회</span>
-                                        </div>
-                                    </div>`;
-                            }
-                            analysisList.appendChild(card);
-                        });
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                    analysisList.innerHTML = `<p style="text-align:center; color:#ef4444;">데이터를 불러오는 중 오류가 발생했습니다.</p>`;
-                } finally {
-                    if (loadingIndicator) loadingIndicator.style.display = 'none';
-                }
-            }
-
-            function setupEventListeners() {
-                // 테마 토글
-                document.getElementById('theme-toggle')?.addEventListener('click', () => {
-                    const currentTheme = document.documentElement.getAttribute('data-theme');
-                    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-                    document.documentElement.setAttribute('data-theme', newTheme);
-                    localStorage.setItem('theme', newTheme);
-                    document.getElementById('theme-toggle').innerText = newTheme === 'light' ? '☀️' : '🌙';
-                });
-
-                // 로고 5번 클릭 시 관리자(VIP) 모드
-                document.getElementById('logo-link')?.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    logoClickCount++;
-                    clearTimeout(logoClickTimer);
-                    logoClickTimer = setTimeout(() => { logoClickCount = 0; }, 2000);
-                    
-                    if (logoClickCount === 5) {
-                        const pw = prompt('관리자 비밀번호를 입력하세요.');
-                        if (pw === ADMIN_PASSWORD) {
-                            localStorage.setItem('isVipUser', 'true');
-                            alert('관리자 모드가 활성화되었습니다. (VIP 픽 잠금 해제)');
-                            location.reload();
-                        }
-                        logoClickCount = 0;
-                    }
-                });
-            }
-
-            init();
+            initApp();
         });
+
+        function initApp() {
+            updateUI();
+            fetchDataAndRender();
+            setupTheme();
+        }
+
+        // 언어 변경 함수
+        function changeLang(lang) {
+            currentLang = lang;
+            localStorage.setItem('lang', lang);
+            updateUI();
+            fetchDataAndRender(); // 리스트 다시 그리기
+        }
+
+        // 정적 텍스트 업데이트
+        function updateUI() {
+            const t = translations[currentLang];
+            document.getElementById('txt-hero-title').innerText = t.heroTitle;
+            document.getElementById('txt-hero-sub').innerText = t.heroSub;
+            document.getElementById('loading-indicator').innerText = t.loading;
+
+            // 버튼 강조 스타일
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.style.fontWeight = btn.dataset.lang === currentLang ? "bold" : "normal";
+                btn.style.opacity = btn.dataset.lang === currentLang ? "1" : "0.5";
+            });
+        }
+
+        async function fetchDataAndRender() {
+            const analysisList = document.getElementById('analysis-list');
+            const isVipUser = localStorage.getItem('isVipUser') === 'true';
+            const t = translations[currentLang];
+
+            try {
+                const response = await fetch('today_ai_all_picks.xlsx?v=' + Date.now());
+                if (!response.ok) throw new Error('File not found');
+                const arrayBuffer = await response.arrayBuffer();
+                const workbook = XLSX.read(new Uint8Array(arrayBuffer), { type: 'array' });
+                const jsonData = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
+
+                analysisList.innerHTML = '';
+                const validMatches = jsonData.filter(row => (parseFloat(row['예상확률']) || 0) >= 70);
+
+                if (validMatches.length === 0) {
+                    analysisList.innerHTML = `<p style="text-align:center; padding:3rem;">${t.noData}</p>`;
+                    return;
+                }
+
+                validMatches.forEach(row => {
+                    const hitRate = parseFloat(row['예상확률']) || 0;
+                    const isVipMatch = hitRate >= 85;
+                    const card = document.createElement('div');
+                    card.className = 'analysis-list-item';
+
+                    if (isVipMatch && !isVipUser) {
+                        // VIP 잠금 상태 UI
+                        card.innerHTML = `
+                            <div style="text-align:center;">
+                                <h3 style="margin-bottom:5px;">${row['홈팀']} vs ${row['원정팀']}</h3>
+                                <p style="color:#2563eb; font-weight:bold;">${t.vipLock}</p>
+                                <p style="font-size:0.85rem; color:#64748b; margin-bottom:15px;">${t.vipDesc}</p>
+                                <a href="vip.html" class="subscribe-button">${t.vipBtn}</a>
+                            </div>`;
+                    } else {
+                        // 일반 공개 UI
+                        card.innerHTML = `
+                            <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                                <strong>${row['홈팀']} vs ${row['원정팀']}</strong>
+                                <span style="color:#2563eb; font-weight:bold;">${hitRate.toFixed(1)}%</span>
+                            </div>
+                            <div style="background:#f8fafc; padding:15px; border-radius:10px;">
+                                <p><strong>${t.aiPick}:</strong> ${row['AI추천']}</p>
+                                <div style="font-size:0.8rem; color:#64748b;">
+                                    ${t.odds}: ${row['홈승배당']} / ${row['무승부배당']} / ${row['원정승배당']} | ${t.sample}: ${row['총경기수']}
+                                </div>
+                            </div>`;
+                    }
+                    analysisList.appendChild(card);
+                });
+            } catch (err) {
+                analysisList.innerHTML = '<p>Error loading data.</p>';
+            } finally {
+                document.getElementById('loading-indicator').style.display = 'none';
+            }
+        }
+
+        function setupTheme() {
+            const toggle = document.getElementById('theme-toggle');
+            toggle.addEventListener('click', () => {
+                const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+                toggle.innerText = theme === 'light' ? '☀️' : '🌙';
+            });
+        }
     </script>
 </body>
 </html>
