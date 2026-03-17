@@ -7,36 +7,49 @@
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
-        /* 기본 스타일 유지 */
         :root { --header-border: #e2e8f0; --card-bg: #ffffff; --primary-blue: #2563eb; }
-        [data-theme='dark'] { --header-border: #334155; --card-bg: #1e293b; }
-        .analysis-list-item { border: 1px solid var(--header-border); border-radius: 12px; padding: 20px; margin-bottom: 15px; background: var(--card-bg); }
-        .subscribe-button { display: inline-block; padding: 10px 20px; background: var(--primary-blue); color: white; border-radius: 8px; text-decoration: none; font-weight: bold; }
-        .lang-btn { cursor: pointer; border: none; background: none; font-size: 0.9rem; transition: 0.3s; }
+        [data-theme='dark'] { --header-border: #334155; --card-bg: #1e293b; --card-text: #f1f5f9; }
+        body { font-family: -apple-system, sans-serif; margin: 0; background: var(--card-bg); color: inherit; }
+        .container { max-width: 800px; margin: 0 auto; padding: 0 20px; }
+        
+        header { border-bottom: 1px solid var(--header-border); padding: 15px 0; background: var(--card-bg); position: sticky; top: 0; z-index: 100; }
+        .header-inner { display: flex; justify-content: space-between; align-items: center; }
+        .nav-menu { display: flex; gap: 20px; font-weight: bold; }
+        .nav-link { text-decoration: none; color: #64748b; font-size: 0.95rem; }
+        .nav-link.active { color: var(--primary-blue); }
+
+        .analysis-list-item { border: 1px solid var(--header-border); border-radius: 12px; padding: 20px; margin-bottom: 15px; background: var(--card-bg); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .lang-btn { cursor: pointer; border: none; background: none; font-size: 0.85rem; padding: 5px; }
+        .subscribe-button { display: inline-block; padding: 10px 20px; background: var(--primary-blue); color: white; border-radius: 8px; text-decoration: none; font-weight: bold; margin-top: 10px; }
     </style>
 </head>
 <body>
-    <header style="border-bottom: 1px solid var(--header-border); padding: 15px 0;">
-        <div class="container" style="display:flex; justify-content:space-between; align-items:center; max-width:1200px; margin:0 auto; padding:0 20px;">
-            <a href="index.html" id="logo-link" style="text-decoration:none; color:inherit; display:flex; align-items:center; gap:10px;">
-                 <img src="betmetrics.png" alt="Logo" style="width:35px; height:35px;">
-                 <span style="font-weight:bold; font-size:1.3rem;">AI365PICK</span>
+    <header>
+        <div class="container header-inner">
+            <a href="index.html" style="text-decoration:none; color:inherit; display:flex; align-items:center; gap:8px;">
+                <img src="betmetrics.png" alt="Logo" style="width:30px; height:30px;">
+                <span style="font-weight:900; font-size:1.2rem; letter-spacing:-1px;">AI365PICK</span>
             </a>
-            <div class="header-controls" style="display:flex; align-items:center; gap:15px;">
-                <div id="language-switcher">
+            
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-link active" id="nav-home">Home</a>
+                <a href="vip.html" class="nav-link" id="nav-vip">VIP</a>
+            </nav>
+
+            <div style="display:flex; align-items:center; gap:10px;">
+                <div class="language-switcher">
                     <button class="lang-btn" data-lang="ko" onclick="changeLang('ko')">KO</button>
-                    <span style="color:#ccc">|</span>
                     <button class="lang-btn" data-lang="en" onclick="changeLang('en')">EN</button>
                 </div>
-                <button id="theme-toggle" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">☀️</button>
+                <button id="theme-toggle" style="background:none; border:none; cursor:pointer;">☀️</button>
             </div>
         </div>
     </header>
 
-    <main class="container" style="max-width:800px; margin:0 auto; padding:40px 20px;">
+    <main class="container" style="padding-top: 40px;">
         <section style="text-align:center; margin-bottom: 40px;">
-            <h1 id="txt-hero-title" style="font-size:2rem; margin-bottom:10px;">실시간 AI 스포츠 분석</h1>
-            <p id="txt-hero-sub" style="color:#64748b;">빅데이터 기반 AI가 365일 정교한 예측을 제공합니다.</p>
+            <h1 id="txt-hero-title" style="font-size:1.8rem; margin-bottom:10px;">실시간 AI 스포츠 분석</h1>
+            <p id="txt-hero-sub" style="color:#64748b; font-size:0.95rem;">빅데이터 기반 AI가 365일 정교한 예측을 제공합니다.</p>
         </section>
 
         <div id="loading-indicator" style="text-align: center; padding: 30px;">데이터 분석 중...</div>
@@ -44,66 +57,54 @@
     </main>
 
     <script>
-        // 1. 번역 데이터 객체
         const translations = {
             ko: {
-                heroTitle: "실시간 AI 스포츠 분석",
-                heroSub: "빅데이터 기반 AI가 365일 정교한 예측을 제공합니다.",
-                loading: "데이터 분석 중...",
-                aiPick: "AI 추천",
-                sample: "표본수",
-                odds: "배당",
-                vipLock: "🔒 VIP 전용 분석",
-                vipDesc: "승률 85% 이상의 VIP 전용 경기입니다.",
-                vipBtn: "VIP 전용 픽 확인하기",
-                noData: "현재 기준을 충족하는 경기가 없습니다."
+                home: "홈", vip: "VIP",
+                heroTitle: "실시간 AI 스포츠 분석", heroSub: "빅데이터 기반 AI가 정교한 예측을 제공합니다.",
+                loading: "데이터 분석 중...", aiPick: "AI 추천", sample: "표본수", odds: "배당",
+                vipLock: "🔒 VIP 전용 분석", vipDesc: "승률 85% 이상의 VIP 전용 경기입니다.",
+                vipBtn: "VIP 전용 픽 확인하기", noData: "데이터가 없습니다.",
+                homeWin: "홈승", draw: "무승부", awayWin: "원정승"
             },
             en: {
-                heroTitle: "Real-time AI Analysis",
-                heroSub: "AI provides precise predictions based on Big Data.",
-                loading: "Analyzing Data...",
-                aiPick: "AI Pick",
-                sample: "Sample",
-                odds: "Odds",
-                vipLock: "🔒 VIP Exclusive",
-                vipDesc: "This is a VIP match with 85%+ win rate.",
-                vipBtn: "Unlock VIP Picks",
-                noData: "No matches found."
+                home: "Home", vip: "VIP",
+                heroTitle: "Real-time AI Analysis", heroSub: "AI provides precise predictions based on Big Data.",
+                loading: "Analyzing Data...", aiPick: "AI Pick", sample: "Sample", odds: "Odds",
+                vipLock: "🔒 VIP Exclusive", vipDesc: "This is a VIP match with 85%+ win rate.",
+                vipBtn: "Unlock VIP Picks", noData: "No matches found.",
+                homeWin: "Home Win", draw: "Draw", awayWin: "Away Win"
             }
         };
 
         let currentLang = localStorage.getItem('lang') || 'ko';
 
-        document.addEventListener('DOMContentLoaded', () => {
-            initApp();
-        });
-
-        function initApp() {
-            updateUI();
-            fetchDataAndRender();
-            setupTheme();
-        }
-
-        // 언어 변경 함수
         function changeLang(lang) {
             currentLang = lang;
             localStorage.setItem('lang', lang);
             updateUI();
-            fetchDataAndRender(); // 리스트 다시 그리기
+            fetchDataAndRender();
         }
 
-        // 정적 텍스트 업데이트
         function updateUI() {
             const t = translations[currentLang];
+            document.getElementById('nav-home').innerText = t.home;
+            document.getElementById('nav-vip').innerText = t.vip;
             document.getElementById('txt-hero-title').innerText = t.heroTitle;
             document.getElementById('txt-hero-sub').innerText = t.heroSub;
-            document.getElementById('loading-indicator').innerText = t.loading;
-
-            // 버튼 강조 스타일
             document.querySelectorAll('.lang-btn').forEach(btn => {
                 btn.style.fontWeight = btn.dataset.lang === currentLang ? "bold" : "normal";
-                btn.style.opacity = btn.dataset.lang === currentLang ? "1" : "0.5";
+                btn.style.color = btn.dataset.lang === currentLang ? "#2563eb" : "#94a3b8";
             });
+        }
+
+        // 엑셀의 한글 픽을 영어로 변환해주는 핵심 함수
+        function translatePick(pickText) {
+            if (currentLang === 'ko') return pickText;
+            const t = translations.en;
+            if (pickText.includes("홈승")) return t.homeWin;
+            if (pickText.includes("무승부")) return t.draw;
+            if (pickText.includes("원정승")) return t.awayWin;
+            return pickText;
         }
 
         async function fetchDataAndRender() {
@@ -113,7 +114,6 @@
 
             try {
                 const response = await fetch('today_ai_all_picks.xlsx?v=' + Date.now());
-                if (!response.ok) throw new Error('File not found');
                 const arrayBuffer = await response.arrayBuffer();
                 const workbook = XLSX.read(new Uint8Array(arrayBuffer), { type: 'array' });
                 const jsonData = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
@@ -133,23 +133,25 @@
                     card.className = 'analysis-list-item';
 
                     if (isVipMatch && !isVipUser) {
-                        // VIP 잠금 상태 UI
                         card.innerHTML = `
                             <div style="text-align:center;">
-                                <h3 style="margin-bottom:5px;">${row['홈팀']} vs ${row['원정팀']}</h3>
-                                <p style="color:#2563eb; font-weight:bold;">${t.vipLock}</p>
-                                <p style="font-size:0.85rem; color:#64748b; margin-bottom:15px;">${t.vipDesc}</p>
+                                <h3 style="margin:0 0 10px 0; font-size:1.1rem;">${row['홈팀']} vs ${row['원정팀']}</h3>
+                                <div style="color:var(--primary-blue); font-weight:bold; margin-bottom:5px;">${t.vipLock}</div>
+                                <p style="font-size:0.85rem; color:#64748b;">${t.vipDesc}</p>
                                 <a href="vip.html" class="subscribe-button">${t.vipBtn}</a>
                             </div>`;
                     } else {
-                        // 일반 공개 UI
+                        // translatePick 함수로 AI 추천 텍스트를 변환하여 출력
                         card.innerHTML = `
-                            <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                                <strong>${row['홈팀']} vs ${row['원정팀']}</strong>
-                                <span style="color:#2563eb; font-weight:bold;">${hitRate.toFixed(1)}%</span>
+                            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+                                <div>
+                                    <span style="font-size:0.75rem; color:#94a3b8; display:block; margin-bottom:2px;">🕒 ${row['시간'] || ''}</span>
+                                    <strong style="font-size:1rem;">${row['홈팀']} vs ${row['원정팀']}</strong>
+                                </div>
+                                <span style="background:#f0f7ff; color:#2563eb; padding:4px 10px; border-radius:20px; font-size:0.8rem; font-weight:bold;">${hitRate.toFixed(1)}%</span>
                             </div>
-                            <div style="background:#f8fafc; padding:15px; border-radius:10px;">
-                                <p><strong>${t.aiPick}:</strong> ${row['AI추천']}</p>
+                            <div style="background:#f8fafc; padding:15px; border-radius:10px; border-left:4px solid #cbd5e1;">
+                                <p style="margin:0 0 8px 0;"><strong>${t.aiPick}:</strong> <span style="color:#2563eb; font-weight:bold;">${translatePick(row['AI추천'])}</span></p>
                                 <div style="font-size:0.8rem; color:#64748b;">
                                     ${t.odds}: ${row['홈승배당']} / ${row['무승부배당']} / ${row['원정승배당']} | ${t.sample}: ${row['총경기수']}
                                 </div>
@@ -158,21 +160,21 @@
                     analysisList.appendChild(card);
                 });
             } catch (err) {
-                analysisList.innerHTML = '<p>Error loading data.</p>';
+                analysisList.innerHTML = '<p style="text-align:center;">Error loading data.</p>';
             } finally {
                 document.getElementById('loading-indicator').style.display = 'none';
             }
         }
 
-        function setupTheme() {
-            const toggle = document.getElementById('theme-toggle');
-            toggle.addEventListener('click', () => {
-                const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-                document.documentElement.setAttribute('data-theme', theme);
-                localStorage.setItem('theme', theme);
-                toggle.innerText = theme === 'light' ? '☀️' : '🌙';
-            });
-        }
+        document.getElementById('theme-toggle').onclick = () => {
+            const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            document.getElementById('theme-toggle').innerText = theme === 'light' ? '☀️' : '🌙';
+        };
+
+        updateUI();
+        fetchDataAndRender();
     </script>
 </body>
 </html>
