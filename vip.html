@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="ko" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIP Access - BetMetrics</title>
+    <title>VIP Access - AI365PICK</title>
     <link rel="stylesheet" href="style.css?v=110">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         #vip-unlocked-section { display: flex; flex-direction: column; align-items: center; width: 100%; }
         .summary-card { margin: 20px auto !important; width: 95%; max-width: 900px; background: var(--card-bg); border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); overflow: hidden; }
-        .summary-header { background: #007bff; color: white; padding: 15px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+        .summary-header { background: #2563eb; color: white; padding: 15px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
         .summary-table { width: 100%; border-collapse: collapse; }
         .summary-table th, .summary-table td { padding: 15px 10px; text-align: center !important; border-bottom: 1px solid #eee; }
         .badge-banker { background: #d1fae5; color: #065f46; padding: 2px 6px; border-radius: 4px; font-weight: bold; border: 1px solid #10b981; margin-left: 5px; font-size: 0.65rem; }
@@ -17,30 +17,22 @@
         [data-theme="dark"] .summary-table tr { background: #1e293b; }
         #more-btn-container { padding: 20px; background: var(--card-bg); border-top: 1px solid #eee; }
         .view-more-btn { width: 100%; padding: 12px; background: #f8f9fa; border: 1px dashed #ccc; cursor: pointer; border-radius: 8px; font-weight: bold; color: #666; transition: 0.3s; }
-        .download-btn { background: #ffffff; color: #007bff; border: none; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; cursor: pointer; font-weight: bold; }
+        .download-btn { background: #ffffff; color: #2563eb; border: none; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; cursor: pointer; font-weight: bold; }
         .hidden-row { display: none; }
         
         /* VIP 콤보 스타일 */
         .vip-combo-container { width: 95%; max-width: 900px; margin: 20px auto; }
-        .vip-combo-card { background: linear-gradient(135deg, #1e3a8a, #2563eb); color: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(37,99,235,0.3); border: 2px solid #facc15; }
+        .vip-combo-card { background: linear-gradient(135deg, #1e3a8a, #2563eb); color: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(37,99,235,0.3); border: 2px solid #facc15; }
     </style>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-TV2YRZP330"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-TV2YRZP330');
-</script>
 </head>
 <body>
     <header>
         <div class="container">
             <a href="index.html" class="logo-link">
-                 <img src="betmetrics.png?v=3" alt="BetMetrics Logo" class="logo-img">
+                 <img src="betmetrics.png" alt="Logo" class="logo-img">
                  <div class="logo-text-group">
                      <span class="logo-main-text">AI365PICK</span>
-                     <span class="logo-sub-text">AI Analysis</span>
+                     <span class="logo-sub-text">Premium Analysis</span>
                  </div>
             </a>
             <nav>
@@ -55,38 +47,38 @@
             <h1 style="color: #fbbf24;">⭐ VIP Premium Member</h1>
             <div class="analysis-list-item" style="max-width: 500px; margin: 40px auto; border: 2px solid #fbbf24; text-align: center; padding: 30px; border-radius: 15px;">
                 <div class="lock-icon" style="font-size: 50px;">🔒</div>
-                <h3>VIP Exclusive Benefits</h3>
-                <p>Access 80%+ Win Rate AI Reports</p>
-                <a href="https://kongkong79.gumroad.com/l/ai-sports-vip" target="_blank" class="nav-link" style="display: block; background: #fbbf24; color: #000; padding: 15px; border-radius: 12px; font-weight: 800; text-decoration: none; margin: 20px 0;">Subscribe Now ($9.99)</a>
-                <input type="text" id="vip-code-input" placeholder="Enter Code" style="padding: 10px; width: 60%; border-radius: 4px; border: 1px solid #ccc;">
-                <button onclick="verifyVipCode()" style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">Verify</button>
+                <h3>VIP 전용 분석 데이터</h3>
+                <p>확률 85% 이상의 최상위 픽과 AI 콤보를 확인하세요.</p>
+                <a href="https://kongkong79.gumroad.com/l/ai-sports-vip" target="_blank" class="nav-link" style="display: block; background: #fbbf24; color: #000; padding: 15px; border-radius: 12px; font-weight: 800; text-decoration: none; margin: 20px 0;">구독하여 코드 받기</a>
+                <input type="text" id="vip-code-input" placeholder="인증 코드 입력" style="padding: 10px; width: 60%; border-radius: 4px; border: 1px solid #ccc;">
+                <button onclick="verifyVipCode()" style="padding: 10px 20px; background: #2563eb; color: white; border: none; border-radius: 4px; cursor: pointer;">인증</button>
             </div>
         </section>
 
         <section id="vip-unlocked-section" style="display: none;">
-            <h1 style="color: #007bff;">✅ VIP Member Zone</h1>
+            <h1 style="color: #2563eb;">✅ VIP Member Zone</h1>
             
             <div id="vip-combo-display" class="vip-combo-container"></div>
 
             <div class="summary-card">
                 <div class="summary-header">
-                    <span id="header-title">🔥 AI Smart Picks</span>
-                    <button class="download-btn" id="dl-btn" onclick="downloadExcel()">📥 Download Excel</button>
+                    <span>🔥 VIP High Probability Picks (85%+)</span>
+                    <button class="download-btn" onclick="downloadExcel()">📥 엑셀 다운로드</button>
                 </div>
                 <table class="summary-table">
                     <tbody id="vip-data-body"></tbody>
                 </table>
                 <div id="more-btn-container" style="display: none;">
-                    <button class="view-more-btn" onclick="toggleMoreMatches()" id="more-btn">+ Load More Matches</button>
+                    <button class="view-more-btn" onclick="toggleMoreMatches()" id="more-btn">+ 더 많은 경기 보기</button>
                 </div>
             </div>
             
-            <button onclick="logoutVip()" style="margin-top: 20px; color: gray; background: none; border: none; text-decoration: underline; cursor: pointer;">Logout</button>
+            <button onclick="logoutVip()" style="margin-top: 20px; color: gray; background: none; border: none; text-decoration: underline; cursor: pointer;">로그아웃</button>
         </section>
     </main>
 
 <script>
-    const VIP_CODE = "FEB888";
+    const VIP_CODE = "FEB888"; // 기존 코드 유지
 
     document.addEventListener('DOMContentLoaded', () => {
         const savedTheme = localStorage.getItem('theme') || 'light';
@@ -104,130 +96,85 @@
     async function initVipPage() {
         const tbody = document.getElementById('vip-data-body');
         const comboDiv = document.getElementById('vip-combo-display');
-        
-        // 영어 문구로 고정
-        const texts = {
-            noticeTitle: "⚠️ IMPORTANT NOTICE:",
-            noticeDesc: "For 'Away Win' picks, we suggest 'Away Team Not to Lose (AH 0)' for safety.",
-            comboTitle: "Today's AI VIP 300% Combo",
-            totalOdds: "Total Odds:",
-            banker: "Banker",
-            samples: "Samples"
-        };
 
         try {
-            const response = await fetch('sports_data.xlsx?v=' + Math.random());
+            // 1. 새로운 엑셀 파일 호출
+            const response = await fetch('today_ai_all_picks.xlsx?v=' + Date.now());
             const arrayBuffer = await response.arrayBuffer();
-            const data = new Uint8Array(arrayBuffer);
-            const workbook = XLSX.read(data, { type: 'array' });
+            const workbook = XLSX.read(new Uint8Array(arrayBuffer), { type: 'array' });
             const sheet = workbook.Sheets[workbook.SheetNames[0]];
-            const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: "" });
+            const jsonData = XLSX.utils.sheet_to_json(sheet);
 
-            if (rows.length <= 1) return;
-
-            const dataRows = [];
-            for(let i = 1; i < rows.length; i++) {
-                const row = rows[i];
-                if(!row[1]) continue;
-
-                let hit = 0;
-                if (typeof row[5] === 'string') hit = parseFloat(row[5].replace('%',''));
-                else hit = parseFloat(row[5]) <= 1 ? row[5]*100 : row[5];
-
-                dataRows.push({
-                    time: row[0] || "--:--",
-                    home: row[1],
-                    away: row[2],
-                    odds: parseFloat(row[3]) || 0,
-                    pick: String(row[4] || ""),
-                    hitRate: hit || 0,
-                    samples: parseInt(row[11]) || 0
-                });
+            if (jsonData.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4">데이터가 없습니다.</td></tr>';
+                return;
             }
 
-            const filteredRows = dataRows.filter(r => r.samples >= 10);
+            // 2. 데이터 가공 (85% 이상만 VIP 리스트에 표시)
+            const vipMatches = jsonData
+                .filter(row => (parseFloat(row['예상확률']) || 0) >= 85)
+                .map(row => ({
+                    time: row['시간'] || '--:--',
+                    home: row['홈팀'],
+                    away: row['원정팀'],
+                    odds: parseFloat(row['홈승배당']) || 0, // 기본 정배당 기준
+                    pick: row['AI추천'],
+                    hitRate: parseFloat(row['예상확률']) || 0,
+                    samples: row['총경기수'] || 0
+                }));
 
-            // AI Combo Extraction
-            const candidates = filteredRows.filter(r => r.hitRate >= 60 && r.odds >= 1.4);
-            let bestCombo = null;
-            if (candidates.length >= 2) {
-                for(let i=0; i<candidates.length; i++) {
-                    for(let j=i+1; j<candidates.length; j++) {
-                        const total = candidates[i].odds * candidates[j].odds;
-                        if (total >= 2.6 && total <= 4.5) {
-                            bestCombo = [candidates[i], candidates[j], total];
-                            break;
-                        }
-                    }
-                    if(bestCombo) break;
-                }
-            }
+            // 3. AI 콤보 로직 (확률 높은 상위 2개 추출)
+            if (vipMatches.length >= 2) {
+                const m1 = vipMatches[0];
+                const m2 = vipMatches[1];
+                const comboOdds = (m1.odds * m2.odds).toFixed(2);
 
-            // Render AI Combo
-            if (bestCombo && comboDiv) {
-                const [m1, m2, finalOdds] = bestCombo;
-                const getFinalPick = (m) => (m.pick.includes("Away") && m.hitRate <= 5) ? "🛡️ AH 0 (Away)" : m.pick;
-                
                 comboDiv.innerHTML = `
                     <div class="vip-combo-card" style="margin-bottom: 25px;">
                         <div style="text-align:center; margin-bottom:15px;">
-                            <span style="background:#facc15; color:#000; padding:4px 12px; border-radius:20px; font-size:0.75rem; font-weight:bold;">AI COMBO</span>
-                            <h2 style="margin:8px 0; font-size:1.2rem; color:#fff;">${texts.comboTitle}</h2>
+                            <span style="background:#facc15; color:#000; padding:4px 12px; border-radius:20px; font-size:0.75rem; font-weight:bold;">AI VIP COMBO</span>
+                            <h2 style="margin:8px 0; font-size:1.4rem; color:#fff;">오늘의 AI 고배당 추천 조합</h2>
                         </div>
-                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
-                            <div style="background:rgba(255,255,255,0.1); padding:12px; border-radius:10px; text-align:center; display:flex; flex-direction:column; justify-content:center;">
-                                <div style="font-size:0.65rem; color:rgba(255,255,255,0.6); margin-bottom:4px;">MATCH 01</div>
-                                <div style="font-size:0.85rem; font-weight:500; line-height:1.2; margin-bottom:6px;">
-                                    ${m1.home} <span style="color:#facc15; font-size:0.7rem;">vs</span> ${m1.away}
-                                </div>
-                                <div style="color:#4ade80; font-weight:bold; font-size:1rem;">${getFinalPick(m1)}</div>
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
+                            <div style="background:rgba(255,255,255,0.15); padding:15px; border-radius:12px; text-align:center;">
+                                <div style="font-size:0.8rem; font-weight:bold; margin-bottom:8px;">${m1.home} vs ${m1.away}</div>
+                                <div style="color:#4ade80; font-weight:bold; font-size:1.1rem;">${m1.pick}</div>
                             </div>
-                            <div style="background:rgba(255,255,255,0.1); padding:12px; border-radius:10px; text-align:center; display:flex; flex-direction:column; justify-content:center;">
-                                <div style="font-size:0.65rem; color:rgba(255,255,255,0.6); margin-bottom:4px;">MATCH 02</div>
-                                <div style="font-size:0.85rem; font-weight:500; line-height:1.2; margin-bottom:6px;">
-                                    ${m2.home} <span style="color:#facc15; font-size:0.7rem;">vs</span> ${m2.away}
-                                </div>
-                                <div style="color:#4ade80; font-weight:bold; font-size:1rem;">${getFinalPick(m2)}</div>
+                            <div style="background:rgba(255,255,255,0.15); padding:15px; border-radius:12px; text-align:center;">
+                                <div style="font-size:0.8rem; font-weight:bold; margin-bottom:8px;">${m2.home} vs ${m2.away}</div>
+                                <div style="color:#4ade80; font-weight:bold; font-size:1.1rem;">${m2.pick}</div>
                             </div>
                         </div>
-                        <div style="text-align:center; margin-top:15px; padding-top:10px; border-top:1px solid rgba(255,255,255,0.1);">
-                            <span style="font-size:0.9rem; vertical-align:middle; color:rgba(255,255,255,0.8);">${texts.totalOdds}</span>
-                            <span style="font-size:1.6rem; color:#facc15; font-weight:900; vertical-align:middle; margin-left:5px;">${finalOdds.toFixed(2)}x</span>
+                        <div style="text-align:center; margin-top:15px; padding-top:10px; border-top:1px solid rgba(255,255,255,0.2);">
+                            <span style="font-size:1rem; color:rgba(255,255,255,0.9);">합산 배당률: </span>
+                            <span style="font-size:1.8rem; color:#facc15; font-weight:900;">${comboOdds}x</span>
                         </div>
                     </div>`;
             }
 
-            // Render List
-            let html = `<tr class="notice-row"><td colspan="4" style="background: #fff9db; color: #856404; padding: 15px; font-size: 0.8rem; text-align: left !important; line-height:1.4;"><strong>${texts.noticeTitle}</strong> <br>${texts.noticeDesc}</td></tr>`;
-            
-            filteredRows.forEach((row, index) => {
-                const isHomeWin = row.pick.includes("Home");
-                let displayPick = isHomeWin ? '🏠 Home Win' : '✈️ Away Win';
-                if (!isHomeWin && row.hitRate <= 5) displayPick = '🛡️ AH 0 (Away)';
-                if (row.odds > 0 && row.odds <= 1.15) displayPick += ` <span class="badge-banker">${texts.banker}</span>`;
-
+            // 4. 리스트 렌더링
+            let html = '';
+            vipMatches.forEach((row, index) => {
                 html += `
-                    <tr ${index >= 7 ? 'class="hidden-row"' : ''}>
+                    <tr ${index >= 10 ? 'class="hidden-row"' : ''}>
                         <td style="text-align:left !important; padding-left:15px;">
                             <small style="color:gray; font-size:0.65rem; display:block;">${row.time}</small>
-                            <div style="font-size:0.85rem;">
-                                <span style="${isHomeWin?'font-weight:bold':''}">${row.home}</span> 
-                                <span style="color:#ccc; font-size:0.7rem;">vs</span> 
-                                <span style="${!isHomeWin?'font-weight:bold':''}">${row.away}</span>
-                            </div>
+                            <div style="font-size:0.85rem; font-weight:bold;">${row.home} vs ${row.away}</div>
                         </td>
-                        <td style="font-size:0.85rem;">${displayPick}</td>
-                        <td style="color:#059669; font-weight:bold;">${row.hitRate <= 5 ? "High(DNB)" : row.hitRate.toFixed(0) + "%"}</td>
+                        <td style="font-size:0.9rem; color:#2563eb; font-weight:bold;">${row.pick}</td>
+                        <td style="color:#059669; font-weight:bold;">${row.hitRate.toFixed(1)}%</td>
                         <td style="font-size:0.85rem;">
-                            <b>${row.odds.toFixed(2)}</b><br>
-                            <small style="font-size:0.55rem; color:#999;">${texts.samples}: ${row.samples}</small>
+                            <small style="font-size:0.6rem; color:#999;">표본: ${row.samples}</small>
                         </td>
                     </tr>`;
             });
             tbody.innerHTML = html;
-            if (filteredRows.length > 7) document.getElementById('more-btn-container').style.display = 'block';
+            if (vipMatches.length > 10) document.getElementById('more-btn-container').style.display = 'block';
 
-        } catch (e) { console.error("VIP Load Error:", e); }
+        } catch (e) { 
+            console.error("VIP Load Error:", e); 
+            tbody.innerHTML = '<tr><td colspan="4">데이터 로딩 중 오류가 발생했습니다.</td></tr>';
+        }
     }
 
     function toggleMoreMatches() {
@@ -235,18 +182,18 @@
         const btn = document.getElementById('more-btn');
         const isHidden = rows.length > 0 && rows[0].style.display !== 'table-row';
         rows.forEach(r => r.style.display = isHidden ? 'table-row' : 'none');
-        btn.innerText = isHidden ? "▲ Close" : "+ View More Matches";
+        btn.innerText = isHidden ? "▲ 닫기" : "+ 더 많은 경기 보기";
     }
 
     function verifyVipCode() {
         if (document.getElementById('vip-code-input').value === VIP_CODE) {
             localStorage.setItem('isVipUser', 'true');
             location.reload();
-        } else { alert("Wrong code."); }
+        } else { alert("코드가 일치하지 않습니다."); }
     }
 
     function logoutVip() { localStorage.removeItem('isVipUser'); location.reload(); }
-    function downloadExcel() { window.location.href = 'sports_data.xlsx'; }
+    function downloadExcel() { window.location.href = 'today_ai_all_picks.xlsx'; }
 </script>
 </body>
 </html>
