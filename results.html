@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIP Hit Records - AI365PICK</title>
+    <link rel="stylesheet" href="style.css?v=110">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        .vip-result-card {
+            border: 2px solid #facc15; /* 금색 테두리 */
+            background: var(--card-bg);
+            border-radius: 15px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(250, 204, 21, 0.2);
+        }
+        .vip-badge {
+            background: #facc15;
+            color: #000;
+            padding: 4px 12px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            border-radius: 0 0 10px 0;
+            display: inline-block;
+        }
+        .hit-status {
+            color: #ef4444; /* 적중 시 강렬한 레드 또는 블루 */
+            font-weight: 900;
+            font-size: 1.2rem;
+        }
+        .result-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            padding: 20px;
+            align-items: center;
+            text-align: center;
+        }
+        .score-display {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <!-- 기존 헤더 동일 유지 -->
+    </header>
+
+    <main class="container" style="padding-top: 20px;">
+        <h1 style="text-align:center; color:#facc15;">🏆 VIP 적중 히스토리</h1>
+        <p style="text-align:center; color:gray; margin-bottom:40px;">AI가 엄선한 VIP 고확률 픽의 실제 결과입니다.</p>
+        
+        <div id="vip-results-container">
+            <!-- 데이터가 여기에 로드됩니다 -->
+        </div>
+    </main>
+
+<script>
+    async function loadVipResults() {
+        const container = document.getElementById('vip-results-container');
+        try {
+            const response = await fetch('past_results.xlsx?v=' + Date.now());
+            const arrayBuffer = await response.arrayBuffer();
+            const workbook = XLSX.read(new Uint8Array(arrayBuffer), { type: 'array' });
+            const jsonData = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
+
+            // '등급' 컬럼이 'VIP'인 데이터만 필터링
+            const vipData = jsonData.filter(row => row['등급'] === 'VIP');
+
+            if (vipData.length === 0) {
+                container.innerHTML = "<p style='text-align:center;'>아직 적중 내역이 없습니다.</p>";
+                return;
+            }
+
+            let html = '';
+            vipData.reverse().forEach(row => {
+                html += `
+                    <div class="vip-result-card">
+                        <div class="vip-badge">PREMIUM VIP</div>
+                        <div class="result-grid">
+                            <div>
+                                <small style="color:gray;">${row['날짜']}</small>
+                                <div style="font-weight:bold; margin-top:5px;">${row['홈팀']}</div>
+                            </div>
+                            <div>
+                                <div class="hit-status">WIN</div>
+                                <div class="score-display">${row['스코어']}</div>
+                                <small style="color:#2563eb;">Pick: ${row['추천']}</small>
+                            </div>
+                            <div>
+                                <small style="color:gray;">${row['리그']}</small>
+                                <div style="font-weight:bold; margin-top:5px;">${row['원정팀']}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        } catch (e) {
+            console.error("데이터 로드 실패:", e);
+        }
+    }
+
+    window.onload = loadVipResults;
+</script>
+</body>
+</html>
