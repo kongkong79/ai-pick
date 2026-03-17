@@ -1,72 +1,92 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIP Hit Records - AI365PICK</title>
-    <style>
-        :root { --vip-gold: #facc15; --bg-dark: #0f172a; --card-bg: #ffffff; }
-        body { font-family: -apple-system, sans-serif; background-color: #f1f5f9; margin: 0; padding: 0; }
-        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-        header { text-align: center; padding: 40px 0; background: var(--bg-dark); color: white; border-radius: 0 0 30px 30px; }
-        
-        /* 게시글(글쓰기) 유닛 스타일 */
-        .post-card { background: var(--card-bg); border-radius: 20px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); margin-bottom: 30px; overflow: hidden; border: 1px solid #e2e8f0; }
-        .post-header { padding: 15px 20px; border-bottom: 1px dotted #e2e8f0; display: flex; justify-content: space-between; align-items: center; background: #fafafa; }
-        .post-date { font-weight: 800; color: #1e293b; }
-        .hit-badge { background: #ef4444; color: white; padding: 4px 10px; border-radius: 8px; font-size: 0.8rem; font-weight: bold; }
-        
-        .post-content { padding: 20px; }
-        .post-image { width: 100%; border-radius: 12px; margin-bottom: 15px; border: 1px solid #f1f5f9; }
-        .post-text { color: #475569; line-height: 1.6; font-size: 0.95rem; }
-        .post-footer { padding: 10px 20px; background: #f8fafc; font-size: 0.85rem; color: #2563eb; font-weight: 600; }
-
-        .btn-back { display: block; text-align: center; margin-top: 20px; text-decoration: none; color: #64748b; font-size: 0.9rem; }
-    </style>
-</head>
-<body>
-
-<header>
-    <h1 style="color: var(--vip-gold); margin: 0;">🏆 VIP HIT BOARD</h1>
-    <p style="opacity: 0.8;">AI365PICK 실시간 적중 내역</p>
-</header>
-
-<div class="container">
-    <!-- [새 글 쓰기 시작] 이 부분을 복사해서 바로 아래에 붙여넣으세요 -->
-    <div class="post-card">
-        <div class="post-header">
-            <span class="post-date">📅 2024-03-18 (오늘 결과)</span>
-            <span class="hit-badge">PERFECT HIT!</span>
-        </div>
-        <div class="post-content">
-            <!-- 캡처한 이미지 파일 경로 -->
-            <img src="img/hit_0318.png" class="post-image" alt="적중 인증">
-            <div class="post-text">
-                어제 추천드린 VIP 2경기 조합이 모두 적중했습니다!<br>
-                4:0 대승과 3:2 접전 승리까지 AI 예측이 정확했습니다. 수익 보신 회원님들 축하드립니다.
-            </div>
-        </div>
-        <div class="post-footer">#승률85% #AI_COMBO #적중성공</div>
-    </div>
-    <!-- [새 글 쓰기 끝] -->
-
-    <!-- [이전 글: 3-17] -->
-    <div class="post-card">
-        <div class="post-header">
-            <span class="post-date">📅 2024-03-17 결과</span>
-            <span class="hit-badge">HIT</span>
-        </div>
-        <div class="post-content">
-            <img src="img/hit_0317.png" class="post-image" alt="적중 인증">
-            <div class="post-text">
-                주말 경기 AI VIP 분석 결과입니다. 핵심 픽들이 모두 들어오면서 안정적인 수익을 기록했습니다.
-            </div>
-        </div>
-        <div class="post-footer">#주말수익 #AI분석 #VIP적중</div>
+<!-- VIP 적중 게시판 (리스트형) -->
+<div id="board-container" style="max-width: 800px; margin: 30px auto; background: #fff; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); overflow: hidden; font-family: sans-serif;">
+    
+    <!-- 게시판 헤더 -->
+    <div style="background: #f8fafc; padding: 15px 20px; border-bottom: 2px solid #2563eb; display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="margin: 0; color: #1e293b;">🏆 VIP 적중 게시판</h3>
+        <span style="font-size: 0.8rem; color: #64748b;">AI365PICK Official</span>
     </div>
 
-    <a href="index.html" class="btn-back">← 메인으로 돌아가기</a>
+    <!-- 1. 목록 화면 (List View) -->
+    <div id="post-list-view">
+        <table style="width: 100%; border-collapse: collapse; text-align: left;">
+            <thead>
+                <tr style="background: #f1f5f9; font-size: 0.85rem; color: #475569;">
+                    <th style="padding: 12px 20px; width: 60px;">번호</th>
+                    <th style="padding: 12px 20px;">제목</th>
+                    <th style="padding: 12px 20px; width: 100px;">날짜</th>
+                    <th style="padding: 12px 20px; width: 80px;">결과</th>
+                </tr>
+            </thead>
+            <tbody id="board-body">
+                <!-- 스크립트가 여기에 목록을 생성합니다 -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 2. 상세 화면 (Detail View) - 기본적으로 숨김 -->
+    <div id="post-detail-view" style="display: none; padding: 25px;">
+        <button onclick="showList()" style="cursor: pointer; background: #f1f5f9; border: 1px solid #cbd5e1; padding: 5px 12px; border-radius: 5px; margin-bottom: 20px;">← 목록으로</button>
+        <h2 id="detail-title" style="margin-bottom: 10px; font-size: 1.4rem;"></h2>
+        <div id="detail-date" style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 20px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;"></div>
+        <div id="detail-content">
+            <img id="detail-img" src="" style="width: 100%; border-radius: 10px; margin-bottom: 20px;">
+            <p id="detail-text" style="line-height: 1.7; color: #334155; white-space: pre-wrap;"></p>
+        </div>
+    </div>
 </div>
 
-</body>
-</html>
+<script>
+    // [글쓰기 관리] 새로운 결과가 나오면 이 배열의 맨 위에 추가하세요.
+    const posts = [
+        {
+            id: 2,
+            title: "3월 18일 VIP 픽 2경기 올킬 적중 내역",
+            date: "2024-03-18",
+            result: "HIT",
+            img: "img/hit_0318.png",
+            content: "어제 추천드린 VIP 콤보가 모두 적중했습니다.\n\n[경기 1] 4:0 대승 완료\n[경기 2] 3:2 접전 승리 완료\n\nAI 분석대로 완벽한 결과가 나왔습니다. 수익 축하드립니다!"
+        },
+        {
+            id: 1,
+            title: "3월 17일 VIP 주말 경기 분석 적중",
+            date: "2024-03-17",
+            result: "HIT",
+            img: "img/hit_0317.png",
+            content: "주말 VIP 데이터 분석 결과입니다.\n안정적인 수익 구간을 확보하며 마무리되었습니다."
+        }
+    ];
+
+    function renderBoard() {
+        const boardBody = document.getElementById('board-body');
+        boardBody.innerHTML = posts.map(post => `
+            <tr onclick="showDetail(${post.id})" style="border-bottom: 1px solid #f1f5f9; cursor: pointer; transition: 0.2s; hover: background: #f8fafc;">
+                <td style="padding: 15px 20px; font-size: 0.9rem; color: #94a3b8;">${post.id}</td>
+                <td style="padding: 15px 20px; font-weight: 500; color: #1e293b;">${post.title}</td>
+                <td style="padding: 15px 20px; font-size: 0.85rem; color: #64748b;">${post.date}</td>
+                <td style="padding: 15px 20px;"><span style="color: #ef4444; font-weight: bold; font-size: 0.8rem;">${post.result}</span></td>
+            </tr>
+        `).join('');
+    }
+
+    function showDetail(id) {
+        const post = posts.find(p => p.id === id);
+        if (!post) return;
+
+        document.getElementById('detail-title').innerText = post.title;
+        document.getElementById('detail-date').innerText = "작성일: " + post.date;
+        document.getElementById('detail-img').src = post.img;
+        document.getElementById('detail-text').innerText = post.content;
+
+        document.getElementById('post-list-view').style.display = 'none';
+        document.getElementById('post-detail-view').style.display = 'block';
+    }
+
+    function showList() {
+        document.getElementById('post-list-view').style.display = 'block';
+        document.getElementById('post-detail-view').style.display = 'none';
+    }
+
+    // 초기 실행
+    renderBoard();
+</script>
