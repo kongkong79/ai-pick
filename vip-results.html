@@ -2,83 +2,151 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>VIP 적중 관리 시스템</title>
+    <title>VIP 적중 결과 관리 시스템</title>
     <style>
-        body { font-family: sans-serif; background: #f4f7f6; padding: 20px; }
-        .container { max-width: 800px; margin: 0 auto; background: #fff; padding: 20px; border-radius: 10px; shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border-bottom: 1px solid #ddd; padding: 12px; text-align: left; }
-        .btn { padding: 8px 16px; cursor: pointer; border: none; border-radius: 4px; }
-        .btn-write { background: #2563eb; color: white; margin-bottom: 10px; }
-        .btn-delete { background: #ef4444; color: white; font-size: 0.8rem; }
-        .modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border: 1px solid #ccc; box-shadow: 0 5px 15px rgba(0,0,0,0.3); z-index: 10; width: 400px; }
-        input, textarea { width: 100%; margin-bottom: 10px; padding: 8px; box-sizing: border-box; }
+        :root { --primary: #2563eb; --danger: #ef4444; --gray: #64748b; }
+        body { font-family: 'Pretendard', sans-serif; background: #f1f5f9; margin: 0; padding: 20px; color: #1e293b; }
+        .container { max-width: 900px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
+        
+        h2 { display: flex; align-items: center; gap: 10px; margin-top: 0; }
+        .btn { padding: 8px 16px; cursor: pointer; border: none; border-radius: 6px; font-weight: 600; transition: 0.2s; }
+        .btn-write { background: var(--primary); color: white; margin-bottom: 20px; }
+        .btn-write:hover { background: #1d4ed8; }
+        .btn-edit { background: #f1f5f9; color: var(--gray); font-size: 0.8rem; border: 1px solid #e2e8f0; }
+        .btn-delete { background: #fee2e2; color: var(--danger); font-size: 0.8rem; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { background: #f8fafc; padding: 12px; text-align: left; border-bottom: 2px solid #e2e8f0; color: var(--gray); font-size: 0.85rem; }
+        td { padding: 15px 12px; border-bottom: 1px solid #f1f5f9; }
+        .clickable-title { cursor: pointer; color: var(--primary); font-weight: 700; text-decoration: none; }
+        .clickable-title:hover { text-decoration: underline; }
+
+        /* 모달 스타일 */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 100; align-items: center; justify-content: center; }
+        .modal { background: white; padding: 25px; border-radius: 12px; width: 450px; max-width: 90%; box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1); }
+        .modal h3 { margin-top: 0; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px; }
+        input, textarea { width: 100%; margin: 10px 0; padding: 12px; border: 1px solid #e2e8f0; border-radius: 6px; box-sizing: border-box; font-size: 1rem; }
+        .modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+        
+        /* 상세 내용 보기 스타일 */
+        .view-content { white-space: pre-wrap; background: #f8fafc; padding: 15px; border-radius: 6px; border: 1px solid #e2e8f0; margin-top: 10px; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <h2>🏆 VIP 적중 결과 관리</h2>
-    <button class="btn btn-write" onclick="openModal()">➕ 새 결과 등록</button>
+    <button class="btn btn-write" onclick="openWriteModal()">➕ 새 결과 등록</button>
     
     <table>
         <thead>
             <tr>
-                <th>날짜</th>
-                <th>제목</th>
-                <th>관리</th>
+                <th style="width: 120px;">날짜</th>
+                <th>제목 (클릭하여 내용 확인)</th>
+                <th style="width: 120px; text-align: center;">관리</th>
             </tr>
         </thead>
-        <tbody id="post-list">
-            <!-- 글 목록이 여기에 표시됩니다 -->
-        </tbody>
+        <tbody id="post-list"></tbody>
     </table>
 </div>
 
-<!-- 글쓰기 모달 창 -->
-<div id="modal" class="modal">
-    <h3>새 적중 결과 작성</h3>
-    <input type="date" id="post-date">
-    <input type="text" id="post-title" placeholder="제목을 입력하세요 (예: 3월 20일 올킬)">
-    <textarea id="post-content" rows="5" placeholder="내용을 입력하세요"></textarea>
-    <button class="btn btn-write" onclick="savePost()">저장하기</button>
-    <button class="btn" onclick="closeModal()">취소</button>
+<!-- 글쓰기/수정 모달 -->
+<div id="modal-overlay" class="modal-overlay">
+    <div class="modal">
+        <h3 id="modal-title">새 결과 등록</h3>
+        <input type="hidden" id="edit-index">
+        <input type="date" id="post-date">
+        <input type="text" id="post-title" placeholder="제목을 입력하세요">
+        <textarea id="post-content" rows="6" placeholder="상세 내용을 입력하세요"></textarea>
+        <div class="modal-footer">
+            <button class="btn" style="background:#e2e8f0;" onclick="closeModal()">취소</button>
+            <button class="btn btn-write" id="save-btn" onclick="savePost()">저장하기</button>
+        </div>
+    </div>
+</div>
+
+<!-- 상세 내용 보기 모달 -->
+<div id="view-overlay" class="modal-overlay">
+    <div class="modal">
+        <h3 id="v-title"></h3>
+        <p id="v-date" style="font-size: 0.85rem; color: var(--gray);"></p>
+        <div class="view-content" id="v-content"></div>
+        <div class="modal-footer">
+            <button class="btn btn-write" onclick="closeView()">확인</button>
+        </div>
+    </div>
 </div>
 
 <script>
-    // 1. 데이터 불러오기
     let posts = JSON.parse(localStorage.getItem('vip_posts')) || [];
 
+    // 1. 목록 렌더링
     function render() {
         const list = document.getElementById('post-list');
         list.innerHTML = posts.map((post, index) => `
             <tr>
-                <td>${post.date}</td>
-                <td><strong>${post.title}</strong></td>
-                <td><button class="btn btn-delete" onclick="deletePost(${index})">삭제</button></td>
+                <td style="color: var(--gray); font-size: 0.9rem;">${post.date}</td>
+                <td><span class="clickable-title" onclick="viewPost(${index})">${post.title}</span></td>
+                <td style="display: flex; gap: 5px; justify-content: center;">
+                    <button class="btn btn-edit" onclick="openEditModal(${index})">수정</button>
+                    <button class="btn btn-delete" onclick="deletePost(${index})">삭제</button>
+                </td>
             </tr>
         `).join('');
     }
 
-    // 2. 글 저장하기
+    // 2. 글 저장 (새 글 & 수정 공통)
     function savePost() {
         const date = document.getElementById('post-date').value;
         const title = document.getElementById('post-title').value;
         const content = document.getElementById('post-content').value;
+        const editIndex = document.getElementById('edit-index').value;
 
-        if(!date || !title) return alert("날짜와 제목을 입력해주세요!");
+        if(!date || !title || !content) return alert("모든 항목을 입력해주세요!");
 
-        posts.unshift({ date, title, content }); // 최신글을 위로
+        const postData = { date, title, content };
+
+        if(editIndex === "") {
+            posts.unshift(postData); // 새 글
+        } else {
+            posts[editIndex] = postData; // 수정
+        }
+
         localStorage.setItem('vip_posts', JSON.stringify(posts));
-        
         closeModal();
         render();
-        // 입력창 비우기
-        document.getElementById('post-title').value = '';
-        document.getElementById('post-content').value = '';
     }
 
-    // 3. 글 삭제하기
+    // 3. 상세 보기
+    function viewPost(index) {
+        const post = posts[index];
+        document.getElementById('v-title').innerText = post.title;
+        document.getElementById('v-date').innerText = "날짜: " + post.date;
+        document.getElementById('v-content').innerText = post.content;
+        document.getElementById('view-overlay').style.display = 'flex';
+    }
+
+    // 4. 수정 모달 열기
+    function openEditModal(index) {
+        const post = posts[index];
+        document.getElementById('modal-title').innerText = "게시글 수정";
+        document.getElementById('edit-index').value = index;
+        document.getElementById('post-date').value = post.date;
+        document.getElementById('post-title').value = post.title;
+        document.getElementById('post-content').value = post.content;
+        document.getElementById('modal-overlay').style.display = 'flex';
+    }
+
+    // 5. 새 글 모달 열기
+    function openWriteModal() {
+        document.getElementById('modal-title').innerText = "새 결과 등록";
+        document.getElementById('edit-index').value = "";
+        document.getElementById('post-date').value = "";
+        document.getElementById('post-title').value = "";
+        document.getElementById('post-content').value = "";
+        document.getElementById('modal-overlay').style.display = 'flex';
+    }
+
     function deletePost(index) {
         if(confirm("정말 삭제하시겠습니까?")) {
             posts.splice(index, 1);
@@ -87,12 +155,10 @@
         }
     }
 
-    function openModal() { document.getElementById('modal').style.display = 'block'; }
-    function closeModal() { document.getElementById('modal').style.display = 'none'; }
+    function closeModal() { document.getElementById('modal-overlay').style.display = 'none'; }
+    function closeView() { document.getElementById('view-overlay').style.display = 'none'; }
 
-    // 초기 실행
     render();
 </script>
-
 </body>
 </html>
