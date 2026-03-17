@@ -1,92 +1,132 @@
-<!-- VIP 적중 게시판 (리스트형) -->
-<div id="board-container" style="max-width: 800px; margin: 30px auto; background: #fff; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); overflow: hidden; font-family: sans-serif;">
-    
-    <!-- 게시판 헤더 -->
-    <div style="background: #f8fafc; padding: 15px 20px; border-bottom: 2px solid #2563eb; display: flex; justify-content: space-between; align-items: center;">
-        <h3 style="margin: 0; color: #1e293b;">🏆 VIP 적중 게시판</h3>
-        <span style="font-size: 0.8rem; color: #64748b;">AI365PICK Official</span>
-    </div>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIP 적중 게시판 - AI365PICK</title>
+    <style>
+        :root { --main-blue: #2563eb; --border-color: #e2e8f0; --bg-gray: #f8fafc; }
+        body { font-family: -apple-system, sans-serif; background: #f1f5f9; margin: 0; padding: 20px; color: #1e293b; }
+        .board-wrapper { max-width: 800px; margin: 0 auto; background: #fff; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); overflow: hidden; }
+        
+        /* 헤더 스타일 */
+        .board-header { padding: 20px; border-bottom: 2px solid var(--main-blue); background: #fff; display: flex; justify-content: space-between; align-items: center; }
+        .board-header h2 { margin: 0; font-size: 1.25rem; color: var(--main-blue); }
 
-    <!-- 1. 목록 화면 (List View) -->
-    <div id="post-list-view">
-        <table style="width: 100%; border-collapse: collapse; text-align: left;">
+        /* 리스트 테이블 스타일 */
+        table { width: 100%; border-collapse: collapse; background: #fff; }
+        th { background: var(--bg-gray); padding: 12px 15px; text-align: left; font-size: 0.85rem; color: #64748b; border-bottom: 1px solid var(--border-color); }
+        td { padding: 15px; border-bottom: 1px solid var(--border-color); font-size: 0.95rem; cursor: pointer; }
+        tr:hover { background: #fdfdfd; }
+        .col-no { width: 50px; color: #94a3b8; text-align: center; }
+        .col-date { width: 100px; color: #64748b; }
+        .col-result { width: 80px; text-align: center; }
+        .status-hit { color: #ef4444; font-weight: bold; border: 1px solid #fee2e2; padding: 2px 6px; border-radius: 4px; background: #fef2f2; font-size: 0.8rem; }
+
+        /* 상세보기 화면 스타일 */
+        #detail-view { display: none; padding: 30px; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .btn-back { background: #f1f5f9; border: 1px solid #cbd5e1; padding: 8px 16px; border-radius: 6px; cursor: pointer; margin-bottom: 20px; font-weight: bold; }
+        .detail-title { font-size: 1.5rem; margin-bottom: 10px; font-weight: 800; }
+        .detail-meta { color: #94a3b8; font-size: 0.85rem; margin-bottom: 25px; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); }
+        .detail-img { width: 100%; border-radius: 10px; margin-bottom: 20px; border: 1px solid var(--border-color); }
+        .detail-content { line-height: 1.8; white-space: pre-wrap; color: #334155; }
+    </style>
+</head>
+<body>
+
+<div class="board-wrapper">
+    <!-- 리스트 뷰 -->
+    <div id="list-view">
+        <div class="board-header">
+            <h2>🏆 VIP 적중 게시판</h2>
+            <small>AI365PICK Official Results</small>
+        </div>
+        <table>
             <thead>
-                <tr style="background: #f1f5f9; font-size: 0.85rem; color: #475569;">
-                    <th style="padding: 12px 20px; width: 60px;">번호</th>
-                    <th style="padding: 12px 20px;">제목</th>
-                    <th style="padding: 12px 20px; width: 100px;">날짜</th>
-                    <th style="padding: 12px 20px; width: 80px;">결과</th>
+                <tr>
+                    <th class="col-no">번호</th>
+                    <th>제목</th>
+                    <th class="col-date">날짜</th>
+                    <th class="col-result">결과</th>
                 </tr>
             </thead>
-            <tbody id="board-body">
-                <!-- 스크립트가 여기에 목록을 생성합니다 -->
+            <tbody id="list-body">
+                <!-- 자바스크립트가 여기에 목록을 만듭니다 -->
             </tbody>
         </table>
     </div>
 
-    <!-- 2. 상세 화면 (Detail View) - 기본적으로 숨김 -->
-    <div id="post-detail-view" style="display: none; padding: 25px;">
-        <button onclick="showList()" style="cursor: pointer; background: #f1f5f9; border: 1px solid #cbd5e1; padding: 5px 12px; border-radius: 5px; margin-bottom: 20px;">← 목록으로</button>
-        <h2 id="detail-title" style="margin-bottom: 10px; font-size: 1.4rem;"></h2>
-        <div id="detail-date" style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 20px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;"></div>
-        <div id="detail-content">
-            <img id="detail-img" src="" style="width: 100%; border-radius: 10px; margin-bottom: 20px;">
-            <p id="detail-text" style="line-height: 1.7; color: #334155; white-space: pre-wrap;"></p>
+    <!-- 상세보기 뷰 -->
+    <div id="detail-view">
+        <button class="btn-back" onclick="closeDetail()">← 목록으로</button>
+        <div class="detail-title" id="d-title"></div>
+        <div class="detail-meta" id="d-meta"></div>
+        <div id="d-body">
+            <img src="" alt="적중인증" class="detail-img" id="d-img">
+            <div class="detail-content" id="d-text"></div>
         </div>
     </div>
 </div>
 
 <script>
-    // [글쓰기 관리] 새로운 결과가 나오면 이 배열의 맨 위에 추가하세요.
+    /* 
+       [관리자 지침: 글쓰기 방법]
+       새로운 글을 쓰려면 아래 posts 배열의 가장 윗줄에 
+       { id: 번호, title: "제목", date: "날짜", img: "이미지경로", content: "내용" } 
+       형태로 복사해서 넣으세요.
+    */
     const posts = [
         {
             id: 2,
-            title: "3월 18일 VIP 픽 2경기 올킬 적중 내역",
+            title: "3월 18일 VIP 분석 결과 - 2경기 올킬 적중!",
             date: "2024-03-18",
-            result: "HIT",
-            img: "img/hit_0318.png",
-            content: "어제 추천드린 VIP 콤보가 모두 적중했습니다.\n\n[경기 1] 4:0 대승 완료\n[경기 2] 3:2 접전 승리 완료\n\nAI 분석대로 완벽한 결과가 나왔습니다. 수익 축하드립니다!"
+            img: "img/hit_0318.png", // 실제 캡처한 이미지 경로
+            content: "안녕하세요. AI365PICK입니다.\n어제 제공해드린 VIP 콤보 픽이 모두 적중되었습니다.\n\n[1경기] 4:0 승리\n[2경기] 3:2 승리\n\n조합 배당 3.21배 깔끔하게 성공했습니다. 수익 보신 회원님들 축하드립니다!"
         },
         {
             id: 1,
-            title: "3월 17일 VIP 주말 경기 분석 적중",
+            title: "3월 17일 VIP 분석 결과 - 고배당 적중 완료",
             date: "2024-03-17",
-            result: "HIT",
             img: "img/hit_0317.png",
-            content: "주말 VIP 데이터 분석 결과입니다.\n안정적인 수익 구간을 확보하며 마무리되었습니다."
+            content: "주말 VIP 분석 결과입니다.\n안정적인 데이터 기반 픽으로 적중에 성공했습니다."
         }
     ];
 
-    function renderBoard() {
-        const boardBody = document.getElementById('board-body');
-        boardBody.innerHTML = posts.map(post => `
-            <tr onclick="showDetail(${post.id})" style="border-bottom: 1px solid #f1f5f9; cursor: pointer; transition: 0.2s; hover: background: #f8fafc;">
-                <td style="padding: 15px 20px; font-size: 0.9rem; color: #94a3b8;">${post.id}</td>
-                <td style="padding: 15px 20px; font-weight: 500; color: #1e293b;">${post.title}</td>
-                <td style="padding: 15px 20px; font-size: 0.85rem; color: #64748b;">${post.date}</td>
-                <td style="padding: 15px 20px;"><span style="color: #ef4444; font-weight: bold; font-size: 0.8rem;">${post.result}</span></td>
+    function renderList() {
+        const listBody = document.getElementById('list-body');
+        listBody.innerHTML = posts.map(post => `
+            <tr onclick="openDetail(${post.id})">
+                <td class="col-no">${post.id}</td>
+                <td style="font-weight: 500;">${post.title}</td>
+                <td class="col-date">${post.date}</td>
+                <td class="col-result"><span class="status-hit">HIT</span></td>
             </tr>
         `).join('');
     }
 
-    function showDetail(id) {
+    function openDetail(id) {
         const post = posts.find(p => p.id === id);
         if (!post) return;
 
-        document.getElementById('detail-title').innerText = post.title;
-        document.getElementById('detail-date').innerText = "작성일: " + post.date;
-        document.getElementById('detail-img').src = post.img;
-        document.getElementById('detail-text').innerText = post.content;
+        document.getElementById('d-title').innerText = post.title;
+        document.getElementById('d-meta').innerText = `작성일: ${post.date} | AI365PICK`;
+        document.getElementById('d-img').src = post.img;
+        document.getElementById('d-text').innerText = post.content;
 
-        document.getElementById('post-list-view').style.display = 'none';
-        document.getElementById('post-detail-view').style.display = 'block';
+        document.getElementById('list-view').style.display = 'none';
+        document.getElementById('detail-view').style.display = 'block';
+        window.scrollTo(0, 0);
     }
 
-    function showList() {
-        document.getElementById('post-list-view').style.display = 'block';
-        document.getElementById('post-detail-view').style.display = 'none';
+    function closeDetail() {
+        document.getElementById('list-view').style.display = 'block';
+        document.getElementById('detail-view').style.display = 'none';
     }
 
     // 초기 실행
-    renderBoard();
+    renderList();
 </script>
+
+</body>
+</html>
