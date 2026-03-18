@@ -24,8 +24,8 @@
         .lang-btn { cursor: pointer; border: none; background: none; font-size: 0.8rem; padding: 5px; color: var(--text-muted); }
         .subscribe-button { display: inline-block; padding: 10px 20px; background: var(--primary-blue); color: white; border-radius: 8px; text-decoration: none; font-weight: bold; margin-top: 10px; }
         
-        /* 경기 시간 스타일 추가 */
-        .match-time { font-size: 0.75rem; color: var(--time-color); display: flex; align-items: center; gap: 4px; margin-bottom: 5px; }
+        /* 경기 시간 스타일 */
+        .match-time { font-size: 0.75rem; color: var(--time-color); display: flex; align-items: center; gap: 4px; margin-bottom: 8px; font-weight: 500; }
 
         footer { border-top: 1px solid var(--header-border); padding: 50px 0; background: var(--bg-gray); margin-top: 50px; }
         .footer-links { display: flex; justify-content: center; gap: 20px; margin-bottom: 20px; flex-wrap: wrap; }
@@ -108,6 +108,31 @@
 
         let currentLang = localStorage.getItem('lang') || 'ko';
 
+        // ★ 시간 보정 함수 추가 ★
+        function formatTimeByLang(timeStr, lang) {
+            if (!timeStr || timeStr === 'TBD') return 'TBD';
+            
+            // 엑셀에서 넘어오는 시간 형식이 "HH:mm"일 경우
+            try {
+                const parts = timeStr.split(':');
+                let hours = parseInt(parts[0]);
+                let minutes = parts[1];
+
+                if (lang === 'ko') {
+                    // 한국어일 때 UTC+9 적용
+                    hours = (hours + 9) % 24;
+                    const formattedHours = hours.toString().padStart(2, '0');
+                    return `${formattedHours}:${minutes} (KST)`;
+                } else {
+                    // 영어일 때 원본 유지 (UTC)
+                    const formattedHours = hours.toString().padStart(2, '0');
+                    return `${formattedHours}:${minutes} (UTC)`;
+                }
+            } catch (e) {
+                return timeStr;
+            }
+        }
+
         function changeLang(lang) {
             currentLang = lang;
             localStorage.setItem('lang', lang);
@@ -148,7 +173,10 @@
 
                 validMatches.forEach((row, index) => {
                     const hitRate = parseFloat(row['예상확률']) || 0;
-                    const matchTime = row['시간'] || 'TBD'; // 엑셀 컬럼명이 '시간'일 경우
+                    
+                    // ★ 언어에 따라 보정된 시간 가져오기 ★
+                    const matchTime = formatTimeByLang(row['시간'], currentLang); 
+                    
                     const isVipMatch = hitRate >= 85;
                     const card = document.createElement('div');
                     card.className = 'analysis-list-item';
