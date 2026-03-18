@@ -128,69 +128,76 @@
             });
         }
 
-        async function fetchDataAndRender() {
-            const list = document.getElementById('analysis-list');
-            const loader = document.getElementById('loading-indicator');
-            const isVipUser = localStorage.getItem('isVipUser') === 'true';
-            const t = translations[currentLang];
+       async function fetchDataAndRender() {
+    const list = document.getElementById('analysis-list');
+    const loader = document.getElementById('loading-indicator');
+    const isVipUser = localStorage.getItem('isVipUser') === 'true';
+    const t = translations[currentLang];
 
-            loader.style.display = 'block';
+    loader.style.display = 'block';
 
-            try {
-                // 캐시 방지를 위해 타임스탬프 적용
-                const resp = await fetch('today_ai_all_picks.xlsx?v=' + new Date().getTime());
-                if (!resp.ok) throw new Error("File not found");
+    try {
+        const resp = await fetch('today_ai_all_picks.xlsx?v=' + new Date().getTime());
+        if (!resp.ok) throw new Error("File not found");
 
-                const buffer = await resp.arrayBuffer();
-                const wb = XLSX.read(new Uint8Array(buffer), { type: 'array' });
-                const data = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
+        const buffer = await resp.arrayBuffer();
+        const wb = XLSX.read(new Uint8Array(buffer), { type: 'array' });
+        const data = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
 
-                console.log("로드된 데이터:", data); // F12 콘솔에서 확인 가능
-
-                list.innerHTML = '';
-                // 데이터가 나타나지 않는 문제를 해결하기 위해 필터를 0%로 낮춤
-                const matches = data.filter(row => (parseFloat(row['예상확률']) || 0) >= 0);
-
-                if (matches.length === 0) {
-                    list.innerHTML = `<p style="text-align:center; padding:3rem;">${t.noData}</p>`;
-                } else {
-                    matches.forEach(row => {
-                        const hitRate = parseFloat(row['예상확률']) || 0;
-                        const matchTime = formatTimeByLang(row['시간'], currentLang);
-                        const isVipMatch = hitRate >= 85;
-                        const card = document.createElement('div');
-                        card.className = 'analysis-list-item';
-
-                        if (isVipMatch && !isVipUser) {
-                            card.innerHTML = `
-                                <div style="text-align:center;">
-                                    <div class="match-time" style="justify-content:center;">🕒 ${matchTime}</div>
-                                    <h3 style="margin:0 0 10px 0;">${row['홈팀']} vs ${row['원정팀']}</h3>
-                                    <div style="color:var(--primary-blue); font-weight:bold;">${t.vipLock}</div>
-                                    <p style="font-size:0.85rem; color:var(--text-muted);">${t.vipDesc}</p>
-                                    <a href="vip.html" class="subscribe-button">${t.vipBtn}</a>
-                                </div>`;
-                        } else {
-                            card.innerHTML = `
-                                <div class="match-time">🕒 ${matchTime}</div>
-                                <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
-                                    <strong>${row['홈팀']} vs ${row['원정팀']}</strong>
-                                    <span style="background:#f0f7ff; color:#2563eb; padding:4px 10px; border-radius:20px; font-weight:bold;">${hitRate.toFixed(1)}%</span>
-                                </div>
-                                <div style="background:#f8fafc; padding:15px; border-radius:10px; border-left:4px solid #cbd5e1;">
-                                    <p style="margin:0;"><strong>${t.aiPick}:</strong> <span style="color:#2563eb; font-weight:bold;">${row['AI추천']}</span></p>
-                                </div>`;
-                        }
-                        list.appendChild(card);
-                    });
+        list.innerHTML = '';
+        
+        if (data.length === 0) {
+            list.innerHTML = `<p style="text-align:center; padding:3rem;">${t.noData}</p>`;
+        } else {
+            data.forEach(row => {
+                // [수정 포인트] 다양한 컬럼명 대응 및 숫자 변환 로직 강화
+                let rawProb = row['예상확률'] || row['확률'] || row['Prob'] || 0;
+                
+                // 만약 데이터에 '%' 문자가 포함되어 있다면 제거 후 숫자로 변환
+                if (typeof rawProb === 'string') {
+                    rawProb = rawProb.replace('%', '').trim();
                 }
-            } catch (err) {
-                console.error(err);
-                list.innerHTML = '<p style="text-align:center; padding:3rem;">데이터 로딩 에러</p>';
-            } finally {
-                loader.style.display = 'none';
-            }
+                const hitRate = parseFloat(rawProb) || 0;
+
+                const matchTime = formatTimeByLang(row['시간'] || row['Time'] || 'TBD', currentLang);
+                const homeTeam = row['홈팀'] || row['Home'] || 'Home Team';
+                const awayTeam = row['원정팀'] || row['Away'] || 'Away Team';
+                const aiPick = row['AI추천'] || row['Pick'] || '-';
+
+                const isVipMatch = hitRate >= 85;
+                const card = document.createElement('div');
+                card.className = 'analysis-list-item';
+
+                if (isVipMatch && !isVipUser) {
+                    card.innerHTML = `
+                        <div style="text-align:center;">
+                            <div class="match-time" style="justify-content:center;">🕒 ${matchTime}</div>
+                            <h3 style="margin:0 0 10px 0;">${homeTeam} vs ${awayTeam}</h3>
+                            <div style="color:var(--primary-blue); font-weight:bold;">${t.vipLock}</div>
+                            <p style="font-size:0.85rem; color:var(--text-muted);">${t.vipDesc}</p>
+                            <a href="vip.html" class="subscribe-button">${t.vipBtn}</a>
+                        </div>`;
+                } else {
+                    card.innerHTML = `
+                        <div class="match-time">🕒 ${matchTime}</div>
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+                            <strong>${homeTeam} vs ${awayTeam}</strong>
+                            <span style="background:#f0f7ff; color:#2563eb; padding:4px 10px; border-radius:20px; font-weight:bold;">${hitRate.toFixed(1)}%</span>
+                        </div>
+                        <div style="background:#f8fafc; padding:15px; border-radius:10px; border-left:4px solid #cbd5e1;">
+                            <p style="margin:0;"><strong>${t.aiPick}:</strong> <span style="color:#2563eb; font-weight:bold;">${aiPick}</span></p>
+                        </div>`;
+                }
+                list.appendChild(card);
+            });
         }
+    } catch (err) {
+        console.error(err);
+        list.innerHTML = '<p style="text-align:center; padding:3rem;">데이터 로딩 중 오류가 발생했습니다.</p>';
+    } finally {
+        loader.style.display = 'none';
+    }
+}
 
         const setTheme = (theme) => {
             document.documentElement.setAttribute('data-theme', theme);
