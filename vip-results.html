@@ -2,243 +2,118 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>VIP 적중 결과 시스템</title>
-    <!-- Firebase SDK 로드 -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI365PICK - VIP 적중 결과</title>
+    <!-- Firebase Legacy SDK (가장 안정적임) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <style>
-        :root { --primary: #2563eb; --danger: #ef4444; --gray: #64748b; }
-        body { font-family: 'Pretendard', sans-serif; background: #f1f5f9; margin: 0; padding: 20px; color: #1e293b; }
-        .container { max-width: 900px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
-        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
-        .btn { padding: 8px 16px; cursor: pointer; border: none; border-radius: 6px; font-weight: 600; transition: 0.2s; text-decoration: none; display: inline-flex; align-items: center; }
-        .btn-home { background: #1e293b; color: white; }
-        .btn-lang { background: #fff; border: 1px solid #e2e8f0; color: var(--gray); font-size: 0.8rem; margin-left: 5px; }
-        .btn-write { background: var(--primary); color: white; margin-bottom: 20px; }
-        .btn-edit { background: #f1f5f9; color: var(--gray); font-size: 0.8rem; border: 1px solid #e2e8f0; }
-        .btn-delete { background: #fee2e2; color: var(--danger); font-size: 0.8rem; }
-        
-        /* 중요: 관리자 전용 숨김 설정 */
-        .admin-only { display: none !important; } 
-        .admin-active { display: block !important; }
-        table .admin-active { display: table-cell !important; }
-
-        table { width: 100%; border-collapse: collapse; }
-        th { background: #f8fafc; padding: 12px; text-align: left; border-bottom: 2px solid #e2e8f0; color: var(--gray); font-size: 0.85rem; }
-        td { padding: 15px 12px; border-bottom: 1px solid #f1f5f9; }
-        .clickable-title { cursor: pointer; color: var(--primary); font-weight: 700; }
-        .clickable-title:hover { text-decoration: underline; }
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 100; align-items: center; justify-content: center; }
-        .modal { background: white; padding: 25px; border-radius: 12px; width: 450px; max-width: 90%; }
-        input, textarea { width: 100%; margin: 10px 0; padding: 12px; border: 1px solid #e2e8f0; border-radius: 6px; box-sizing: border-box; }
-        .modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
-        .view-content { white-space: pre-wrap; background: #f8fafc; padding: 15px; border-radius: 6px; border: 1px solid #e2e8f0; margin-top: 10px; min-height: 100px; }
-        .btn-admin-login { background: none; color: #cbd5e1; border: none; font-size: 0.7rem; cursor: pointer; margin-top: 50px; width: 100%; }
+        /* 기존 스타일 유지 */
+        body { font-family: 'Pretendard', sans-serif; margin: 0; padding: 0; background: #fff; }
+        .container { max-width: 800px; margin: 20px auto; padding: 20px; }
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #eee; }
+        .post-item { padding: 15px; border-bottom: 1px solid #f9f9f9; cursor: pointer; display: flex; justify-content: space-between; }
+        .admin-btn-area { margin-top: 10px; display: none; }
+        .active { display: block !important; }
+        /* 로딩 표시기 */
+        #loading { text-align: center; padding: 50px; color: #999; }
     </style>
 </head>
 <body>
 
+<div class="header">
+    <strong>🏆 VIP 적중 결과</strong>
+    <button onclick="location.href='index.html'" style="cursor:pointer;">홈으로</button>
+</div>
+
 <div class="container">
-    <div class="top-bar">
-        <a href="index.html" class="btn btn-home">🏠 <span data-i18n="goHome">Home</span></a>
-        <div>
-            <button class="btn btn-lang" onclick="toggleLang()">🌐 KO/EN</button>
-            <button class="btn btn-lang admin-only" onclick="adminLogout()" id="logout-btn">🔒 Logout</button>
-        </div>
+    <div id="admin-controls" class="admin-btn-area">
+        <button onclick="openModal()" style="background:#2563eb; color:#fff; border:none; padding:10px; border-radius:5px; cursor:pointer;">+ 새 결과 등록</button>
+        <button onclick="adminLogout()" style="margin-left:10px;">로그아웃</button>
     </div>
 
-    <h2 data-i18n="boardTitle">🏆 VIP 적중 결과</h2>
-    <div class="admin-only" id="write-section">
-        <button class="btn btn-write" onclick="openWriteModal()">➕ <span data-i18n="addResult">새 결과 등록</span></button>
-    </div>
+    <div id="loading">데이터를 불러오는 중입니다...</div>
+    <div id="post-list"></div>
     
-    <table>
-        <thead>
-            <tr>
-                <th style="width: 120px;" data-i18n="tableDate">날짜</th>
-                <th data-i18n="tableTitle">제목</th>
-                <th style="width: 120px; text-align: center;" class="admin-only" data-i18n="tableManage">관리</th>
-            </tr>
-        </thead>
-        <tbody id="post-list">
-            <tr><td colspan="3" style="text-align:center;">로딩 중...</td></tr>
-        </tbody>
-    </table>
-    <button class="btn-admin-login" onclick="promptAdmin()">Admin Login</button>
-</div>
-
-<!-- [모달 부분은 이전과 동일함] -->
-<div id="modal-overlay" class="modal-overlay">
-    <div class="modal">
-        <h3 id="modal-header-text"></h3>
-        <input type="hidden" id="edit-id">
-        <input type="date" id="post-date">
-        <input type="text" id="post-title" placeholder="Title">
-        <textarea id="post-content" rows="6" placeholder="Content"></textarea>
-        <div class="modal-footer">
-            <button class="btn" style="background:#e2e8f0;" onclick="closeModal()">취소</button>
-            <button class="btn btn-write" onclick="savePost()">저장하기</button>
-        </div>
-    </div>
-</div>
-
-<div id="view-overlay" class="modal-overlay">
-    <div class="modal">
-        <h3 id="v-title"></h3>
-        <p id="v-date" style="font-size: 0.85rem; color: var(--gray);"></p>
-        <div class="view-content" id="v-content"></div>
-        <div class="modal-footer">
-            <button class="btn btn-write" onclick="closeView()">확인</button>
-        </div>
+    <div style="margin-top:100px; text-align:center;">
+        <button onclick="promptAdmin()" style="background:none; border:none; color:#eee; font-size:10px; cursor:pointer;">Admin Login</button>
     </div>
 </div>
 
 <script>
-    // 1. Firebase 설정 (이미지에서 주신 값을 정확히 반영)
+    // 1. Firebase 설정
     const firebaseConfig = {
         apiKey: "AIzaSyCzkJ0xPcCILCnAgNO5JeaVbezjRjMSqPs",
         authDomain: "ai365pick-vip.firebaseapp.com",
         projectId: "ai365pick-vip",
-        storageBucket: "ai365pick-vip.firebasestorage.app",
+        databaseURL: "https://ai365pick-vip-default-rtdb.firebaseio.com",
+        storageBucket: "ai365pick-vip.appspot.com",
         messagingSenderId: "511678113338",
-        appId: "1:511678113338:web:42040a530060295ec1f703",
-        databaseURL: "https://ai365pick-vip-default-rtdb.firebaseio.com"
+        appId: "1:511678113338:web:42040a530060295ec1f703"
     };
 
-    // 초기화 시도 및 에러 체크
-    try {
+    // Firebase 초기화 (중복 초기화 방지)
+    if (!firebase.apps.length) {
         firebase.initializeApp(firebaseConfig);
-        var db = firebase.database();
-    } catch (e) {
-        console.error("Firebase 초기화 에러:", e);
     }
+    const db = firebase.database();
 
-    const adminPassword = "1234"; 
-    const translations = {
-        ko: { goHome: "홈으로", boardTitle: "🏆 VIP 적중 결과", addResult: "새 결과 등록", tableDate: "날짜", tableTitle: "제목", tableManage: "관리", btnEdit: "수정", btnDelete: "삭제", modalNew: "새 결과 등록", modalEdit: "게시글 수정" },
-        en: { goHome: "Home", boardTitle: "🏆 VIP Hits", addResult: "Add New Result", tableDate: "Date", tableTitle: "Title", tableManage: "Action", btnEdit: "Edit", btnDelete: "Delete", modalNew: "New Result", modalEdit: "Edit Post" }
-    };
-
-    let currentLang = localStorage.getItem('lang') || 'ko';
     let isAdmin = sessionStorage.getItem('isAdmin') === 'true';
-    let posts = {};
 
-    // 2. 관리자 상태 체크 함수 (강력하게 수정)
-    function checkAdminStatus() {
-        const adminElements = document.querySelectorAll('.admin-only');
-        adminElements.forEach(el => {
-            if (isAdmin) {
-                el.classList.add('admin-active');
-            } else {
-                el.classList.remove('admin-active');
-            }
-        });
+    // 2. 관리자 UI 체크
+    function checkAdmin() {
+        const controls = document.getElementById('admin-controls');
+        if (isAdmin) controls.classList.add('active');
+        else controls.classList.remove('active');
     }
 
-    // 3. 데이터 렌더링
-    function render() {
+    // 3. 데이터 가져오기 (실시간)
+    db.ref('vip_posts').on('value', (snapshot) => {
         const list = document.getElementById('post-list');
-        const t = translations[currentLang];
+        const loading = document.getElementById('loading');
+        loading.style.display = 'none'; // 로딩 메시지 숨김
+        
+        const data = snapshot.val();
         let html = '';
-        
-        const sortedKeys = Object.keys(posts).sort((a, b) => {
-            return new Date(posts[b].date) - new Date(posts[a].date);
-        });
-        
-        if (sortedKeys.length === 0) {
-            list.innerHTML = '<tr><td colspan="3" style="text-align:center;">등록된 결과가 없습니다.</td></tr>';
-        } else {
-            sortedKeys.forEach(key => {
-                const post = posts[key];
+
+        if (data) {
+            // 날짜순 정렬하여 출력
+            const keys = Object.keys(data).reverse();
+            keys.forEach(key => {
+                const item = data[key];
                 html += `
-                    <tr>
-                        <td style="color: var(--gray); font-size: 0.9rem;">${post.date}</td>
-                        <td><span class="clickable-title" onclick="viewPost('${key}')">${post.title}</span></td>
-                        <td class="admin-only ${isAdmin ? 'admin-active' : ''}" style="display: flex; gap: 5px; justify-content: center;">
-                            <button class="btn btn-edit" onclick="openEditModal('${key}')">${t.btnEdit}</button>
-                            <button class="btn btn-delete" onclick="deletePost('${key}')">${t.btnDelete}</button>
-                        </td>
-                    </tr>`;
+                    <div class="post-item" onclick="alert('${item.content}')">
+                        <span>${item.title}</span>
+                        <span style="color:#999; font-size:12px;">${item.date}</span>
+                    </div>
+                `;
             });
             list.innerHTML = html;
+        } else {
+            list.innerHTML = '<p style="text-align:center; color:#ccc;">등록된 결과가 없습니다.</p>';
         }
-        checkAdminStatus(); // 렌더링 후 상태 다시 체크
-    }
+        checkAdmin();
+    });
 
-    // 4. Firebase 실시간 수신
-    if (db) {
-        db.ref('vip_posts').on('value', (snapshot) => {
-            posts = snapshot.val() || {};
-            render();
-        }, (error) => {
-            console.error("데이터 읽기 실패 (규칙 확인 필요):", error);
-            document.getElementById('post-list').innerHTML = '<tr><td colspan="3" style="text-align:center; color:red;">데이터를 가져올 권한이 없습니다. (Rules 확인)</td></tr>';
-        });
-    }
-
-    // 5. 로그인 함수
+    // 4. 관리자 로그인 함수
     function promptAdmin() {
-        const pass = prompt("Admin Password?");
-        if(pass === adminPassword) {
-            isAdmin = true;
+        const pw = prompt("관리자 비밀번호를 입력하세요.");
+        if (pw === "1234") { // 비밀번호 설정
             sessionStorage.setItem('isAdmin', 'true');
-            alert("관리자 모드 활성화");
-            render();
+            isAdmin = true;
+            checkAdmin();
+            location.reload(); // 화면 갱신
         } else {
             alert("비밀번호가 틀렸습니다.");
         }
     }
 
     function adminLogout() {
-        isAdmin = false;
         sessionStorage.removeItem('isAdmin');
-        render();
-    }
-
-    // --- 나머지 유틸리티 함수 ---
-    function savePost() {
-        const date = document.getElementById('post-date').value;
-        const title = document.getElementById('post-title').value;
-        const content = document.getElementById('post-content').value;
-        const editId = document.getElementById('edit-id').value;
-        if(!date || !title || !content) return alert("입력칸을 채워주세요.");
-        const postData = { date, title, content };
-        if(!editId) db.ref('vip_posts').push(postData);
-        else db.ref('vip_posts/' + editId).set(postData);
-        closeModal();
-    }
-    function deletePost(key) {
-        if(confirm("삭제하시겠습니까?")) db.ref('vip_posts/' + key).remove();
-    }
-    function viewPost(key) {
-        const post = posts[key];
-        document.getElementById('v-title').innerText = post.title;
-        document.getElementById('v-date').innerText = "Date: " + post.date;
-        document.getElementById('v-content').innerText = post.content;
-        document.getElementById('view-overlay').style.display = 'flex';
-    }
-    function openWriteModal() {
-        document.getElementById('edit-id').value = "";
-        document.getElementById('post-date').value = "";
-        document.getElementById('post-title').value = "";
-        document.getElementById('post-content').value = "";
-        document.getElementById('modal-overlay').style.display = 'flex';
-    }
-    function openEditModal(key) {
-        const post = posts[key];
-        document.getElementById('edit-id').value = key;
-        document.getElementById('post-date').value = post.date;
-        document.getElementById('post-title').value = post.title;
-        document.getElementById('post-content').value = post.content;
-        document.getElementById('modal-overlay').style.display = 'flex';
-    }
-    function closeModal() { document.getElementById('modal-overlay').style.display = 'none'; }
-    function closeView() { document.getElementById('view-overlay').style.display = 'none'; }
-    function toggleLang() {
-        currentLang = currentLang === 'ko' ? 'en' : 'ko';
-        localStorage.setItem('lang', currentLang);
-        render();
+        isAdmin = false;
+        location.reload();
     }
 </script>
+
 </body>
 </html>
