@@ -4,132 +4,84 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI365PICK - VIP 적중 결과</title>
-    <!-- Firebase SDK (호환성 버전) -->
+    <!-- Firebase 라이브러리 -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <style>
-        body { font-family: 'Pretendard', sans-serif; margin: 0; padding: 0; background: #fff; }
-        .container { max-width: 800px; margin: 20px auto; padding: 20px; }
-        .header { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #eee; }
-        .post-item { padding: 15px; border-bottom: 1px solid #f9f9f9; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-        .post-item:hover { background-color: #f0f7ff; }
-        .admin-controls { margin: 20px 0; display: none; padding: 15px; background: #f8fafc; border-radius: 8px; }
-        .active { display: block !important; }
-        #loading { text-align: center; padding: 50px; color: #999; }
-        .btn { padding: 8px 16px; border-radius: 6px; cursor: pointer; border: 1px solid #ddd; }
-        .btn-primary { background: #2563eb; color: white; border: none; }
+        body { font-family: sans-serif; margin: 0; background-color: #f4f7f9; }
+        /* 핵심: 화면 크기 제한 및 중앙 정렬 */
+        .container { 
+            max-width: 800px; 
+            margin: 0 auto; 
+            background: #fff; 
+            min-height: 100vh; 
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; padding-bottom: 15px; }
+        .post-item { padding: 20px; border-bottom: 1px solid #f0f0f0; transition: background 0.2s; }
+        .post-item:hover { background: #fafafa; }
+        .post-title { font-size: 1.1rem; font-weight: bold; color: #1e293b; }
+        .post-date { font-size: 0.85rem; color: #94a3b8; margin-top: 5px; }
+        #loading { text-align: center; padding: 50px; color: #666; }
     </style>
 </head>
 <body>
+    <div class="container">
+        <div class="header">
+            <h2 style="margin:0;">🏆 VIP 적중 결과</h2>
+            <button onclick="location.href='index.html'" style="cursor:pointer; padding:8px 15px; border-radius:5px; border:1px solid #ddd; background:#fff;">홈으로</button>
+        </div>
 
-<div class="header">
-    <strong>🏆 VIP 적중 결과</strong>
-    <button class="btn" onclick="location.href='index.html'">홈으로</button>
-</div>
+        <div id="loading">데이터를 불러오는 중입니다...</div>
+        <div id="post-list"></div>
 
-<div class="container">
-    <!-- 관리자 도구 -->
-    <div id="admin-section" class="admin-controls">
-        <button class="btn btn-primary" onclick="addSampleData()">+ 테스트 데이터 추가</button>
-        <button class="btn" onclick="adminLogout()" style="margin-left:5px;">로그아웃</button>
+        <div style="margin-top:50px; text-align:center;">
+            <button onclick="promptAdmin()" style="border:none; background:none; color:#eee; cursor:pointer; font-size:10px;">Admin Login</button>
+        </div>
     </div>
 
-    <div id="loading">데이터를 불러오는 중입니다...</div>
-    <div id="post-list"></div>
-    
-    <!-- 관리자 로그인 (투명 버튼) -->
-    <div style="margin-top:100px; text-align:center;">
-        <button onclick="promptAdmin()" style="background:none; border:none; color:#f0f0f0; font-size:10px; cursor:pointer;">Admin Login</button>
-    </div>
-</div>
-
-<script>
-    // 1. Firebase 설정 (제공해주신 정보 그대로 적용)
-    const firebaseConfig = {
-        apiKey: "AIzaSyCzkJ0xPcCILCnAgNO5JeaVbezjRjMSqPs",
-        authDomain: "ai365pick-vip.firebaseapp.com",
-        projectId: "ai365pick-vip",
-        databaseURL: "https://ai365pick-vip-default-rtdb.firebaseio.com",
-        storageBucket: "ai365pick-vip.appspot.com",
-        messagingSenderId: "511678113338",
-        appId: "1:511678113338:web:42040a530060295ec1f703"
-    };
-
-    // Firebase 초기화
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-    }
-    const db = firebase.database();
-
-    // 2. 관리자 상태 체크
-    function checkAdminStatus() {
-        const isAdmin = sessionStorage.getItem('isAdmin') === 'true';
-        if (isAdmin) {
-            document.getElementById('admin-section').classList.add('active');
-        }
-    }
-
-    // 3. 데이터 불러오기 핵심 로직
-    const postListDiv = document.getElementById('post-list');
-    const loadingDiv = document.getElementById('loading');
-
-    db.ref('vip_posts').on('value', (snapshot) => {
-        loadingDiv.style.display = 'none'; // 로딩 메시지 제거
-        const data = snapshot.val();
-        
-        if (data) {
-            let html = '';
-            // 데이터를 배열로 변환 후 최신순 정렬
-            const entries = Object.entries(data).reverse();
-            entries.forEach(([key, item]) => {
-                html += `
-                    <div class="post-item">
-                        <div>
-                            <div style="font-weight:bold;">${item.title}</div>
-                            <div style="font-size:0.85rem; color:#666; margin-top:4px;">${item.content}</div>
-                        </div>
-                        <div style="color:#94a3b8; font-size:0.8rem;">${item.date}</div>
-                    </div>
-                `;
-            });
-            postListDiv.innerHTML = html;
-        } else {
-            postListDiv.innerHTML = '<p style="text-align:center; color:#999; padding:40px;">등록된 데이터가 없습니다. <br>관리자로 로그인하여 데이터를 추가해 보세요.</p>';
-        }
-        checkAdminStatus();
-    }, (error) => {
-        console.error("Firebase 읽기 에러:", error);
-        loadingDiv.innerText = "데이터를 불러오는 데 실패했습니다. (권한 오류)";
-    });
-
-    // 4. 관리자 기능 함수들
-    function promptAdmin() {
-        const pw = prompt("관리자 비밀번호를 입력하세요.");
-        if (pw === "1234") {
-            sessionStorage.setItem('isAdmin', 'true');
-            location.reload();
-        } else {
-            alert("틀렸습니다.");
-        }
-    }
-
-    function adminLogout() {
-        sessionStorage.removeItem('isAdmin');
-        location.reload();
-    }
-
-    // [테스트용] 데이터가 하나도 없을 때 강제로 하나 넣는 기능
-    function addSampleData() {
-        const newPost = {
-            title: "오늘의 VIP 적중 결과",
-            content: "축하합니다! AI 분석 결과 적중 완료.",
-            date: new Date().toLocaleDateString()
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyCzkJ0xPcCILCnAgNO5JeaVbezjRjMSqPs",
+            databaseURL: "https://ai365pick-vip-default-rtdb.firebaseio.com",
+            projectId: "ai365pick-vip",
+            appId: "1:511678113338:web:42040a530060295ec1f703"
         };
-        db.ref('vip_posts').push(newPost)
-            .then(() => alert("테스트 데이터가 추가되었습니다!"))
-            .catch((err) => alert("추가 실패: " + err.message));
-    }
-</script>
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
 
+        // 실시간 데이터 감시
+        db.ref('vip_posts').on('value', (snapshot) => {
+            document.getElementById('loading').style.display = 'none';
+            const list = document.getElementById('post-list');
+            const data = snapshot.val();
+
+            if (data) {
+                let html = '';
+                // 최신글이 위로 오도록 역순 정렬
+                Object.values(data).reverse().forEach(item => {
+                    html += `
+                        <div class="post-item">
+                            <div class="post-title">${item.title}</div>
+                            <div style="margin-top:8px;">${item.content}</div>
+                            <div class="post-date">${item.date}</div>
+                        </div>`;
+                });
+                list.innerHTML = html;
+            } else {
+                list.innerHTML = '<p style="text-align:center; padding:50px; color:#999;">등록된 결과가 없습니다.</p>';
+            }
+        });
+
+        function promptAdmin() {
+            const pw = prompt("관리자 암호를 입력하세요.");
+            if(pw === "1234") {
+                sessionStorage.setItem('isAdmin', 'true');
+                alert("인증되었습니다. 이제 수정 권한이 부여됩니다.");
+                location.reload();
+            }
+        }
+    </script>
 </body>
 </html>
