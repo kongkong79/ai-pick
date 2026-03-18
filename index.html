@@ -24,7 +24,6 @@
         .lang-btn { cursor: pointer; border: none; background: none; font-size: 0.8rem; padding: 5px; color: var(--text-muted); }
         .subscribe-button { display: inline-block; padding: 10px 20px; background: var(--primary-blue); color: white; border-radius: 8px; text-decoration: none; font-weight: bold; margin-top: 10px; }
         
-        /* 경기 시간 스타일 */
         .match-time { font-size: 0.75rem; color: var(--time-color); display: flex; align-items: center; gap: 4px; margin-bottom: 8px; font-weight: 500; }
 
         footer { border-top: 1px solid var(--header-border); padding: 50px 0; background: var(--bg-gray); margin-top: 50px; }
@@ -45,6 +44,7 @@
             
             <nav class="nav-menu">
                 <a href="index.html" class="nav-link active" data-i18n="navHome">Home</a>
+                <!-- ★ 경로 수정: vip-results.html 로 변경 ★ -->
                 <a href="vip-results.html" class="nav-link" data-i18n="navHistory">VIP 적중결과</a>
                 <a href="vip.html" class="nav-link" data-i18n="navVip" style="color:#e11d48;">VIP 전용</a>
             </nav>
@@ -108,29 +108,19 @@
 
         let currentLang = localStorage.getItem('lang') || 'ko';
 
-        // ★ 시간 보정 함수 추가 ★
         function formatTimeByLang(timeStr, lang) {
             if (!timeStr || timeStr === 'TBD') return 'TBD';
-            
-            // 엑셀에서 넘어오는 시간 형식이 "HH:mm"일 경우
             try {
                 const parts = timeStr.split(':');
                 let hours = parseInt(parts[0]);
                 let minutes = parts[1];
-
                 if (lang === 'ko') {
-                    // 한국어일 때 UTC+9 적용
                     hours = (hours + 9) % 24;
-                    const formattedHours = hours.toString().padStart(2, '0');
-                    return `${formattedHours}:${minutes} (KST)`;
+                    return `${hours.toString().padStart(2, '0')}:${minutes} (KST)`;
                 } else {
-                    // 영어일 때 원본 유지 (UTC)
-                    const formattedHours = hours.toString().padStart(2, '0');
-                    return `${formattedHours}:${minutes} (UTC)`;
+                    return `${hours.toString().padStart(2, '0')}:${minutes} (UTC)`;
                 }
-            } catch (e) {
-                return timeStr;
-            }
+            } catch (e) { return timeStr; }
         }
 
         function changeLang(lang) {
@@ -173,10 +163,7 @@
 
                 validMatches.forEach((row, index) => {
                     const hitRate = parseFloat(row['예상확률']) || 0;
-                    
-                    // ★ 언어에 따라 보정된 시간 가져오기 ★
                     const matchTime = formatTimeByLang(row['시간'], currentLang); 
-                    
                     const isVipMatch = hitRate >= 85;
                     const card = document.createElement('div');
                     card.className = 'analysis-list-item';
@@ -213,19 +200,4 @@
         const setTheme = (theme) => {
             document.documentElement.setAttribute('data-theme', theme);
             localStorage.setItem('theme', theme);
-            document.getElementById('theme-toggle').innerText = theme === 'light' ? '☀️' : '🌙';
-        };
-
-        document.getElementById('theme-toggle').onclick = () => {
-            const current = document.documentElement.getAttribute('data-theme');
-            setTheme(current === 'dark' ? 'light' : 'dark');
-        };
-
-        document.addEventListener('DOMContentLoaded', () => {
-            updateUI();
-            fetchDataAndRender();
-            setTheme(localStorage.getItem('theme') || 'light');
-        });
-    </script>
-</body>
-</html>
+            document.getElementById('theme-toggle').innerText = theme === 'light' ? '
