@@ -8,8 +8,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4466358200851184" crossorigin="anonymous"></script>
     <style>
-        :root { --header-border: #e2e8f0; --card-bg: #ffffff; --primary-blue: #2563eb; --text-muted: #64748b; }
-        [data-theme='dark'] { --header-border: #334155; --card-bg: #1e293b; --text-muted: #94a3b8; }
+        :root { --header-border: #e2e8f0; --card-bg: #ffffff; --primary-blue: #2563eb; --text-muted: #64748b; --time-color: #94a3b8; }
+        [data-theme='dark'] { --header-border: #334155; --card-bg: #1e293b; --text-muted: #94a3b8; --time-color: #64748b; }
         body { font-family: -apple-system, sans-serif; margin: 0; background: var(--card-bg); color: inherit; transition: background 0.3s; }
         .container { max-width: 800px; margin: 0 auto; padding: 0 20px; }
         
@@ -24,7 +24,9 @@
         .lang-btn { cursor: pointer; border: none; background: none; font-size: 0.8rem; padding: 5px; color: var(--text-muted); }
         .subscribe-button { display: inline-block; padding: 10px 20px; background: var(--primary-blue); color: white; border-radius: 8px; text-decoration: none; font-weight: bold; margin-top: 10px; }
         
-        /* 푸터 스타일 보강 */
+        /* 경기 시간 스타일 추가 */
+        .match-time { font-size: 0.75rem; color: var(--time-color); display: flex; align-items: center; gap: 4px; margin-bottom: 5px; }
+
         footer { border-top: 1px solid var(--header-border); padding: 50px 0; background: var(--bg-gray); margin-top: 50px; }
         .footer-links { display: flex; justify-content: center; gap: 20px; margin-bottom: 20px; flex-wrap: wrap; }
         .footer-link { text-decoration: none; color: var(--text-muted); font-size: 0.85rem; font-weight: 500; }
@@ -43,7 +45,6 @@
             
             <nav class="nav-menu">
                 <a href="index.html" class="nav-link active" data-i18n="navHome">Home</a>
-                <!-- 새로 만든 리스트형 게시판 연결 -->
                 <a href="vip-results.html" class="nav-link" data-i18n="navHistory">VIP 적중결과</a>
                 <a href="vip.html" class="nav-link" data-i18n="navVip" style="color:#e11d48;">VIP 전용</a>
             </nav>
@@ -72,7 +73,6 @@
         <div class="ads-placeholder">ADVERTISEMENT</div>
     </main>
 
-    <!-- 하단에 다시 부활시킨 정책 메뉴 섹션 -->
     <footer>
         <div class="container" style="text-align: center;">
             <div class="footer-links">
@@ -148,6 +148,7 @@
 
                 validMatches.forEach((row, index) => {
                     const hitRate = parseFloat(row['예상확률']) || 0;
+                    const matchTime = row['시간'] || 'TBD'; // 엑셀 컬럼명이 '시간'일 경우
                     const isVipMatch = hitRate >= 85;
                     const card = document.createElement('div');
                     card.className = 'analysis-list-item';
@@ -155,14 +156,15 @@
                     if (isVipMatch && !isVipUser) {
                         card.innerHTML = `
                             <div style="text-align:center;">
+                                <div class="match-time" style="justify-content:center;">🕒 ${matchTime}</div>
                                 <h3 style="margin:0 0 10px 0; font-size:1.1rem;">${row['홈팀']} vs ${row['원정팀']}</h3>
                                 <div style="color:var(--primary-blue); font-weight:bold; margin-bottom:5px;">${t.vipLock}</div>
                                 <p style="font-size:0.85rem; color:var(--text-muted);">${t.vipDesc}</p>
                                 <a href="vip.html" class="subscribe-button">${t.vipBtn}</a>
                             </div>`;
                     } else {
-                        // 일반/VIP 오픈 픽 렌더링 (생략 없이 유지)
                         card.innerHTML = `
+                            <div class="match-time">🕒 ${matchTime}</div>
                             <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
                                 <div><strong style="font-size:1rem;">${row['홈팀']} vs ${row['원정팀']}</strong></div>
                                 <span style="background:#f0f7ff; color:#2563eb; padding:4px 10px; border-radius:20px; font-size:0.8rem; font-weight:bold;">${hitRate.toFixed(1)}%</span>
