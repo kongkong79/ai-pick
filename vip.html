@@ -18,17 +18,14 @@
         .nav-link { text-decoration: none; color: #64748b; font-size: 0.95rem; }
         .nav-link.active { color: var(--primary-blue); }
 
-        /* 잠금 섹션 카드 스타일 */
         .lock-card { max-width: 500px; margin: 40px auto; border: 2px solid #fbbf24; padding: 30px; border-radius: 15px; background: var(--card-bg); text-align: center; }
         .btn-subscribe { display: block; background: #fbbf24; color: #000; padding: 15px; border-radius: 12px; font-weight: 800; text-decoration: none; margin: 15px 0; transition: transform 0.2s; }
         .btn-subscribe:hover { transform: scale(1.02); }
 
-        /* 한국 전용 결제 섹션 스타일 */
         .kr-payment-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin-bottom: 25px; text-align: left; }
         [data-theme='dark'] .kr-payment-box { background: #0f172a; border-color: #334155; }
         .kr-payment-box b { color: var(--primary-blue); }
 
-        /* VIP 데이터 카드 스타일 */
         .summary-card { margin: 20px auto; background: var(--card-bg); border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); overflow: hidden; border: 1px solid var(--header-border); }
         .summary-header { background: var(--primary-blue); color: white; padding: 15px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
         .summary-table { width: 100%; border-collapse: collapse; }
@@ -60,12 +57,13 @@
     </header>
 
     <main class="container" style="padding-top: 20px;">
+        <!-- 잠금 섹션 -->
         <section id="vip-locked-section" style="display: none; padding: 40px 0;">
             <h1 id="txt-vip-lock-title" style="text-align:center; color: #fbbf24; font-size: 2rem;">⭐ VIP Premium Member</h1>
             <div class="lock-card">
                 <div style="font-size: 50px; margin-bottom: 15px;">🔒</div>
                 <h3 id="txt-vip-lock-sub">VIP 전용 분석 데이터</h3>
-                <p id="txt-vip-lock-desc" style="color: #64748b; margin-bottom: 25px;">승률 85% 이상의 최상위 픽과 AI 조합을 확인하세요.</p>
+                <p id="txt-vip-lock-desc" style="color: #64748b; margin-bottom: 25px;">승률 80% 이상의 최상위 픽과 AI 조합을 확인하세요.</p>
 
                 <div id="kr-only-payment" style="display: none;">
                     <div class="kr-payment-box">
@@ -83,7 +81,7 @@
                 </div>
 
                 <a href="https://kongkong79.gumroad.com/l/ai-sports-vip" target="_blank" id="btn-subscribe" class="btn-subscribe">
-                   구독하고 코드 받기 ($9.99)
+                    구독하고 코드 받기 ($9.99)
                 </a>
 
                 <div style="border-top: 1px dashed #ccc; padding-top: 20px; margin-top: 10px;">
@@ -94,12 +92,13 @@
             </div>
         </section>
 
+        <!-- 해제 섹션 -->
         <section id="vip-unlocked-section" style="display: none;">
             <h1 id="txt-vip-welcome" style="color: #2563eb; text-align:center; margin-bottom: 30px;">✅ VIP Member Zone</h1>
             <div id="vip-combo-display"></div>
             <div class="summary-card">
                 <div class="summary-header">
-                    <span id="txt-list-title">🔥 VIP High Probability Picks (85%+)</span>
+                    <span id="txt-list-title">🔥 VIP High Probability Picks (80%+)</span>
                     <button style="background:white; color:#2563eb; border:none; padding:6px 12px; border-radius:6px; font-weight:bold; cursor:pointer; font-size: 0.8rem;" onclick="downloadExcel()" id="btn-download">📥 Download Excel</button>
                 </div>
                 <table class="summary-table">
@@ -117,10 +116,10 @@
         ko: {
             home: "홈", vip: "VIP",
             vipLockTitle: "⭐ VIP 프리미엄 회원", vipLockSub: "VIP 전용 분석 데이터",
-            vipLockDesc: "승률 85% 이상의 최상위 픽과 AI 조합을 확인하세요.",
+            vipLockDesc: "승률 80% 이상의 최상위 픽과 AI 조합을 확인하세요.",
             subscribeBtn: "해외 카드 결제 ($9.99)",
             alreadyCode: "이미 코드가 있으신가요?", verifyBtn: "인증하기",
-            vipWelcome: "✅ VIP 멤버 전용 구역", listTitle: "🔥 VIP 고확률 추천 (85%+)",
+            vipWelcome: "✅ VIP 멤버 전용 구역", listTitle: "🔥 VIP 고확률 추천 (80%+)",
             comboTitle: "오늘의 AI VIP 추천 조합", totalOdds: "합산 배당률",
             download: "📥 엑셀 다운로드", sample: "표본", 
             homeWin: "홈승", draw: "무승부", awayWin: "원정승"
@@ -128,10 +127,10 @@
         en: {
             home: "Home", vip: "VIP",
             vipLockTitle: "⭐ VIP Premium Member", vipLockSub: "VIP Exclusive Analysis",
-            vipLockDesc: "Access our highest probability picks (85%+) and AI combos.",
+            vipLockDesc: "Access our highest probability picks (80%+) and AI combos.",
             subscribeBtn: "Subscribe Now ($9.99)",
             alreadyCode: "Already have a code?", verifyBtn: "Verify",
-            vipWelcome: "✅ VIP Member Zone", listTitle: "🔥 VIP High Odds Picks (85%+)",
+            vipWelcome: "✅ VIP Member Zone", listTitle: "🔥 VIP High Odds Picks (80%+)",
             comboTitle: "Today's AI VIP Combo", totalOdds: "Total Odds",
             download: "📥 Download Excel", sample: "Sample", 
             homeWin: "Home Win", draw: "Draw", awayWin: "Away Win"
@@ -140,6 +139,21 @@
 
     let currentLang = localStorage.getItem('lang') || 'ko';
     const VIP_CODE = "FEB888";
+
+    // 시간 보정 함수 (KST 변환)
+    function formatTimeByLang(timeStr, lang) {
+        if (!timeStr || timeStr === 'TBD') return 'TBD';
+        try {
+            const parts = timeStr.split(':');
+            let hours = parseInt(parts[0]);
+            let minutes = parts[1];
+            if (lang === 'ko') {
+                hours = (hours + 9) % 24;
+                return `${hours.toString().padStart(2, '0')}:${minutes} (KST)`;
+            }
+            return `${timeStr} (UTC)`;
+        } catch (e) { return timeStr; }
+    }
 
     function changeLang(lang) {
         currentLang = lang;
@@ -162,11 +176,8 @@
             document.getElementById('btn-verify').innerText = t.verifyBtn;
         }
 
-        // 한국어일 때만 무통장 입금 섹션 노출
         const krSection = document.getElementById('kr-only-payment');
-        if(krSection) {
-            krSection.style.display = currentLang === 'ko' ? 'block' : 'none';
-        }
+        if(krSection) krSection.style.display = currentLang === 'ko' ? 'block' : 'none';
         
         if(document.getElementById('txt-vip-welcome')) document.getElementById('txt-vip-welcome').innerText = t.vipWelcome;
         if(document.getElementById('txt-list-title')) document.getElementById('txt-list-title').innerText = t.listTitle;
@@ -205,8 +216,10 @@
             const workbook = XLSX.read(new Uint8Array(arrayBuffer), { type: 'array' });
             const jsonData = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
 
-            const vipMatches = jsonData.filter(row => (parseFloat(row['예상확률']) || 0) >= 85);
+            // ★ 80% 기준으로 필터링 (현재 3경기 반영)
+            const vipMatches = jsonData.filter(row => (parseFloat(row['예상확률']) || 0) >= 80);
             
+            // 조합 카드 생성
             if (vipMatches.length >= 2) {
                 const m1 = vipMatches[0]; const m2 = vipMatches[1];
                 const totalOdds = ( (parseFloat(m1['홈승배당']) || 1) * (parseFloat(m2['홈승배당']) || 1) ).toFixed(2);
@@ -229,6 +242,8 @@
                             ${t.totalOdds}: <span style="font-size:1.6rem; color:#facc15; margin-left:10px;">${totalOdds}x</span>
                         </div>
                     </div>`;
+            } else {
+                comboDiv.innerHTML = ""; // 경기가 2개 미만이면 조합 노출 안함
             }
 
             let html = '';
@@ -236,7 +251,7 @@
                 html += `
                     <tr>
                         <td style="text-align:left !important; padding-left: 20px;">
-                            <small style="color:gray; font-size:0.7rem; display:block; margin-bottom:3px;">${row['시간'] || ''}</small>
+                            <small style="color:gray; font-size:0.7rem; display:block; margin-bottom:3px;">${formatTimeByLang(row['시간'], currentLang)}</small>
                             <div style="font-weight:bold;">${row['홈팀']} vs ${row['원정팀']}</div>
                         </td>
                         <td style="color:#2563eb; font-weight:bold; font-size:0.95rem;">${translatePick(row['AI추천'])}</td>
@@ -244,8 +259,11 @@
                         <td><small style="color:#999;">${t.sample}: ${row['총경기수']}</small></td>
                     </tr>`;
             });
-            tbody.innerHTML = html || '<tr><td colspan="4">No VIP data available.</td></tr>';
-        } catch (e) { console.error(e); }
+            tbody.innerHTML = html || '<tr><td colspan="4" style="padding:20px;">No VIP data (80%+) available at the moment.</td></tr>';
+        } catch (e) { 
+            console.error(e); 
+            tbody.innerHTML = '<tr><td colspan="4">Error loading VIP data.</td></tr>';
+        }
     }
 
     function verifyVipCode() {
