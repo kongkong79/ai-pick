@@ -11,29 +11,19 @@
         [data-theme='dark'] { --header-border: #334155; --card-bg: #1e293b; --card-text: #f1f5f9; --text-muted: #94a3b8; }
         body { font-family: -apple-system, sans-serif; margin: 0; background: var(--card-bg); color: inherit; }
         .container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
-        
         header { border-bottom: 1px solid var(--header-border); padding: 15px 0; background: var(--card-bg); position: sticky; top: 0; z-index: 100; }
         .header-inner { display: flex; justify-content: space-between; align-items: center; }
         .nav-menu { display: flex; gap: 20px; font-weight: bold; }
         .nav-link { text-decoration: none; color: #64748b; font-size: 0.95rem; }
         .nav-link.active { color: var(--primary-blue); }
-
-        .notice-banner { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; padding: 15px; border-radius: 10px; margin-bottom: 20px; font-weight: bold; text-align: center; font-size: 0.9rem; }
-        [data-theme='dark'] .notice-banner { background: #451a03; border-color: #78350f; color: #fde68a; }
-
+        .notice-banner { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; padding: 15px; border-radius: 10px; margin-bottom: 20px; font-weight: bold; text-align: center; }
         .lock-card { max-width: 500px; margin: 40px auto; border: 2px solid #fbbf24; padding: 30px; border-radius: 15px; background: var(--card-bg); text-align: center; }
-        .btn-subscribe { display: block; background: #fbbf24; color: #000; padding: 15px; border-radius: 12px; font-weight: 800; text-decoration: none; margin: 15px 0; transition: transform 0.2s; }
-        
-        .kr-payment-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin-bottom: 25px; text-align: left; }
-        [data-theme='dark'] .kr-payment-box { background: #0f172a; border-color: #334155; }
-
+        .btn-subscribe { display: block; background: #fbbf24; color: #000; padding: 15px; border-radius: 12px; font-weight: 800; text-decoration: none; margin: 15px 0; }
         .summary-card { margin: 20px auto; background: var(--card-bg); border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); overflow: hidden; border: 1px solid var(--header-border); }
-        .summary-header { background: var(--primary-blue); color: white; padding: 15px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+        .summary-header { background: var(--primary-blue); color: white; padding: 15px; font-weight: bold; display: flex; justify-content: space-between; }
         .summary-table { width: 100%; border-collapse: collapse; }
         .summary-table td { padding: 15px 10px; text-align: center !important; border-bottom: 1px solid var(--header-border); }
-        
-        .vip-combo-card { background: linear-gradient(135deg, #1e3a8a, #2563eb); color: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(37,99,235,0.3); border: 2px solid #facc15; margin-bottom: 30px; width: 100%; box-sizing: border-box; }
-        .lang-btn { cursor: pointer; border: none; background: none; font-size: 0.85rem; padding: 5px; }
+        .vip-combo-card { background: linear-gradient(135deg, #1e3a8a, #2563eb); color: white; padding: 25px; border-radius: 15px; border: 2px solid #facc15; margin-bottom: 30px; }
     </style>
 </head>
 <body>
@@ -47,168 +37,125 @@
                 <a href="index.html" class="nav-link" id="nav-home">Home</a>
                 <a href="vip.html" class="nav-link active" id="nav-vip">VIP</a>
             </nav>
-            <div style="display:flex; align-items:center; gap:10px;">
-                <div class="language-switcher">
-                    <button class="lang-btn" data-lang="ko" onclick="changeLang('ko')">KO</button>
-                    <button class="lang-btn" data-lang="en" onclick="changeLang('en')">EN</button>
-                </div>
-                <button id="theme-toggle" style="background:none; border:none; cursor:pointer;">☀️</button>
-            </div>
         </div>
     </header>
 
     <main class="container" style="padding-top: 20px;">
-        <section id="vip-locked-section" style="display: none; padding: 40px 0;">
-            <h1 id="txt-vip-lock-title" style="text-align:center; color: #fbbf24; font-size: 2rem;">⭐ VIP Premium Member</h1>
+        <section id="vip-locked-section" style="display: none;">
             <div class="lock-card">
-                <div style="font-size: 50px; margin-bottom: 15px;">🔒</div>
-                <h3 id="txt-vip-lock-sub">VIP 전용 분석 데이터</h3>
-                <p id="txt-vip-lock-desc" style="color: #64748b; margin-bottom: 25px;">배당 가치가 높은 AI 엄선 VIP 픽을 확인하세요.</p>
-                <div id="kr-only-payment" style="display: none;">
-                    <div class="kr-payment-box">
-                        <p style="margin: 0 0 10px 0; font-weight: bold; text-align: center; font-size: 1rem;">🇰🇷 한국 사용자 무통장 입금</p>
-                        <div style="font-size: 0.9rem; line-height: 1.7;">
-                            • <b>입금 금액:</b> 11,000원 (VAT 포함)<br>
-                            • <b>계좌 번호:</b> 카카오뱅크 3333-02-1632124 (진겸조)<br>
-                            • <b>참고:</b> 입금 확인 후 카톡 문의 시 인증 코드를 발급해 드립니다.
-                        </div>
-                    </div>
-                </div>
-                <a href="https://kongkong79.gumroad.com/l/ai-sports-vip" target="_blank" id="btn-subscribe" class="btn-subscribe">구독하기 ($9.99)</a>
-                <div style="border-top: 1px dashed #ccc; padding-top: 20px; margin-top: 10px;">
-                    <p id="txt-already-code" style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 10px;">이미 코드가 있으신가요?</p>
-                    <input type="text" id="vip-code-input" placeholder="Code" style="padding: 12px; width: 60%; border-radius: 8px; border: 1px solid #ccc; margin-bottom: 10px; background: var(--card-bg); color: inherit;">
-                    <button onclick="verifyVipCode()" id="btn-verify" style="padding: 12px 20px; background: #2563eb; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; width: 65%;">Verify</button>
-                </div>
+                <h2>🔒 VIP 전용 구역</h2>
+                <p>구독 후 인증 코드를 입력해주세요.</p>
+                <input type="text" id="vip-code-input" placeholder="Code">
+                <button onclick="verifyVipCode()">인증하기</button>
             </div>
         </section>
 
         <section id="vip-unlocked-section" style="display: none;">
             <div id="notice-area"></div> 
-            <h1 id="txt-vip-welcome" style="color: #2563eb; text-align:center; margin-bottom: 30px;">✅ VIP Member Zone</h1>
+            <h1 style="color: #2563eb; text-align:center;">✅ VIP Member Zone</h1>
             <div id="vip-combo-display"></div>
 
             <div class="summary-card">
                 <div class="summary-header">
-                    <span id="txt-list-title">🔥 오늘의 AI 엄선 VIP 추천픽</span>
-                    <button style="background:white; color:#2563eb; border:none; padding:6px 12px; border-radius:6px; font-weight:bold; cursor:pointer; font-size: 0.8rem;" onclick="downloadExcel()" id="btn-download">📥 Download Excel</button>
+                    <span>🔥 오늘의 VIP 추천픽 (가치 베팅)</span>
                 </div>
                 <table class="summary-table">
-                    <tbody id="vip-data-body"></tbody>
+                    <tbody id="vip-data-body">
+                        <tr><td colspan="4" style="padding:50px;">데이터를 불러오는 중...</td></tr>
+                    </tbody>
                 </table>
             </div>
-            <div style="text-align: center; margin: 30px 0;">
-                <button onclick="logoutVip()" style="color: gray; background: none; border: none; text-decoration: underline; cursor: pointer; font-size: 0.9rem;">Logout</button>
-            </div>
+            <div style="text-align: center;"><button onclick="logoutVip()">Logout</button></div>
         </section>
     </main>
 
 <script>
-    const translations = {
-        ko: {
-            home: "홈", vip: "VIP",
-            vipLockTitle: "⭐ VIP 프리미엄 회원", vipLockSub: "VIP 전용 분석 데이터",
-            vipLockDesc: "배당 가치가 높은 AI 엄선 VIP 픽을 확인하세요.",
-            subscribeBtn: "해외 카드 결제 ($9.99)",
-            alreadyCode: "이미 코드가 있으신가요?", verifyBtn: "인증하기",
-            noVip: "⚠️ 오늘 조건에 맞는 VIP 경기가 없습니다. 일반 고확률 픽을 참고하세요.",
-            hcapInfo: "(0 핸디캡 추천)",
-            vipWelcome: "✅ VIP 멤버 전용 구역", listTitle: "🔥 오늘의 AI 엄선 VIP 추천픽",
-            comboTitle: "오늘의 AI VIP 추천 조합", totalOdds: "합산 배당률",
-            download: "📥 엑셀 다운로드", sample: "표본", 
-            homeWin: "홈승", draw: "무승부", awayWin: "원정승"
-        },
-        en: {
-            home: "Home", vip: "VIP",
-            vipLockTitle: "⭐ VIP Premium Member", vipLockSub: "VIP Exclusive Analysis",
-            vipLockDesc: "Access our AI-selected high value VIP picks.",
-            subscribeBtn: "Subscribe Now ($9.99)",
-            alreadyCode: "Already have a code?", verifyBtn: "Verify",
-            noVip: "⚠️ No VIP matches meet the criteria today.",
-            hcapInfo: "(0 Handicap Recommended)",
-            vipWelcome: "✅ VIP Member Zone", listTitle: "🔥 Today's AI Selected VIP Picks",
-            comboTitle: "Today's AI VIP Combo", totalOdds: "Total Odds",
-            download: "📥 Download Excel", sample: "Sample", 
-            homeWin: "Home Win", draw: "Draw", awayWin: "Away Win"
-        }
-    };
-
-    let currentLang = localStorage.getItem('lang') || 'ko';
     const VIP_CODE = "FEB888";
-
-    function changeLang(lang) {
-        currentLang = lang;
-        localStorage.setItem('lang', lang);
-        updateUI();
-        if (localStorage.getItem('isVipUser') === 'true') initVipPage();
-    }
-
-    function updateUI() {
-        const t = translations[currentLang];
-        document.getElementById('nav-home').innerText = t.home;
-        document.getElementById('nav-vip').innerText = t.vip;
-        if(document.getElementById('txt-vip-lock-title')) {
-            document.getElementById('txt-vip-lock-title').innerText = t.vipLockTitle;
-            document.getElementById('txt-vip-lock-sub').innerText = t.vipLockSub;
-            document.getElementById('txt-vip-lock-desc').innerText = t.vipLockDesc;
-            document.getElementById('btn-subscribe').innerText = t.subscribeBtn;
-            document.getElementById('txt-already-code').innerText = t.alreadyCode;
-            document.getElementById('btn-verify').innerText = t.verifyBtn;
-        }
-        if(document.getElementById('txt-vip-welcome')) document.getElementById('txt-vip-welcome').innerText = t.vipWelcome;
-        if(document.getElementById('txt-list-title')) document.getElementById('txt-list-title').innerText = t.listTitle;
-        if(document.getElementById('btn-download')) document.getElementById('btn-download').innerText = t.download;
-
-        const krSection = document.getElementById('kr-only-payment');
-        if(krSection) krSection.style.display = currentLang === 'ko' ? 'block' : 'none';
-    }
-
-    function translatePick(pickText) {
-        const t = translations[currentLang];
-        if (pickText.includes("홈승")) return t.homeWin;
-        if (pickText.includes("무승부")) return t.draw;
-        if (pickText.includes("원정승")) return t.awayWin;
-        return pickText;
-    }
 
     async function initVipPage() {
         const tbody = document.getElementById('vip-data-body');
         const comboDiv = document.getElementById('vip-combo-display');
         const noticeArea = document.getElementById('notice-area');
-        const t = translations[currentLang];
 
         try {
             const response = await fetch('today_ai_all_picks.xlsx?v=' + Date.now());
+            if (!response.ok) throw new Error("파일을 찾을 수 없습니다.");
+            
             const arrayBuffer = await response.arrayBuffer();
             const workbook = XLSX.read(new Uint8Array(arrayBuffer), { type: 'array' });
             const jsonData = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
 
-            // [핵심 로직] 1. 홈승 추천 2. Forebet 무승부 예측 3. 홈정배
+            // [조건 검사 로직]
             const vipMatches = jsonData.filter(row => {
-                const isHomePick = row['AI추천'] === '홈승';
-                const isHomeFavorite = row['정배위치'] === '홈정배';
+                const isHomePick = String(row['AI추천']).includes('홈승');
+                const isHomeFavorite = String(row['정배위치']).includes('홈정배');
                 
-                const forebetScore = row['Forebet_예상점수'] || "";
-                const scores = forebetScore.split(':').map(s => parseInt(s.trim()));
-                const isForebetDraw = scores.length === 2 && scores[0] === scores[1];
+                // Forebet 점수 무승부 여부 (예: "1 : 1", "0:0", "2-2")
+                const forebetScore = String(row['Forebet_예상점수'] || "");
+                const scoreParts = forebetScore.replace(/\s/g, '').split(/[:\-]/);
+                const isForebetDraw = scoreParts.length === 2 && scoreParts[0] === scoreParts[1] && scoreParts[0] !== "";
 
                 return isHomePick && isHomeFavorite && isForebetDraw;
             });
 
-            if (vipMatches.length === 0) {
-                noticeArea.innerHTML = `<div class="notice-banner">${t.noVip}</div>`;
-                comboDiv.innerHTML = ""; 
-            } else {
-                noticeArea.innerHTML = "";
-                if (vipMatches.length >= 2) {
-                    const m1 = vipMatches[0]; const m2 = vipMatches[1];
-                    const odds1 = parseFloat(m1['홈승배당']) || 1;
-                    const odds2 = parseFloat(m2['홈승배당']) || 1;
-                    const totalOdds = (odds1 * odds2).toFixed(2);
+            // VIP 경기가 없을 경우 대안: AI 확률 80% 이상 중 홈정배인 경기 보여주기
+            const displayMatches = vipMatches.length > 0 ? vipMatches : 
+                jsonData.filter(row => (parseFloat(row['예상확률']) >= 80 && String(row['정배위치']).includes('홈정배'))).slice(0, 5);
 
-                    comboDiv.innerHTML = `
-                        <div class="vip-combo-card">
-                            <div style="text-align:center; margin-bottom:15px;">
-                                <h2 style="margin:0; font-size:1.3rem;">${t.comboTitle}</h2>
-                                <p style="font-size:0.75rem; color:#fde68a; margin-top:5px;">[Forebet 무승부 예측 + AI 분석 홈승 조합]</p>
-                            </div>
+            if (vipMatches.length === 0) {
+                noticeArea.innerHTML = `<div class="notice-banner">⚠️ 오늘은 '무승부 예측/홈승' 조건의 경기가 없어 고확률 홈정배 경기로 대체 제공됩니다.</div>`;
+            }
+
+            // 조합 생성
+            if (displayMatches.length >= 2) {
+                const m1 = displayMatches[0]; const m2 = displayMatches[1];
+                const totalOdds = ((parseFloat(m1['홈승배당']) || 1) * (parseFloat(m2['홈승배당']) || 1)).toFixed(2);
+                comboDiv.innerHTML = `
+                    <div class="vip-combo-card">
+                        <h3 style="text-align:center;">오늘의 VIP 추천 조합</h3>
+                        <div style="display:flex; justify-content:space-around; text-align:center;">
+                            <div><b>${m1['홈팀']}</b><br>${m1['AI추천']} (${m1['홈승배당']})</div>
+                            <div><b>${m2['홈팀']}</b><br>${m2['AI추천']} (${m2['홈승배당']})</div>
+                        </div>
+                        <div style="text-align:center; margin-top:15px; font-size:1.2rem; border-top:1px solid #fff; padding-top:10px;">
+                            합산 배당률: <span style="color:#facc15;">${totalOdds}x</span>
+                        </div>
+                    </div>`;
+            }
+
+            // 리스트 출력
+            let html = '';
+            displayMatches.forEach(row => {
+                html += `<tr>
+                    <td style="text-align:left !important;"><b>${row['홈팀']}</b> vs ${row['원정팀']}</td>
+                    <td style="color:#2563eb; font-weight:bold;">${row['AI추천']}</td>
+                    <td style="color:#059669;">${parseFloat(row['예상확률']).toFixed(1)}%</td>
+                    <td><small>Forebet: ${row['Forebet_예상점수']}</small></td>
+                </tr>`;
+            });
+            tbody.innerHTML = html || '<tr><td>데이터가 없습니다.</td></tr>';
+
+        } catch (e) {
+            tbody.innerHTML = `<tr><td colspan="4">에러: ${e.message}</td></tr>`;
+        }
+    }
+
+    function verifyVipCode() {
+        if (document.getElementById('vip-code-input').value.trim() === VIP_CODE) {
+            localStorage.setItem('isVipUser', 'true');
+            location.reload();
+        } else { alert("코드가 틀렸습니다."); }
+    }
+
+    function checkStatus() {
+        const isVip = localStorage.getItem('isVipUser') === 'true';
+        document.getElementById('vip-locked-section').style.display = isVip ? 'none' : 'block';
+        document.getElementById('vip-unlocked-section').style.display = isVip ? 'block' : 'none';
+        if (isVip) initVipPage();
+    }
+
+    function logoutVip() { localStorage.removeItem('isVipUser'); location.reload(); }
+    checkStatus();
+</script>
+</body>
+</html>
