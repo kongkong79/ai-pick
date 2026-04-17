@@ -18,7 +18,6 @@
         .nav-link { text-decoration: none; color: #64748b; font-size: 0.95rem; }
         .nav-link.active { color: var(--primary-blue); }
 
-        /* 공지사항 배너 스타일 */
         .notice-banner { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; padding: 15px; border-radius: 10px; margin-bottom: 20px; font-weight: bold; text-align: center; font-size: 0.9rem; }
         [data-theme='dark'] .notice-banner { background: #451a03; border-color: #78350f; color: #fde68a; }
 
@@ -59,13 +58,12 @@
     </header>
 
     <main class="container" style="padding-top: 20px;">
-        <!-- 잠금 섹션 -->
         <section id="vip-locked-section" style="display: none; padding: 40px 0;">
             <h1 id="txt-vip-lock-title" style="text-align:center; color: #fbbf24; font-size: 2rem;">⭐ VIP Premium Member</h1>
             <div class="lock-card">
                 <div style="font-size: 50px; margin-bottom: 15px;">🔒</div>
                 <h3 id="txt-vip-lock-sub">VIP 전용 분석 데이터</h3>
-                <p id="txt-vip-lock-desc" style="color: #64748b; margin-bottom: 25px;">승률 80% 이상의 최상위 픽과 AI 조합을 확인하세요.</p>
+                <p id="txt-vip-lock-desc" style="color: #64748b; margin-bottom: 25px;">배당 가치가 높은 AI 엄선 VIP 픽을 확인하세요.</p>
                 <div id="kr-only-payment" style="display: none;">
                     <div class="kr-payment-box">
                         <p style="margin: 0 0 10px 0; font-weight: bold; text-align: center; font-size: 1rem;">🇰🇷 한국 사용자 무통장 입금</p>
@@ -85,7 +83,6 @@
             </div>
         </section>
 
-        <!-- 해제 섹션 -->
         <section id="vip-unlocked-section" style="display: none;">
             <div id="notice-area"></div> 
             <h1 id="txt-vip-welcome" style="color: #2563eb; text-align:center; margin-bottom: 30px;">✅ VIP Member Zone</h1>
@@ -93,7 +90,7 @@
 
             <div class="summary-card">
                 <div class="summary-header">
-                    <span id="txt-list-title">🔥 VIP High Probability Picks (80%+)</span>
+                    <span id="txt-list-title">🔥 오늘의 AI 엄선 VIP 추천픽</span>
                     <button style="background:white; color:#2563eb; border:none; padding:6px 12px; border-radius:6px; font-weight:bold; cursor:pointer; font-size: 0.8rem;" onclick="downloadExcel()" id="btn-download">📥 Download Excel</button>
                 </div>
                 <table class="summary-table">
@@ -111,30 +108,28 @@
         ko: {
             home: "홈", vip: "VIP",
             vipLockTitle: "⭐ VIP 프리미엄 회원", vipLockSub: "VIP 전용 분석 데이터",
-            vipLockDesc: "승률 80% 이상의 최상위 픽과 AI 조합을 확인하세요.",
+            vipLockDesc: "배당 가치가 높은 AI 엄선 VIP 픽을 확인하세요.",
             subscribeBtn: "해외 카드 결제 ($9.99)",
             alreadyCode: "이미 코드가 있으신가요?", verifyBtn: "인증하기",
-            no85: "⚠️ 금일 분석 결과 85% 이상 적중 예상픽이 없어 80% 이상의 고확률 픽으로 대체 제공됩니다.",
+            noVip: "⚠️ 오늘 조건에 맞는 VIP 경기가 없습니다. 일반 고확률 픽을 참고하세요.",
             hcapInfo: "(0 핸디캡 추천)",
-            vipWelcome: "✅ VIP 멤버 전용 구역", listTitle: "🔥 VIP 고확률 추천 (80%+)",
+            vipWelcome: "✅ VIP 멤버 전용 구역", listTitle: "🔥 오늘의 AI 엄선 VIP 추천픽",
             comboTitle: "오늘의 AI VIP 추천 조합", totalOdds: "합산 배당률",
             download: "📥 엑셀 다운로드", sample: "표본", 
-            homeWin: "홈승", draw: "무승부", awayWin: "원정승",
-            awayRisk: "⚠️ 원정승은 홈승 대비 경기 변수가 많아 리스크가 존재합니다."
+            homeWin: "홈승", draw: "무승부", awayWin: "원정승"
         },
         en: {
             home: "Home", vip: "VIP",
             vipLockTitle: "⭐ VIP Premium Member", vipLockSub: "VIP Exclusive Analysis",
-            vipLockDesc: "Access our highest probability picks (80%+) and AI combos.",
+            vipLockDesc: "Access our AI-selected high value VIP picks.",
             subscribeBtn: "Subscribe Now ($9.99)",
             alreadyCode: "Already have a code?", verifyBtn: "Verify",
-            no85: "⚠️ No picks over 85% today. Providing high-probability picks over 80% instead.",
+            noVip: "⚠️ No VIP matches meet the criteria today.",
             hcapInfo: "(0 Handicap Recommended)",
-            vipWelcome: "✅ VIP Member Zone", listTitle: "🔥 VIP High Odds Picks (80%+)",
+            vipWelcome: "✅ VIP Member Zone", listTitle: "🔥 Today's AI Selected VIP Picks",
             comboTitle: "Today's AI VIP Combo", totalOdds: "Total Odds",
             download: "📥 Download Excel", sample: "Sample", 
-            homeWin: "Home Win", draw: "Draw", awayWin: "Away Win",
-            awayRisk: "⚠️ Away wins carry more variables and risk than home wins."
+            homeWin: "Home Win", draw: "Draw", awayWin: "Away Win"
         }
     };
 
@@ -168,19 +163,12 @@
         if(krSection) krSection.style.display = currentLang === 'ko' ? 'block' : 'none';
     }
 
-    // 추천 텍스트 번역 및 원정승 특수 문구 처리
     function translatePick(pickText) {
         const t = translations[currentLang];
-        let translated = pickText;
-        
-        if (pickText.includes("홈승")) translated = t.homeWin;
-        else if (pickText.includes("무승부")) translated = t.draw;
-        else if (pickText.includes("원정승")) translated = t.awayWin;
-
-        if (pickText.includes("원정승")) {
-            return `<span style="color:#ef4444;">${translated}</span><br><small style="font-size:0.7rem; color:#94a3b8;">${t.hcapInfo}</small>`;
-        }
-        return translated;
+        if (pickText.includes("홈승")) return t.homeWin;
+        if (pickText.includes("무승부")) return t.draw;
+        if (pickText.includes("원정승")) return t.awayWin;
+        return pickText;
     }
 
     async function initVipPage() {
@@ -195,99 +183,32 @@
             const workbook = XLSX.read(new Uint8Array(arrayBuffer), { type: 'array' });
             const jsonData = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
 
-            // 1. 85% 이상 경기 필터링 (조합용)
-            const vipMatches85 = jsonData.filter(row => (parseFloat(row['예상확률']) || 0) >= 85);
-            
-            // 85% 이상이 없으면 상단 안내문 노출
-            if (vipMatches85.length === 0) {
-                noticeArea.innerHTML = `<div class="notice-banner">${t.no85}</div>`;
+            // [핵심 로직] 1. 홈승 추천 2. Forebet 무승부 예측 3. 홈정배
+            const vipMatches = jsonData.filter(row => {
+                const isHomePick = row['AI추천'] === '홈승';
+                const isHomeFavorite = row['정배위치'] === '홈정배';
+                
+                const forebetScore = row['Forebet_예상점수'] || "";
+                const scores = forebetScore.split(':').map(s => parseInt(s.trim()));
+                const isForebetDraw = scores.length === 2 && scores[0] === scores[1];
+
+                return isHomePick && isHomeFavorite && isForebetDraw;
+            });
+
+            if (vipMatches.length === 0) {
+                noticeArea.innerHTML = `<div class="notice-banner">${t.noVip}</div>`;
                 comboDiv.innerHTML = ""; 
             } else {
                 noticeArea.innerHTML = "";
-                // 85% 이상이 2개 이상일 때만 조합 생성
-                if (vipMatches85.length >= 2) {
-                    const m1 = vipMatches85[0]; const m2 = vipMatches85[1];
-                    
-                    // [배당률 선택 로직] 추천이 원정승이면 원정승배당 선택
-                    const odds1 = m1['AI추천'].includes('원정승') ? parseFloat(m1['원정승배당']) : parseFloat(m1['홈승배당']);
-                    const odds2 = m2['AI추천'].includes('원정승') ? parseFloat(m2['원정승배당']) : parseFloat(m2['홈승배당']);
-                    
-                    const totalOdds = ( (odds1 || 1) * (odds2 || 1) ).toFixed(2);
+                if (vipMatches.length >= 2) {
+                    const m1 = vipMatches[0]; const m2 = vipMatches[1];
+                    const odds1 = parseFloat(m1['홈승배당']) || 1;
+                    const odds2 = parseFloat(m2['홈승배당']) || 1;
+                    const totalOdds = (odds1 * odds2).toFixed(2);
 
                     comboDiv.innerHTML = `
                         <div class="vip-combo-card">
                             <div style="text-align:center; margin-bottom:15px;">
                                 <h2 style="margin:0; font-size:1.3rem;">${t.comboTitle}</h2>
+                                <p style="font-size:0.75rem; color:#fde68a; margin-top:5px;">[Forebet 무승부 예측 + AI 분석 홈승 조합]</p>
                             </div>
-                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; text-align:center;">
-                                <div style="background:rgba(255,255,255,0.15); padding:15px; border-radius:12px;">
-                                    <div style="font-size:0.8rem; margin-bottom:5px;">${m1['홈팀']} vs ${m1['원정팀']}</div>
-                                    <div style="font-weight:bold; color:#facc15; font-size:1.1rem;">${translatePick(m1['AI추천'])}</div>
-                                </div>
-                                <div style="background:rgba(255,255,255,0.15); padding:15px; border-radius:12px;">
-                                    <div style="font-size:0.8rem; margin-bottom:5px;">${m2['홈팀']} vs ${m2['원정팀']}</div>
-                                    <div style="font-weight:bold; color:#facc15; font-size:1.1rem;">${translatePick(m2['AI추천'])}</div>
-                                </div>
-                            </div>
-                            <div style="text-align:center; margin-top:18px; font-weight:bold; border-top:1px solid rgba(255,255,255,0.2); padding-top:10px;">
-                                ${t.totalOdds}: <span style="font-size:1.6rem; color:#facc15; margin-left:10px;">${totalOdds}x</span>
-                            </div>
-                            <p style="font-size:0.75rem; text-align:center; margin-top:10px; opacity:0.9;">${t.awayRisk}</p>
-                        </div>`;
-                }
-            }
-
-            // 2. 하단 리스트는 80% 기준으로 노출
-            const vipMatches80 = jsonData.filter(row => (parseFloat(row['예상확률']) || 0) >= 80);
-            let html = '';
-            vipMatches80.forEach(row => {
-                html += `
-                    <tr>
-                        <td style="text-align:left !important; padding-left: 20px;">
-                            <small style="color:gray; font-size:0.7rem; display:block; margin-bottom:3px;">${row['시간'] || ''}</small>
-                            <div style="font-weight:bold;">${row['홈팀']} vs ${row['원정팀']}</div>
-                        </td>
-                        <td style="color:#2563eb; font-weight:bold; font-size:0.95rem;">${translatePick(row['AI추천'])}</td>
-                        <td style="color:#059669; font-weight:bold;">${parseFloat(row['예상확률']).toFixed(1)}%</td>
-                        <td><small style="color:#999;">${t.sample}: ${row['총경기수']}</small></td>
-                    </tr>`;
-            });
-            tbody.innerHTML = html || '<tr><td colspan="4" style="padding:20px;">No VIP data available.</td></tr>';
-        } catch (e) { 
-            console.error(e); 
-            tbody.innerHTML = '<tr><td colspan="4">Error loading data.</td></tr>';
-        }
-    }
-
-    function checkStatus() {
-        const isVip = localStorage.getItem('isVipUser') === 'true';
-        document.getElementById('vip-locked-section').style.display = isVip ? 'none' : 'block';
-        document.getElementById('vip-unlocked-section').style.display = isVip ? 'block' : 'none';
-        if (isVip) initVipPage();
-    }
-
-    function verifyVipCode() {
-        const input = document.getElementById('vip-code-input').value.trim();
-        if (input === VIP_CODE) {
-            localStorage.setItem('isVipUser', 'true');
-            location.reload();
-        } else { 
-            alert(currentLang === 'ko' ? "코드가 일치하지 않습니다." : "Invalid code."); 
-        }
-    }
-
-    function logoutVip() { localStorage.removeItem('isVipUser'); location.reload(); }
-    function downloadExcel() { window.location.href = 'today_ai_all_picks.xlsx'; }
-
-    document.getElementById('theme-toggle').onclick = () => {
-        const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-        document.documentElement.setAttribute('data-theme', theme);
-        localStorage.setItem('theme', theme);
-        document.getElementById('theme-toggle').innerText = theme === 'light' ? '☀️' : '🌙';
-    };
-
-    updateUI();
-    checkStatus();
-</script>
-</body>
-</html>
