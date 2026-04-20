@@ -31,7 +31,6 @@
         .time-badge { background: #f1f5f9; padding: 3px 8px; border-radius: 6px; font-size: 0.75rem; color: #2563eb; margin-right: 8px; font-weight: bold; border: 1px solid #e2e8f0; }
         [data-theme='dark'] .time-badge { background: #0f172a; color: #60a5fa; border-color: #334155; }
 
-        /* 잠금 및 결제 정보 카드 */
         .lock-card { max-width: 500px; margin: 40px auto; border: 2px solid #fbbf24; padding: 30px; border-radius: 15px; background: var(--card-bg); text-align: center; }
         .kr-payment-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin: 20px 0; text-align: left; }
         [data-theme='dark'] .kr-payment-box { background: #0f172a; border-color: #334155; }
@@ -69,8 +68,7 @@
                     <div style="font-size: 0.9rem; line-height: 1.7;">
                         • <b>입금 금액:</b> 11,000원 (VAT 포함)<br>
                         • <b>계좌 번호:</b> 카카오뱅크 3333-02-1632124 (진겸조)<br>
-                        • <b>참고:</b> 입금 확인 후 카톡 문의 시 인증 코드를 발급해 드립니다.
-                                      https://open.kakao.com/o/syMLKPli         
+                        • <b>참고:</b> 입금 확인 후 <a href="https://open.kakao.com/o/syMLKPli" target="_blank" style="color:#2563eb; font-weight:bold; text-decoration:underline;">카톡 문의</a> 시 인증 코드를 발급해 드립니다.
                     </div>
                 </div>
 
@@ -87,9 +85,7 @@
         <section id="vip-unlocked-section" style="display: none;">
             <div id="notice-area"></div> 
             <h1 style="color: #2563eb; text-align:center; margin-bottom: 30px;">✅ VIP Member Zone</h1>
-            
             <div id="vip-combo-display"></div>
-
             <div class="summary-card">
                 <div class="summary-header">
                     <span>🔥 오늘의 AI 엄선 VIP 추천픽 (한국 시간 기준)</span>
@@ -100,7 +96,6 @@
                     </tbody>
                 </table>
             </div>
-            
             <div style="text-align: center; margin: 30px 0;">
                 <button onclick="logoutVip()" style="color: gray; background: none; border: none; text-decoration: underline; cursor: pointer;">Logout</button>
             </div>
@@ -110,7 +105,6 @@
 <script>
     const VIP_CODE = "FEB888";
 
-    // 시간 변환 함수 (GMT/UTC -> KST +9시간)
     function convertToKST(timeStr) {
         if (!timeStr || !timeStr.includes(':')) return "--:--";
         try {
@@ -120,9 +114,7 @@
             let h = String(kstHours).padStart(2, '0');
             let m = String(minutes).padStart(2, '0');
             return `${h}:${m}`;
-        } catch (e) {
-            return timeStr;
-        }
+        } catch (e) { return timeStr; }
     }
 
     async function initVipPage() {
@@ -142,34 +134,26 @@
                 const isHomeFavorite = String(row['정배위치'] || "").includes('홈정배');
                 const forebetScore = String(row['Forebet_예상점수'] || "");
                 const scoreParts = forebetScore.replace(/\s/g, '').split(/[:\-]/);
-                const isForebetDraw = scoreParts.length === 2 && scoreParts[0] === scoreParts[1] && scoreParts[0] !== "";
-                return isHomePick && isHomeFavorite && isForebetDraw;
+                return isHomePick && isHomeFavorite && scoreParts.length === 2 && scoreParts[0] === scoreParts[1];
             });
 
             const displayMatches = vipMatches.length > 0 ? vipMatches : 
                 jsonData.filter(row => (parseFloat(row['예상확률']) >= 80)).slice(0, 15);
 
             if (vipMatches.length === 0) {
-                noticeArea.innerHTML = `<div class="notice-banner">⚠️ 조건에 맞는 VIP 경기가 없어 고확률 추천픽으로 대체됩니다. (시간은 한국 기준)</div>`;
+                noticeArea.innerHTML = `<div class="notice-banner">⚠️ 조건에 맞는 VIP 경기가 없어 고확률 추천픽으로 대체됩니다.</div>`;
             }
 
             if (displayMatches.length >= 2) {
                 const m1 = displayMatches[0]; const m2 = displayMatches[1];
                 const totalOdds = ((parseFloat(m1['홈승배당']) || 1) * (parseFloat(m2['홈승배당']) || 1)).toFixed(2);
-                
                 comboDiv.innerHTML = `
                     <div class="vip-combo-card">
                         <h3 style="text-align:center; margin-top:0;">VIP 추천 조합</h3>
                         <div style="display:flex; justify-content:space-around; text-align:center;">
-                            <div>
-                                <div style="font-size:0.75rem; opacity:0.9;">[${convertToKST(m1['시간'])}]</div>
-                                <b>${m1['홈팀']}</b><br><span style="color:#facc15;">${m1['AI추천']}</span>
-                            </div>
+                            <div>[${convertToKST(m1['시간'])}]<br><b>${m1['홈팀']}</b><br><span style="color:#facc15;">${m1['AI추천']}</span></div>
                             <div style="font-size:1.5rem; align-self:center;">×</div>
-                            <div>
-                                <div style="font-size:0.75rem; opacity:0.9;">[${convertToKST(m2['시간'])}]</div>
-                                <b>${m2['홈팀']}</b><br><span style="color:#facc15;">${m2['AI추천']}</span>
-                            </div>
+                            <div>[${convertToKST(m2['시간'])}]<br><b>${m2['홈팀']}</b><br><span style="color:#facc15;">${m2['AI추천']}</span></div>
                         </div>
                         <div style="text-align:center; margin-top:20px; font-weight:bold; border-top:1px solid rgba(255,255,255,0.2); padding-top:10px;">
                             합산 배당률: <span style="font-size:1.5rem; color:#facc15;">${totalOdds}x</span>
@@ -177,24 +161,16 @@
                     </div>`;
             }
 
-            let html = '';
-            displayMatches.forEach(row => {
-                const kstTime = convertToKST(row['시간']);
-                html += `
-                    <tr>
-                        <td style="text-align:left !important; padding-left: 20px;">
-                            <span class="time-badge">KST ${kstTime}</span>
-                            <span style="font-weight:bold;">${row['홈팀']} vs ${row['원정팀']}</span>
-                        </td>
-                        <td style="color:#2563eb; font-weight:bold;">${row['AI추천']}</td>
-                        <td style="color:#059669; font-weight:bold;">${parseFloat(row['예상확률'] || 0).toFixed(1)}%</td>
-                    </tr>`;
-            });
-            tbody.innerHTML = html || '<tr><td colspan="3">데이터가 없습니다.</td></tr>';
-
-        } catch (e) {
-            tbody.innerHTML = '<tr><td colspan="3">데이터 로드 실패</td></tr>';
-        }
+            tbody.innerHTML = displayMatches.map(row => `
+                <tr>
+                    <td style="text-align:left !important; padding-left: 20px;">
+                        <span class="time-badge">KST ${convertToKST(row['시간'])}</span>
+                        <span style="font-weight:bold;">${row['홈팀']} vs ${row['원정팀']}</span>
+                    </td>
+                    <td style="color:#2563eb; font-weight:bold;">${row['AI추천']}</td>
+                    <td style="color:#059669; font-weight:bold;">${parseFloat(row['예상확률'] || 0).toFixed(1)}%</td>
+                </tr>`).join('');
+        } catch (e) { tbody.innerHTML = '<tr><td colspan="3">데이터 로드 실패</td></tr>'; }
     }
 
     function verifyVipCode() {
