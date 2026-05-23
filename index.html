@@ -302,9 +302,9 @@ async function render() {
             .map(([g,c]) => `<div class="s-badge">${GRADE_LABELS[g]||g}: ${c}경기</div>`)
             .join('');
 
-        // 카드 렌더링
+        // 카드 렌더링 (데이터부족 제외하고 전체 표시)
         wrap.innerHTML = data
-            .filter(r => (parseFloat(r['예상확률'])||0) >= 45)
+            .filter(r => r['신호등급'] !== '❓')
             .map(r => renderCard(r, isVip))
             .join('');
 
