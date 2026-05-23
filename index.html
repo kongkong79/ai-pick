@@ -150,26 +150,25 @@ const GRADE_ORDER  = {'★★★':0,'★★':1,'★':2,'⚡':3,'❓':4};
 const GRADE_COLORS = {'★★★':'#f59e0b','★★':'#2563eb','★':'#10b981','⚡':'#ef4444','❓':'#94a3b8'};
 const GRADE_LABELS = {'★★★':'🔥 강추','★★':'✅ 유망','★':'👍 참고','⚡':'⚡ 반전주의','❓':'❓ 데이터부족'};
 
-// ── 시간 변환: 문자열 "HH:MM" 또는 엑셀 소수 모두 처리 ──────────
+// ── 시간 표시: forebet은 현지 로컬 시간 그대로 표시 (+9 변환 불필요) ──
 function kst(t) {
     if (!t || t === '-' || t === 'None' || t === 'nan') return '--:--';
-    // 엑셀 소수 형태 (예: 0.5 = 12:00 UTC)
+    // 엑셀 소수 형태 (예: 0.791 = 19:00)
     const num = parseFloat(t);
     if (!isNaN(num) && !String(t).includes(':')) {
         const totalMin = Math.round(num * 24 * 60);
         const h = Math.floor(totalMin / 60) % 24;
         const m = totalMin % 60;
-        const kstH = (h + 9) % 24;
-        return String(kstH).padStart(2,'0') + ':' + String(m).padStart(2,'0');
+        return String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
     }
-    // 문자열 "HH:MM" 형태
+    // 문자열 "HH:MM" 형태 → 그대로 반환
     try {
         const parts = String(t).split(':');
         if (parts.length < 2) return '--:--';
         const h = parseInt(parts[0]);
         const m = parseInt(parts[1]);
         if (isNaN(h) || isNaN(m)) return '--:--';
-        return String((h+9)%24).padStart(2,'0') + ':' + String(m).padStart(2,'0');
+        return String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
     } catch(e) { return '--:--'; }
 }
 
