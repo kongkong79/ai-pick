@@ -279,7 +279,74 @@ function renderCard(row, isVip) {
     </div>`;
 }
 
-async function render() {
+async 
+function renderOver25Card(row, isVip) {
+    const grade = row['신호등급'] || '❓';
+    const gc    = GRADE_COLORS[grade] || '#94a3b8';
+    const gl    = GRADE_LABELS[grade] || grade;
+    const pick  = row['AI추천'] || '';
+    const pickDisplay = pick === '홈승' ? row['홈팀'] : pick === '원정승' ? row['원정팀'] : pick === '무승부' ? 'DRAW' : pick;
+    const over25 = parseFloat(row['오버25예측']||0);
+    const over35 = parseFloat(row['오버35예측']||0);
+    const over25real = row['오버25구간실적'] || '-';
+
+    return `
+    <div class="pick-card" style="border-left:5px solid #0ea5e9;">
+      <div class="card-top">
+        <div class="grade-badge" style="background:#0ea5e9;">⚡ 오버2.5 ${over25.toFixed(1)}%</div>
+        <div class="card-meta">KST ${kst(row['시간'])} &nbsp;|&nbsp; ${row['리그']||row['BT_리그']||'-'}</div>
+      </div>
+      <div class="teams">
+        <span class="team">${row['홈팀']||''}</span>
+        <span class="vs">vs</span>
+        <span class="team away">${row['원정팀']||''}</span>
+      </div>
+      ${pickDisplay ? `<div class="pick-badge" style="background:${gc};">📌 추천픽: ${pickDisplay}</div>` : ''}
+
+      <div class="sections-grid">
+        <div class="section">
+          <div class="section-title">📊 Forebet 예측</div>
+          <div class="prob-row">
+            <div class="prob-cell"><div class="prob-label">홈승</div><div class="prob-val" style="color:#2563eb;">${sv(row['FB_홈승확률'])}%</div></div>
+            <div class="prob-cell"><div class="prob-label">무승부</div><div class="prob-val" style="color:#94a3b8;">${sv(row['FB_무승부확률'])}%</div></div>
+            <div class="prob-cell"><div class="prob-label">원정승</div><div class="prob-val" style="color:#ef4444;">${sv(row['FB_원정승확률'])}%</div></div>
+          </div>
+          <div class="sub-info">예상스코어: <b>${row['FB_예상점수']||'-'}</b> &nbsp;|&nbsp; 평균득점: <b>${row['FB_평균득점']||'-'}</b></div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">💰 배당률</div>
+          <div class="prob-row">
+            <div class="prob-cell"><div class="prob-label">홈승</div><div class="prob-val" style="color:#f59e0b;">${sv(row['홈승배당'])}</div></div>
+            <div class="prob-cell"><div class="prob-label">무승부</div><div class="prob-val" style="color:#f59e0b;">${sv(row['무승부배당'])}</div></div>
+            <div class="prob-cell"><div class="prob-label">원정승</div><div class="prob-val" style="color:#f59e0b;">${sv(row['원정승배당'])}</div></div>
+          </div>
+        </div>
+
+        <div class="section" style="grid-column:1/-1; background:#eff6ff; border:1px solid #bfdbfe;">
+          <div class="section-title" style="color:#1d4ed8;">⚡ 오버언더 상세</div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <div class="prob-cell" style="background:white; min-width:100px;">
+              <div class="prob-label">오버2.5 예측</div>
+              <div class="prob-val" style="color:#0ea5e9; font-size:1.3rem;">${over25.toFixed(1)}%</div>
+            </div>
+            <div class="prob-cell" style="background:white; min-width:100px;">
+              <div class="prob-label">오버2.5 구간실적</div>
+              <div class="prob-val" style="color:#0ea5e9;">${sv(over25real)}%</div>
+            </div>
+            <div class="prob-cell" style="background:white; min-width:100px;">
+              <div class="prob-label">오버3.5 예측</div>
+              <div class="prob-val" style="color:#6366f1;">${over35.toFixed(1)}%</div>
+            </div>
+          </div>
+        </div>
+
+        ${simSection(row, isVip)}
+      </div>
+    </div>`;
+}
+
+function render() {
     const wrap   = document.getElementById('cards-wrap');
     const loader = document.getElementById('loading');
     const badges = document.getElementById('summary-badges');
@@ -302,11 +369,19 @@ async function render() {
             .map(([g,c]) => `<div class="s-badge">${GRADE_LABELS[g]||g}: ${c}경기</div>`)
             .join('');
 
-        // 카드 렌더링 (데이터부족 제외하고 전체 표시)
-        wrap.innerHTML = data
-            .filter(r => r['신호등급'] !== '❓')
-            .map(r => renderCard(r, isVip))
-            .join('');
+        // 카드 렌더링: 전체 표시 (❓ 포함)
+        // 오버2.5 50%+ 경기는 하단에 별도 섹션 추가
+        const over25Picks = data.filter(r => parseFloat(r['오버25예측']||0) >= 50);
+
+        let mainHtml = data.map(r => renderCard(r, isVip)).join('');
+
+        let over25Html = '';
+        if (over25Picks.length > 0) {
+            over25Html += '<div style="margin:28px 0 12px;padding:12px 16px;background:linear-gradient(135deg,#0f172a,#1e3a5f);color:white;border-radius:10px;font-weight:700;font-size:0.95rem;">⚡ 오버2.5 예측 50%+ 경기 (' + over25Picks.length + '경기)</div>';
+            over25Html += over25Picks.map(r => renderOver25Card(r, isVip)).join('');
+        }
+
+        wrap.innerHTML = mainHtml + over25Html;
 
         if (!wrap.innerHTML) wrap.innerHTML = '<p style="text-align:center;padding:30px;">오늘 조건에 맞는 경기가 없습니다.</p>';
 
