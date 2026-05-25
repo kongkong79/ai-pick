@@ -165,7 +165,7 @@ function kst(t) {
     try {
         const parts = String(t).split(':');
         if (parts.length < 2) return '--:--';
-        const h = parseInt(parts[0]);
+        const h = parseInt(parts[0]) % 24;   // 26시→02시, 25시→01시 변환
         const m = parseInt(parts[1]);
         if (isNaN(h) || isNaN(m)) return '--:--';
         return String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
