@@ -1,0 +1,433 @@
+{
+  "generated_at": "2026-05-29 17:33:59",
+  "target_date": "2026-05-29",
+  "sport": "baseball",
+  "total_games": 17,
+  "picks": [
+    {
+      "date": "2026-05-29",
+      "time": "7:35",
+      "league": "MLB",
+      "home": "Baltimore Orioles",
+      "away": "Toronto Blue Jays",
+      "fb_prob": {
+        "1": "48.0",
+        "2": "52.0"
+      },
+      "fb_score": "6-7",
+      "fb_predict": "2",
+      "over85": "78.5",
+      "over105": "56.4",
+      "similar_n": 1,
+      "similar": {
+        "홈승": 100.0,
+        "원정승": 0.0,
+        "오버8.5": 100.0,
+        "오버10.5": 100.0
+      },
+      "grade": "❓",
+      "signal": "데이터부족",
+      "pick": ""
+    },
+    {
+      "date": "2026-05-29",
+      "time": "7:40",
+      "league": "MLB",
+      "home": "Pittsburgh Pirates",
+      "away": "Chicago Cubs",
+      "fb_prob": {
+        "1": "44.0",
+        "2": "56.0"
+      },
+      "fb_score": "2-4",
+      "fb_predict": "2",
+      "over85": "19.7",
+      "over105": "6.1",
+      "similar_n": 0,
+      "similar": {
+        "홈승": "-",
+        "원정승": "-",
+        "오버8.5": "-",
+        "오버10.5": "-"
+      },
+      "grade": "❓",
+      "signal": "데이터부족",
+      "pick": ""
+    },
+    {
+      "date": "2026-05-29",
+      "time": "9:05",
+      "league": "MLB",
+      "home": "Texas Rangers",
+      "away": "Houston Astros",
+      "fb_prob": {
+        "1": "51.0",
+        "2": "49.0"
+      },
+      "fb_score": "4-3",
+      "fb_predict": "1",
+      "over85": "29.7",
+      "over105": "11.3",
+      "similar_n": 1,
+      "similar": {
+        "홈승": 100.0,
+        "원정승": 0.0,
+        "오버8.5": 100.0,
+        "오버10.5": 100.0
+      },
+      "grade": "❓",
+      "signal": "데이터부족",
+      "pick": ""
+    },
+    {
+      "date": "2026-05-29",
+      "time": "18:00",
+      "league": "NPB",
+      "home": "Chiba Lotte Marines",
+      "away": "Hanshin Tigers",
+      "fb_prob": {
+        "1": "57.0",
+        "2": "43.0"
+      },
+      "fb_score": "5-4",
+      "fb_predict": "1",
+      "over85": "36.6",
+      "over105": "15.5",
+      "similar_n": 2,
+      "similar": {
+        "홈승": 50.0,
+        "원정승": 50.0,
+        "오버8.5": 50.0,
+        "오버10.5": 50.0
+      },
+      "grade": "❓",
+      "signal": "데이터부족",
+      "pick": ""
+    },
+    {
+      "date": "2026-05-29",
+      "time": "18:00",
+      "league": "NPB",
+      "home": "Fukuoka S. Hawks",
+      "away": "Hiroshima Carp",
+      "fb_prob": {
+        "1": "64.0",
+        "2": "36.0"
+      },
+      "fb_score": "4-1",
+      "fb_predict": "1",
+      "over85": "9.7",
+      "over105": "2.3",
+      "similar_n": 2,
+      "similar": {
+        "홈승": 50.0,
+        "원정승": 50.0,
+        "오버8.5": 50.0,
+        "오버10.5": 50.0
+      },
+      "grade": "❓",
+      "signal": "데이터부족",
+      "pick": ""
+    },
+    {
+      "date": "2026-05-29",
+      "time": "18:00",
+      "league": "NPB",
+      "home": "Nippon Ham Fighters",
+      "away": "Yomiuri Giants",
+      "fb_prob": {
+        "1": "64.0",
+        "2": "36.0"
+      },
+      "fb_score": "4-3",
+      "fb_predict": "1",
+      "over85": "27.1",
+      "over105": "9.9",
+      "similar_n": 2,
+      "similar": {
+        "홈승": 50.0,
+        "원정승": 50.0,
+        "오버8.5": 50.0,
+        "오버10.5": 50.0
+      },
+      "grade": "❓",
+      "signal": "데이터부족",
+      "pick": ""
+    },
+    {
+      "date": "2026-05-29",
+      "time": "18:00",
+      "league": "NPB",
+      "home": "Orix Buffaloes",
+      "away": "Chunichi Dragons",
+      "fb_prob": {
+        "1": "58.0",
+        "2": "42.0"
+      },
+      "fb_score": "5-4",
+      "fb_predict": "1",
+      "over85": "35.2",
+      "over105": "14.6",
+      "similar_n": 2,
+      "similar": {
+        "홈승": 50.0,
+        "원정승": 50.0,
+        "오버8.5": 50.0,
+        "오버10.5": 50.0
+      },
+      "grade": "❓",
+      "signal": "데이터부족",
+      "pick": ""
+    },
+    {
+      "date": "2026-05-29",
+      "time": "18:00",
+      "league": "NPB",
+      "home": "Rakuten Gold. Eagles",
+      "away": "Yakult Swallows",
+      "fb_prob": {
+        "1": "59.0",
+        "2": "41.0"
+      },
+      "fb_score": "3-2",
+      "fb_predict": "1",
+      "over85": "8.2",
+      "over105": "1.8",
+      "similar_n": 2,
+      "similar": {
+        "홈승": 50.0,
+        "원정승": 50.0,
+        "오버8.5": 50.0,
+        "오버10.5": 50.0
+      },
+      "grade": "❓",
+      "signal": "데이터부족",
+      "pick": ""
+    },
+    {
+      "date": "2026-05-29",
+      "time": "18:00",
+      "league": "NPB",
+      "home": "Seibu Lions",
+      "away": "Yokohama BayStars",
+      "fb_prob": {
+        "1": "53.0",
+        "2": "46.0"
+      },
+      "fb_score": "3-2",
+      "fb_predict": "1",
+      "over85": "8.2",
+      "over105": "1.8",
+      "similar_n": 2,
+      "similar": {
+        "홈승": 50.0,
+        "원정승": 50.0,
+        "오버8.5": 50.0,
+        "오버10.5": 50.0
+      },
+      "grade": "❓",
+      "signal": "데이터부족",
+      "pick": ""
+    },
+    {
+      "date": "2026-05-29",
+      "time": "18:30",
+      "league": "KBO",
+      "home": "NC Dinos",
+      "away": "Lotte Giants",
+      "fb_prob": {
+        "1": "56.0",
+        "2": "44.0"
+      },
+      "fb_score": "8-6",
+      "fb_predict": "1",
+      "over85": "80.9",
+      "over105": "59.8",
+      "similar_n": 2,
+      "similar": {
+        "홈승": 50.0,
+        "원정승": 50.0,
+        "오버8.5": 50.0,
+        "오버10.5": 50.0
+      },
+      "grade": "❓",
+      "signal": "데이터부족",
+      "pick": ""
+    },
+    {
+      "date": "2026-05-29",
+      "time": "18:30",
+      "league": "KBO",
+      "home": "Samsung Lions",
+      "away": "Doosan Bears",
+      "fb_prob": {
+        "1": "66.0",
+        "2": "34.0"
+      },
+      "fb_score": "7-5",
+      "fb_predict": "1",
+      "over85": "80.9",
+      "over105": "59.8",
+      "similar_n": 2,
+      "similar": {
+        "홈승": 50.0,
+        "원정승": 50.0,
+        "오버8.5": 50.0,
+        "오버10.5": 50.0
+      },
+      "grade": "❓",
+      "signal": "데이터부족",
+      "pick": ""
+    },
+    {
+      "date": "2026-05-29",
+      "time": "18:30",
+      "league": "KBO",
+      "home": "Hanwha Eagles",
+      "away": "SSG Landers",
+      "fb_prob": {
+        "1": "51.0",
+        "2": "49.0"
+      },
+      "fb_score": "5-3",
+      "fb_predict": "1",
+      "over85": "22.0",
+      "over105": "7.3",
+      "similar_n": 1,
+      "similar": {
+        "홈승": 100.0,
+        "원정승": 0.0,
+        "오버8.5": 100.0,
+        "오버10.5": 100.0
+      },
+      "grade": "❓",
+      "signal": "데이터부족",
+      "pick": ""
+    },
+    {
+      "date": "2026-05-29",
+      "time": "18:30",
+      "league": "KBO",
+      "home": "LG Twins",
+      "away": "KIA Tigers",
+      "fb_prob": {
+        "1": "55.0",
+        "2": "45.0"
+      },
+      "fb_score": "5-4",
+      "fb_predict": "1",
+      "over85": "55.7",
+      "over105": "30.6",
+      "similar_n": 2,
+      "similar": {
+        "홈승": 50.0,
+        "원정승": 50.0,
+        "오버8.5": 50.0,
+        "오버10.5": 50.0
+      },
+      "grade": "❓",
+      "signal": "데이터부족",
+      "pick": ""
+    },
+    {
+      "date": "2026-05-29",
+      "time": "18:30",
+      "league": "KBO",
+      "home": "Kiwoom Heroes",
+      "away": "KT Wiz Suwon",
+      "fb_prob": {
+        "1": "32.0",
+        "2": "68.0"
+      },
+      "fb_score": "4-6",
+      "fb_predict": "2",
+      "over85": "63.2",
+      "over105": "37.9",
+      "similar_n": 0,
+      "similar": {
+        "홈승": "-",
+        "원정승": "-",
+        "오버8.5": "-",
+        "오버10.5": "-"
+      },
+      "grade": "❓",
+      "signal": "데이터부족",
+      "pick": ""
+    },
+    {
+      "date": "2026-05-29",
+      "time": "19:35",
+      "league": "CPB",
+      "home": "Fubon Guardians",
+      "away": "Chinatrust Brothers",
+      "fb_prob": {
+        "1": "56.0",
+        "2": "44.0"
+      },
+      "fb_score": "5-3",
+      "fb_predict": "1",
+      "over85": "36.6",
+      "over105": "15.5",
+      "similar_n": 2,
+      "similar": {
+        "홈승": 50.0,
+        "원정승": 50.0,
+        "오버8.5": 50.0,
+        "오버10.5": 50.0
+      },
+      "grade": "❓",
+      "signal": "데이터부족",
+      "pick": ""
+    },
+    {
+      "date": "2026-05-29",
+      "time": "19:35",
+      "league": "CPB",
+      "home": "Rakuten Monkeys",
+      "away": "TSG Hawks",
+      "fb_prob": {
+        "1": "47.0",
+        "2": "53.0"
+      },
+      "fb_score": "4-6",
+      "fb_predict": "2",
+      "over85": "35.2",
+      "over105": "14.6",
+      "similar_n": 0,
+      "similar": {
+        "홈승": "-",
+        "원정승": "-",
+        "오버8.5": "-",
+        "오버10.5": "-"
+      },
+      "grade": "❓",
+      "signal": "데이터부족",
+      "pick": ""
+    },
+    {
+      "date": "2026-05-29",
+      "time": "19:35",
+      "league": "CPB",
+      "home": "Wei Chuan Dragons",
+      "away": "Uni Lions",
+      "fb_prob": {
+        "1": "49.0",
+        "2": "51.0"
+      },
+      "fb_score": "3-4",
+      "fb_predict": "2",
+      "over85": "23.3",
+      "over105": "7.9",
+      "similar_n": 1,
+      "similar": {
+        "홈승": 100.0,
+        "원정승": 0.0,
+        "오버8.5": 100.0,
+        "오버10.5": 100.0
+      },
+      "grade": "❓",
+      "signal": "데이터부족",
+      "pick": ""
+    }
+  ]
+}
