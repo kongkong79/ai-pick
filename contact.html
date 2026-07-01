@@ -1,119 +1,93 @@
 <!DOCTYPE html>
-<html lang="ko" data-theme="light">
+<html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us - AI365PICK</title>
-    <link rel="stylesheet" href="style.css">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4466358200851184" crossorigin="anonymous"></script>
-    <style>
-        .ads-placeholder { background: #f8fafc; border: 1px dashed #cbd5e1; margin: 20px 0; padding: 20px; text-align: center; color: #94a3b8; font-size: 0.8rem; border-radius: 8px; }
-        .contact-box { text-align: center; padding: 40px 20px; background: var(--card-bg); border-radius: 15px; border: 1px solid #eee; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .email-link { font-size: 1.5rem; font-weight: bold; color: #2563eb; text-decoration: none; display: block; margin-top: 15px; }
-        .email-link:hover { text-decoration: underline; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>문의하기 - AI365PICK</title>
+<link rel="stylesheet" href="style.css">
+<style>
+body { font-family: -apple-system, sans-serif; margin: 0; background: #f8fafc; color: #1e293b; }
+.container { max-width: 700px; margin: 0 auto; padding: 40px 20px; }
+header { background: white; border-bottom: 1px solid #e2e8f0; padding: 15px 20px; }
+.header-inner { max-width: 700px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+.box { background: white; border-radius: 12px; padding: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 16px; }
+h1 { font-size: 1.8rem; margin-bottom: 8px; }
+h2 { font-size: 1.1rem; color: #2563eb; margin: 0 0 12px; }
+p, li { line-height: 1.8; color: #475569; }
+.contact-card { display: flex; align-items: center; gap: 16px; padding: 16px; background: #f0f7ff; border-radius: 10px; margin-bottom: 12px; border: 1px solid #bfdbfe; text-decoration: none; color: inherit; transition: .2s; }
+.contact-card:hover { background: #dbeafe; }
+.contact-icon { font-size: 2rem; }
+.contact-info strong { display: block; color: #1e3a8a; margin-bottom: 2px; }
+.contact-info span { font-size: 0.85rem; color: #64748b; }
+.faq-item { border-bottom: 1px solid #e2e8f0; padding: 16px 0; }
+.faq-item:last-child { border-bottom: none; }
+.faq-q { font-weight: 700; color: #1e293b; margin-bottom: 8px; }
+.faq-a { color: #475569; font-size: 0.9rem; line-height: 1.7; }
+</style>
 </head>
 <body>
-    <header>
-        <div class="container" style="display:flex; justify-content:space-between; align-items:center; max-width:1200px; margin:0 auto; padding:15px 20px;">
-            <a href="index.html" style="text-decoration:none; color:inherit; display:flex; align-items:center; gap:10px;">
-                 <img src="betmetrics.png" alt="Logo" style="width:35px; height:35px;">
-                 <span style="font-weight:bold; font-size:1.2rem;">AI365PICK</span>
-            </a>
-            <nav style="display:flex; gap:15px; font-weight:bold;">
-                <a href="index.html" class="nav-link" data-i18n="navHome">Home</a>
-                <a href="about.html" class="nav-link" data-i18n="navAbout">About</a>
-                <a href="contact.html" class="nav-link active" data-i18n="navContact" style="color:#2563eb;">Contact</a>
-                <a href="privacy.html" class="nav-link" data-i18n="navPrivacy">Privacy</a>
-                <a href="vip.html" class="nav-link" data-i18n="navVip">VIP</a>
-            </nav>
-            <div class="header-controls" style="display:flex; align-items:center; gap:10px;">
-                <div id="language-switcher">
-                    <button class="lang-btn" data-lang="ko">KO</button>
-                    <button class="lang-btn" data-lang="en">EN</button>
-                </div>
-                <button id="theme-toggle" style="background:none; border:none; cursor:pointer;">☀️</button>
-            </div>
-        </div>
-    </header>
+<header>
+  <div class="header-inner">
+    <a href="index.html" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:8px;">
+      <img src="betmetrics.png" alt="Logo" style="width:30px;height:30px;">
+      <span style="font-weight:900;font-size:1.1rem;">AI365PICK</span>
+    </a>
+    <a href="index.html" style="color:#2563eb;text-decoration:none;font-weight:600;">← 홈으로</a>
+  </div>
+</header>
 
-    <main class="container" style="max-width:800px; margin:0 auto; padding:40px 20px;">
-        <section class="hero">
-            <h1 id="txt-contact-title" data-i18n="contactTitle" style="text-align:center; font-size:2rem; margin-bottom:10px;">Contact Us</h1>
-            
-            <div class="ads-placeholder">ADVERTISEMENT</div>
+<div class="container">
+  <div class="box">
+    <h1>📬 문의하기</h1>
+    <p>서비스 이용 중 궁금한 점이나 VIP 가입 문의는 아래 채널을 통해 연락해 주세요. 빠르게 답변 드리겠습니다.</p>
 
-            <div class="contact-box">
-                <p id="txt-contact-desc" data-i18n="contactDesc" style="color:#64748b; font-size:1.1rem; line-height:1.6;">
-                    If you have any questions or partnership inquiries, please contact us via email.
-                </p>
-                <a href="mailto:mgbgoal@naver.com" class="email-link">mgbgoal@naver.com</a>
-                <p style="margin-top:20px; font-size:0.9rem; color:#94a3b8;">Average response time: Within 24 hours</p>
-            </div>
+    <h2 style="margin-top:24px;">연락 채널</h2>
 
-            <div class="ads-placeholder" style="margin-top:30px;">ADVERTISEMENT</div>
-        </section>
-    </main>
+    <a href="https://open.kakao.com/o/syMLKPli" target="_blank" class="contact-card">
+      <div class="contact-icon">💬</div>
+      <div class="contact-info">
+        <strong>카카오톡 오픈채팅</strong>
+        <span>VIP 가입 문의 및 인증코드 발급 | 평균 응답 1시간 이내</span>
+      </div>
+    </a>
 
-    <footer>
-        <div class="container" style="text-align: center; padding: 40px 0; color:#94a3b8;">
-            <p>&copy; 2024 AI365PICK. All rights reserved.</p>
-        </div>
-    </footer>
+    <a href="mailto:contact@ai365pick.com" class="contact-card">
+      <div class="contact-icon">📧</div>
+      <div class="contact-info">
+        <strong>이메일</strong>
+        <span>contact@ai365pick.com | 서비스 관련 일반 문의</span>
+      </div>
+    </a>
+  </div>
 
-    <script>
-        const translations = {
-            en: { 
-                navHome: "Home", navAbout: "About", navContact: "Contact", navPrivacy: "Privacy", navVip: "VIP", 
-                contactTitle: "Contact Us", 
-                contactDesc: "If you have any questions or partnership inquiries, please contact us via email." 
-            },
-            ko: { 
-                navHome: "홈", navAbout: "소개", navContact: "문의", navPrivacy: "개인정보", navVip: "VIP 전용", 
-                contactTitle: "고객 문의", 
-                contactDesc: "궁금하신 점이나 제휴 문의는 아래 이메일로 연락 주시기 바랍니다." 
-            }
-        };
+  <div class="box">
+    <h2>자주 묻는 질문 (FAQ)</h2>
 
-        // 로컬 스토리지 키 이름을 다른 페이지(index, about 등)와 동일하게 'lang'으로 통일
-        let currentLang = localStorage.getItem('lang') || 'ko';
+    <div class="faq-item">
+      <div class="faq-q">Q. VIP 가입은 어떻게 하나요?</div>
+      <div class="faq-a">국내: 카카오뱅크 3333-02-1632124 (진겸조)으로 11,000원 입금 후 카톡 오픈채팅으로 입금자명과 함께 문의해 주세요. 확인 후 인증코드를 발급해 드립니다.<br>해외: <a href="https://kongkong79.gumroad.com/l/ai-sports-vip" style="color:#2563eb;">Gumroad($9.99)</a>에서 결제하신 후 영수증 이메일을 카톡으로 보내주세요.</div>
+    </div>
 
-        function updateLang(lang) {
-            currentLang = lang;
-            localStorage.setItem('lang', lang);
-            
-            const t = translations[lang];
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (t[key]) el.innerText = t[key];
-            });
+    <div class="faq-item">
+      <div class="faq-q">Q. 픽은 매일 몇 시에 업데이트되나요?</div>
+      <div class="faq-a">매일 오전 11시~12시 사이에 당일 오후 12시부터 다음날 오전 11시 59분까지의 경기 픽이 업데이트됩니다.</div>
+    </div>
 
-            // 버튼 스타일 업데이트
-            document.querySelectorAll('.lang-btn').forEach(btn => {
-                btn.style.fontWeight = btn.dataset.lang === lang ? "bold" : "normal";
-                btn.style.color = btn.dataset.lang === lang ? "#2563eb" : "#94a3b8";
-            });
-        }
+    <div class="faq-item">
+      <div class="faq-q">Q. 픽이 맞지 않으면 환불이 되나요?</div>
+      <div class="faq-a">스포츠 경기 예측은 통계 기반 참고 정보이며, 결과를 보장하지 않습니다. 이를 사전에 동의하고 가입하시는 것으로, 예측 실패에 따른 환불은 제공되지 않습니다.</div>
+    </div>
 
-        document.querySelectorAll('.lang-btn').forEach(btn => {
-            btn.addEventListener('click', () => updateLang(btn.dataset.lang));
-        });
+    <div class="faq-item">
+      <div class="faq-q">Q. 어떤 리그의 픽을 제공하나요?</div>
+      <div class="faq-a">잉글랜드 프리미어리그, 스페인 라리가, 독일 분데스리가, 이탈리아 세리에A, 프랑스 리그앙 등 주요 유럽 5대 리그와 UEFA 챔피언스리그, FIFA 월드컵, K리그, J리그, MLB, KBO, NPB 등 40여 개 리그를 제공합니다.</div>
+    </div>
 
-        // 테마 로직
-        const themeBtn = document.getElementById('theme-toggle');
-        themeBtn.onclick = () => {
-            const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', theme);
-            localStorage.setItem('theme', theme);
-            themeBtn.innerText = theme === 'light' ? '☀️' : '🌙';
-        };
-
-        document.addEventListener('DOMContentLoaded', () => {
-            updateLang(currentLang);
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-            themeBtn.innerText = savedTheme === 'light' ? '☀️' : '🌙';
-        });
-    </script>
+    <div class="faq-item">
+      <div class="faq-q">Q. 데이터는 어디서 가져오나요?</div>
+      <div class="faq-a">Forebet.com의 AI 예측 데이터와 수만 건의 과거 실제 경기 결과를 자체 수집·분석합니다. 배당률은 주요 북메이커 평균값을 참고합니다.</div>
+    </div>
+  </div>
+</div>
 </body>
 </html>
