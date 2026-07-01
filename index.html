@@ -3,7 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI365PICK - Smart AI Sports Analysis</title>
+    <title>AI365PICK - AI 스포츠 분석 픽 추천</title>
+    <meta name="description" content="AI365PICK - 빅데이터 기반 AI 축구·야구 예측 분석. 유럽 리그, KBO, MLB, NPB 경기의 통계 기반 픽을 매일 제공합니다.">
+    <meta name="keywords" content="축구 픽, 야구 픽, 스포츠 분석, AI 예측, KBO, MLB, 프리미어리그, 라리가, 분데스리가">
+    <meta property="og:title" content="AI365PICK - AI 스포츠 분석">
+    <meta property="og:description" content="빅데이터와 AI 통계로 분석한 축구·야구 경기 예측 픽">
+    <meta property="og:url" content="https://ai365pick.com">
+    <meta name="robots" content="index, follow">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4466358200851184" crossorigin="anonymous"></script>
@@ -130,7 +136,49 @@
   <div class="notice-wrap">
     <div class="notice-box">⚠️ 본 자료는 통계 기반 참고 정보이며, 실제 결과를 보장하지 않습니다.</div>
   </div>
+  <!-- 서비스 소개 정적 섹션 (검색엔진 크롤링용) -->
+  <section style="max-width:860px;margin:0 auto 24px;padding:0 16px;">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;">
+      <div style="background:white;border-radius:12px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);border-top:3px solid #2563eb;">
+        <div style="font-size:1.4rem;margin-bottom:6px;">📊</div>
+        <div style="font-weight:700;margin-bottom:4px;">통계 기반 분석</div>
+        <p style="font-size:0.82rem;color:#64748b;margin:0;">Forebet 확률 구간별 실제 적중률과 배당 구간 패턴을 분석합니다.</p>
+      </div>
+      <div style="background:white;border-radius:12px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);border-top:3px solid #10b981;">
+        <div style="font-size:1.4rem;margin-bottom:6px;">🔍</div>
+        <div style="font-weight:700;margin-bottom:4px;">유사 과거경기 탐색</div>
+        <p style="font-size:0.82rem;color:#64748b;margin:0;">유사 조건의 과거 수천 경기 데이터를 탐색하여 결과 패턴을 제시합니다.</p>
+      </div>
+      <div style="background:white;border-radius:12px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);border-top:3px solid #f59e0b;">
+        <div style="font-size:1.4rem;margin-bottom:6px;">⭐</div>
+        <div style="font-weight:700;margin-bottom:4px;">VIP 엄선 픽</div>
+        <p style="font-size:0.82rem;color:#64748b;margin:0;">신뢰도 높은 경기만 엄선하여 유사경기 전체 실적을 VIP 회원께 공개합니다.</p>
+      </div>
+      <div style="background:white;border-radius:12px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);border-top:3px solid #8b5cf6;">
+        <div style="font-size:1.4rem;margin-bottom:6px;">⚾</div>
+        <div style="font-weight:700;margin-bottom:4px;">야구 분석</div>
+        <p style="font-size:0.82rem;color:#64748b;margin:0;">MLB, KBO, NPB 경기의 득점 오버언더 예측 및 승패 분석을 제공합니다.</p>
+      </div>
+    </div>
+  </section>
+
   <div id="loading" style="text-align:center;padding:30px;">데이터 분석 중...</div>
+
+  <!-- 구글봇이 읽는 정적 콘텐츠 섹션 -->
+  <div style="max-width:860px;margin:0 auto 24px;padding:0 16px;">
+    <div style="background:white;border-radius:12px;padding:24px;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+      <h2 style="font-size:1rem;color:#2563eb;margin:0 0 12px;">AI365PICK 서비스 소개</h2>
+      <p style="font-size:0.88rem;color:#475569;line-height:1.8;margin:0 0 10px;">
+        AI365PICK은 Forebet AI 확률 데이터와 수만 건의 과거 경기 결과를 분석하여 축구·야구 통계 기반 픽을 제공합니다.
+        잉글랜드 프리미어리그, 스페인 라리가, 독일 분데스리가, 이탈리아 세리에A, 프랑스 리그앙, UEFA 챔피언스리그,
+        FIFA 월드컵, K리그 1부·2부, MLB, KBO, NPB 등 40여 개 리그를 분석합니다.
+      </p>
+      <p style="font-size:0.85rem;color:#94a3b8;margin:0;">
+        ⚠️ 본 서비스의 모든 픽은 통계 기반 참고 정보이며, 실제 결과를 보장하지 않습니다.
+      </p>
+    </div>
+  </div>
+
   <div class="cards" id="cards-wrap"></div>
   <div class="container"><div class="ads-placeholder">ADVERTISEMENT</div></div>
 </main>
@@ -138,9 +186,9 @@
 <footer>
   <div class="container" style="text-align:center;">
     <div class="footer-links">
-      <a href="about.html" class="footer-link">서비스 소개</a>
-      <a href="contact.html" class="footer-link">문의하기</a>
-      <a href="privacy.html" class="footer-link">개인정보 처리방침</a>
+      <a href="about.html" class="footer-link" title="AI365PICK 서비스 소개">서비스 소개</a>
+      <a href="contact.html" class="footer-link" title="AI365PICK 문의하기">문의하기</a>
+      <a href="privacy.html" class="footer-link" title="개인정보 처리방침">개인정보 처리방침</a>
     </div>
     <p style="color:var(--text-muted);font-size:0.8rem;">&copy; 2024 AI365PICK. All rights reserved.</p>
   </div>
