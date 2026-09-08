@@ -378,7 +378,8 @@ async function render() {
             .join('');
 
         // 카드 렌더링: 전체 표시 (오버 배지는 카드 안에 통합)
-        wrap.innerHTML = data.map(r => renderCard(r, isVip)).join('');
+        // ❓ 데이터부족 제외
+        wrap.innerHTML = data.filter(r => r['신호등급'] !== '❓').map(r => renderCard(r, isVip)).join('');
 
         if (!wrap.innerHTML.trim()) {
             wrap.innerHTML = '<p style="text-align:center;padding:30px;">오늘 경기가 없습니다.</p>';
