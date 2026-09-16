@@ -16,8 +16,10 @@ body { font-family:'Segoe UI','Noto Sans KR',Arial,sans-serif; background:#f1f5f
 .notice-wrap { max-width:860px; margin:0 auto; padding:0 16px 12px; }
 .notice-box { background:#fff7ed; border:1px solid #fed7aa; border-radius:8px; padding:10px 16px; font-size:0.8rem; color:#9a3412; text-align:center; }
 .cards { max-width:860px; margin:0 auto; padding:0 16px 60px; }
-.pick-card { background:white; border-radius:14px; padding:20px; margin-bottom:18px; box-shadow:0 2px 12px rgba(0,0,0,0.07); transition:box-shadow .2s; }
-.pick-card:hover { box-shadow:0 6px 24px rgba(0,0,0,0.12); }
+.pick-card { background:white; border:1px solid #e2e8f0; border-left:5px solid var(--accent); border-radius:18px; padding:20px; margin-bottom:18px; box-shadow:0 8px 24px rgba(15,23,42,0.07); transition:transform .2s,box-shadow .2s; }
+.pick-card:hover { transform:translateY(-2px); box-shadow:0 14px 34px rgba(15,23,42,0.12); }
+.recommended-card { background:linear-gradient(145deg,#fff 0%,#f8fbff 100%); }
+.pass-card { background:#f8fafc; border-color:#dbe3ed; opacity:.92; }
 .card-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
 .grade-badge { padding:5px 13px; border-radius:20px; font-size:0.8rem; font-weight:700; color:#fff; }
 .card-meta { font-size:0.78rem; color:#64748b; }
@@ -26,9 +28,18 @@ body { font-family:'Segoe UI','Noto Sans KR',Arial,sans-serif; background:#f1f5f
 .team.away { text-align:right; }
 .vs { color:#94a3b8; font-size:0.82rem; }
 .pick-badge { display:inline-flex; align-items:center; gap:6px; color:#fff; border-radius:20px; padding:5px 14px; font-size:0.84rem; font-weight:700; margin-bottom:14px; }
+.decision-box { display:flex;align-items:center;gap:12px;border-radius:12px;padding:12px 14px;margin:0 0 14px; }
+.pick-box { background:color-mix(in srgb,var(--accent) 10%,white);border:1px solid color-mix(in srgb,var(--accent) 30%,white); }
+.pass-box { background:#eef2f7;border:1px solid #d7e0ea;color:#64748b; }
+.decision-icon { width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:#fff;box-shadow:0 2px 8px rgba(15,23,42,.08);font-size:1rem;flex:none; }
+.decision-title { font-size:.9rem;font-weight:900;letter-spacing:-.2px; }
+.decision-desc { margin-top:3px;font-size:.74rem;color:#64748b;line-height:1.45; }
 .sections-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
 @media(max-width:560px){ .sections-grid{ grid-template-columns:1fr; } }
 .section { background:#f8fafc; border-radius:10px; padding:12px; }
+.model-section { background:linear-gradient(145deg,#eff6ff,#f8fafc);border:1px solid #bfdbfe; }
+.model-foot { margin-top:8px;color:#64748b;font-size:.7rem;text-align:center;line-height:1.5; }
+.home-color { color:#2563eb; }.away-color { color:#ef4444; }
 .section-title { font-size:0.76rem; font-weight:700; color:#475569; margin-bottom:9px; }
 .prob-row { display:flex; gap:7px; }
 .prob-cell { flex:1; background:white; border-radius:8px; padding:8px 4px; text-align:center; box-shadow:0 1px 3px rgba(0,0,0,0.06); border:1px solid #e2e8f0; }
@@ -39,6 +50,7 @@ body { font-family:'Segoe UI','Noto Sans KR',Arial,sans-serif; background:#f1f5f
 .over-row { display:flex; justify-content:space-between; background:white; border-radius:6px; padding:6px 10px; font-size:0.79rem; border:1px solid #e2e8f0; }
 .over-label { color:#64748b; }
 .over-val { font-weight:700; }
+.market-pick { display:inline-block;margin-left:5px;padding:2px 7px;border-radius:999px;background:#e0f2fe;color:#0369a1;font-size:.68rem; }
 .sim-grid { display:flex; gap:6px; flex-wrap:wrap; }
 .sim-cell { flex:1; min-width:55px; background:white; border-radius:8px; padding:8px 4px; text-align:center; box-shadow:0 1px 3px rgba(0,0,0,0.06); border:1px solid #e2e8f0; }
 .sim-label { font-size:0.67rem; color:#94a3b8; margin-bottom:3px; }
@@ -59,6 +71,7 @@ body { font-family:'Segoe UI','Noto Sans KR',Arial,sans-serif; background:#f1f5f
 .nav-tab.active { background:#2563eb; color:white; }
 .nav-tab:hover { transform:translateY(-1px); }
 footer { background:#0f172a; color:#64748b; text-align:center; padding:24px; font-size:0.78rem; }
+@media(max-width:560px){ .pick-card{padding:15px;border-radius:15px}.teams{gap:7px}.team{font-size:1rem}.card-meta{font-size:.7rem}.decision-desc{font-size:.7rem} }
 </style>
 </head>
 <body>
@@ -73,7 +86,7 @@ footer { background:#0f172a; color:#64748b; text-align:center; padding:24px; fon
   <div class="sub">2026-09-16 KST 기준 &nbsp;|&nbsp; 총 10경기 (NPB + KBO + MLB) &nbsp;|&nbsp; 2026-09-16 16:42:47 KST</div>
 </div>
 
-<div class="summary"><div class="s-badge">⏭: 10경기</div></div>
+<div class="summary"><div class="s-badge">⏭ PASS: 10경기</div></div>
 
 <div class="notice-wrap">
   <div class="notice-box">⚠️ 본 자료는 통계 기반 참고 정보이며, 실제 결과를 보장하지 않습니다.</div>
@@ -81,9 +94,9 @@ footer { background:#0f172a; color:#64748b; text-align:center; padding:24px; fon
 
 <div class="cards">
 
-  <div class="pick-card" style="border-left:5px solid #94a3b8;">
+  <div class="pick-card pass-card" style="--accent:#64748b;">
     <div class="card-top">
-      <div class="grade-badge" style="background:#94a3b8;">⏭</div>
+      <div class="grade-badge" style="background:#64748b;">⏭ PASS</div>
       <div class="card-meta">18:00 &nbsp;|&nbsp; NPB</div>
     </div>
     <div class="teams">
@@ -91,7 +104,9 @@ footer { background:#0f172a; color:#64748b; text-align:center; padding:24px; fon
       <span class="vs">vs</span>
       <span class="team away">Fukuoka S. Hawks</span>
     </div>
-    
+    <div class="decision-box pass-box">
+          <div class="decision-icon">⏭</div><div><div class="decision-title">추천 없음 · PASS</div>
+          <div class="decision-desc">확률·표본·모델합의 기준 미달</div></div></div>
 
     <div class="sections-grid">
       <div class="section">
@@ -109,6 +124,15 @@ footer { background:#0f172a; color:#64748b; text-align:center; padding:24px; fon
         <div class="sub-info">예상스코어: <b>2-5</b> &nbsp;|&nbsp; FB예측: <b>2.0</b></div>
       </div>
 
+      <div class="section model-section">
+        <div class="section-title">🧠 V2 보정확률</div>
+        <div class="prob-row">
+          <div class="prob-cell"><div class="prob-label">최종 홈승</div><div class="prob-val home-color">35.0%</div></div>
+          <div class="prob-cell"><div class="prob-label">최종 원정승</div><div class="prob-val away-color">65.0%</div></div>
+        </div>
+        <div class="model-foot">과거모델 홈 50.0% · 원정 50.0% · 유효표본 0.0</div>
+      </div>
+
       <div class="section" style="background:#eff6ff;border:1px solid #bfdbfe;">
         <div class="section-title" style="color:#1d4ed8;">⚾ 득점 오버언더</div>
         <div class="over-list">
@@ -117,12 +141,12 @@ footer { background:#0f172a; color:#64748b; text-align:center; padding:24px; fon
             <span class="over-val" style="color:inherit">-</span>
           </div>
           <div class="over-row">
-            <span class="over-label">오버 8.5점 예측</span>
-            <span class="over-val" style="color:inherit">28.4%</span>
+            <span class="over-label">8.5점 보정</span>
+            <span class="over-val">- <b class="market-pick">PASS</b></span>
           </div>
           <div class="over-row">
-            <span class="over-label">오버 10.5점 예측</span>
-            <span class="over-val">10.6%</span>
+            <span class="over-label">10.5점 보정</span>
+            <span class="over-val">- <b class="market-pick">PASS</b></span>
           </div>
         </div>
       </div>
@@ -135,9 +159,9 @@ footer { background:#0f172a; color:#64748b; text-align:center; padding:24px; fon
     </div>
   </div>
 
-  <div class="pick-card" style="border-left:5px solid #94a3b8;">
+  <div class="pick-card pass-card" style="--accent:#64748b;">
     <div class="card-top">
-      <div class="grade-badge" style="background:#94a3b8;">⏭</div>
+      <div class="grade-badge" style="background:#64748b;">⏭ PASS</div>
       <div class="card-meta">18:00 &nbsp;|&nbsp; NPB</div>
     </div>
     <div class="teams">
@@ -145,7 +169,9 @@ footer { background:#0f172a; color:#64748b; text-align:center; padding:24px; fon
       <span class="vs">vs</span>
       <span class="team away">Rakuten Gold. Eagles</span>
     </div>
-    
+    <div class="decision-box pass-box">
+          <div class="decision-icon">⏭</div><div><div class="decision-title">추천 없음 · PASS</div>
+          <div class="decision-desc">확률·표본·모델합의 기준 미달</div></div></div>
 
     <div class="sections-grid">
       <div class="section">
@@ -163,6 +189,15 @@ footer { background:#0f172a; color:#64748b; text-align:center; padding:24px; fon
         <div class="sub-info">예상스코어: <b>5-3</b> &nbsp;|&nbsp; FB예측: <b>1.0</b></div>
       </div>
 
+      <div class="section model-section">
+        <div class="section-title">🧠 V2 보정확률</div>
+        <div class="prob-row">
+          <div class="prob-cell"><div class="prob-label">최종 홈승</div><div class="prob-val home-color">52.4%</div></div>
+          <div class="prob-cell"><div class="prob-label">최종 원정승</div><div class="prob-val away-color">47.6%</div></div>
+        </div>
+        <div class="model-foot">과거모델 홈 50.0% · 원정 50.0% · 유효표본 0.0</div>
+      </div>
+
       <div class="section" style="background:#eff6ff;border:1px solid #bfdbfe;">
         <div class="section-title" style="color:#1d4ed8;">⚾ 득점 오버언더</div>
         <div class="over-list">
@@ -171,12 +206,12 @@ footer { background:#0f172a; color:#64748b; text-align:center; padding:24px; fon
             <span class="over-val" style="color:inherit">-</span>
           </div>
           <div class="over-row">
-            <span class="over-label">오버 8.5점 예측</span>
-            <span class="over-val" style="color:inherit">42.1%</span>
+            <span class="over-label">8.5점 보정</span>
+            <span class="over-val">- <b class="market-pick">PASS</b></span>
           </div>
           <div class="over-row">
-            <span class="over-label">오버 10.5점 예측</span>
-            <span class="over-val">19.4%</span>
+            <span class="over-label">10.5점 보정</span>
+            <span class="over-val">- <b class="market-pick">PASS</b></span>
           </div>
         </div>
       </div>
@@ -189,9 +224,9 @@ footer { background:#0f172a; color:#64748b; text-align:center; padding:24px; fon
     </div>
   </div>
 
-  <div class="pick-card" style="border-left:5px solid #94a3b8;">
+  <div class="pick-card pass-card" style="--accent:#64748b;">
     <div class="card-top">
-      <div class="grade-badge" style="background:#94a3b8;">⏭</div>
+      <div class="grade-badge" style="background:#64748b;">⏭ PASS</div>
       <div class="card-meta">18:30 &nbsp;|&nbsp; KBO</div>
     </div>
     <div class="teams">
@@ -199,7 +234,9 @@ footer { background:#0f172a; color:#64748b; text-align:center; padding:24px; fon
       <span class="vs">vs</span>
       <span class="team away">LG Twins</span>
     </div>
-    
+    <div class="decision-box pass-box">
+          <div class="decision-icon">⏭</div><div><div class="decision-title">추천 없음 · PASS</div>
+          <div class="decision-desc">확률·표본·모델합의 기준 미달</div></div></div>
 
     <div class="sections-grid">
       <div class="section">
@@ -217,6 +254,15 @@ footer { background:#0f172a; color:#64748b; text-align:center; padding:24px; fon
         <div class="sub-info">예상스코어: <b>4-5</b> &nbsp;|&nbsp; FB예측: <b>2.0</b></div>
       </div>
 
+      <div class="section model-section">
+        <div class="section-title">🧠 V2 보정확률</div>
+        <div class="prob-row">
+          <div class="prob-cell"><div class="prob-label">최종 홈승</div><div class="prob-val home-color">39.8%</div></div>
+          <div class="prob-cell"><div class="prob-label">최종 원정승</div><div class="prob-val away-color">60.2%</div></div>
+        </div>
+        <div class="model-foot">과거모델 홈 50.0% · 원정 50.0% · 유효표본 0.0</div>
+      </div>
+
       <div class="section" style="background:#eff6ff;border:1px solid #bfdbfe;">
         <div class="section-title" style="color:#1d4ed8;">⚾ 득점 오버언더</div>
         <div class="over-list">
@@ -225,12 +271,12 @@ footer { background:#0f172a; color:#64748b; text-align:center; padding:24px; fon
             <span class="over-val" style="color:inherit">-</span>
           </div>
           <div class="over-row">
-            <span class="over-label">오버 8.5점 예측</span>
-            <span class="over-val" style="color:#0ea5e9">55.7%</span>
+            <span class="over-label">8.5점 보정</span>
+            <span class="over-val">- <b class="market-pick">PASS</b></span>
           </div>
           <div class="over-row">
-            <span class="over-label">오버 10.5점 예측</span>
-            <span class="over-val">30.6%</span>
+            <span class="over-label">10.5점 보정</span>
+            <span class="over-val">- <b class="market-pick">PASS</b></span>
           </div>
         </div>
       </div>
@@ -243,9 +289,9 @@ footer { background:#0f172a; color:#64748b; text-align:center; padding:24px; fon
     </div>
   </div>
 
-  <div class="pick-card" style="border-left:5px solid #94a3b8;">
+  <div class="pick-card pass-card" style="--accent:#64748b;">
     <div class="card-top">
-      <div class="grade-badge" style="background:#94a3b8;">⏭</div>
+      <div class="grade-badge" style="background:#64748b;">⏭ PASS</div>
       <div class="card-meta">18:30 &nbsp;|&nbsp; KBO</div>
     </div>
     <div class="teams">
@@ -253,7 +299,9 @@ footer { background:#0f172a; color:#64748b; text-align:center; padding:24px; fon
       <span class="vs">vs</span>
       <span class="team away">SSG Landers</span>
     </div>
-    
+    <div class="decision-box pass-box">
+          <div class="decision-icon">⏭</div><div><div class="decision-title">추천 없음 · PASS</div>
+          <div class="decision-desc">확률·표본·모델합의 기준 미달</div></div></div>
 
     <div class="sections-grid">
       <div class="section">
@@ -271,6 +319,15 @@ footer { background:#0f172a; color:#64748b; text-align:center; padding:24px; fon
         <div class="sub-info">예상스코어: <b>3-5</b> &nbsp;|&nbsp; FB예측: <b>2.0</b></div>
       </div>
 
+      <div class="section model-section">
+        <div class="section-title">🧠 V2 보정확률</div>
+        <div class="prob-row">
+          <div class="prob-cell"><div class="prob-label">최종 홈승</div><div class="prob-val home-color">41.6%</div></div>
+          <div class="prob-cell"><div class="prob-label">최종 원정승</div><div class="prob-val away-color">58.4%</div></div>
+        </div>
+        <div class="model-foot">과거모델 홈 50.0% · 원정 50.0% · 유효표본 0.0</div>
+      </div>
+
       <div class="section" style="background:#eff6ff;border:1px solid #bfdbfe;">
         <div class="section-title" style="color:#1d4ed8;">⚾ 득점 오버언더</div>
         <div class="over-list">
@@ -279,12 +336,12 @@ footer { background:#0f172a; color:#64748b; text-align:center; padding:24px; fon
             <span class="over-val" style="color:inherit">-</span>
           </div>
           <div class="over-row">
-            <span class="over-label">오버 8.5점 예측</span>
-            <span class="over-val" style="color:inherit">46.3%</span>
+            <span class="over-label">8.5점 보정</span>
+            <span class="over-val">- <b class="market-pick">PASS</b></span>
           </div>
           <div class="over-row">
-            <span class="over-label">오버 10.5점 예측</span>
-            <span class="over-val">22.6%</span>
+            <span class="over-label">10.5점 보정</span>
+            <span class="over-val">- <b class="market-pick">PASS</b></span>
           </div>
         </div>
       </div>
@@ -297,9 +354,9 @@ footer { background:#0f172a; color:#64748b; text-align:center; padding:24px; fon
     </div>
   </div>
 
-  <div class="pick-card" style="border-left:5px solid #94a3b8;">
+  <div class="pick-card pass-card" style="--accent:#64748b;">
     <div class="card-top">
-      <div class="grade-badge" style="background:#94a3b8;">⏭</div>
+      <div class="grade-badge" style="background:#64748b;">⏭ PASS</div>
       <div class="card-meta">18:30 &nbsp;|&nbsp; KBO</div>
     </div>
     <div class="teams">
@@ -307,7 +364,9 @@ footer { background:#0f172a; color:#64748b; text-align:center; padding:24px; fon
       <span class="vs">vs</span>
       <span class="team away">KT Wiz Suwon</span>
     </div>
-    
+    <div class="decision-box pass-box">
+          <div class="decision-icon">⏭</div><div><div class="decision-title">추천 없음 · PASS</div>
+          <div class="decision-desc">확률·표본·모델합의 기준 미달</div></div></div>
 
     <div class="sections-grid">
       <div class="section">
@@ -325,6 +384,15 @@ footer { background:#0f172a; color:#64748b; text-align:center; padding:24px; fon
         <div class="sub-info">예상스코어: <b>4-6</b> &nbsp;|&nbsp; FB예측: <b>2.0</b></div>
       </div>
 
+      <div class="section model-section">
+        <div class="section-title">🧠 V2 보정확률</div>
+        <div class="prob-row">
+          <div class="prob-cell"><div class="prob-label">최종 홈승</div><div class="prob-val home-color">46.4%</div></div>
+          <div class="prob-cell"><div class="prob-label">최종 원정승</div><div class="prob-val away-color">53.6%</div></div>
+        </div>
+        <div class="model-foot">과거모델 홈 50.0% · 원정 50.0% · 유효표본 0.0</div>
+      </div>
+
       <div class="section" style="background:#eff6ff;border:1px solid #bfdbfe;">
         <div class="section-title" style="color:#1d4ed8;">⚾ 득점 오버언더</div>
         <div class="over-list">
@@ -333,12 +401,12 @@ footer { background:#0f172a; color:#64748b; text-align:center; padding:24px; fon
             <span class="over-val" style="color:inherit">-</span>
           </div>
           <div class="over-row">
-            <span class="over-label">오버 8.5점 예측</span>
-            <span class="over-val" style="color:inherit">49.1%</span>
+            <span class="over-label">8.5점 보정</span>
+            <span class="over-val">- <b class="market-pick">PASS</b></span>
           </div>
           <div class="over-row">
-            <span class="over-label">오버 10.5점 예측</span>
-            <span class="over-val">24.8%</span>
+            <span class="over-label">10.5점 보정</span>
+            <span class="over-val">- <b class="market-pick">PASS</b></span>
           </div>
         </div>
       </div>
@@ -351,9 +419,9 @@ footer { background:#0f172a; color:#64748b; text-align:center; padding:24px; fon
     </div>
   </div>
 
-  <div class="pick-card" style="border-left:5px solid #94a3b8;">
+  <div class="pick-card pass-card" style="--accent:#64748b;">
     <div class="card-top">
-      <div class="grade-badge" style="background:#94a3b8;">⏭</div>
+      <div class="grade-badge" style="background:#64748b;">⏭ PASS</div>
       <div class="card-meta">18:30 &nbsp;|&nbsp; KBO</div>
     </div>
     <div class="teams">
@@ -361,7 +429,9 @@ footer { background:#0f172a; color:#64748b; text-align:center; padding:24px; fon
       <span class="vs">vs</span>
       <span class="team away">Samsung Lions</span>
     </div>
-    
+    <div class="decision-box pass-box">
+          <div class="decision-icon">⏭</div><div><div class="decision-title">추천 없음 · PASS</div>
+          <div class="decision-desc">확률·표본·모델합의 기준 미달</div></div></div>
 
     <div class="sections-grid">
       <div class="section">
@@ -379,6 +449,15 @@ footer { background:#0f172a; color:#64748b; text-align:center; padding:24px; fon
         <div class="sub-info">예상스코어: <b>4-5</b> &nbsp;|&nbsp; FB예측: <b>2.0</b></div>
       </div>
 
+      <div class="section model-section">
+        <div class="section-title">🧠 V2 보정확률</div>
+        <div class="prob-row">
+          <div class="prob-cell"><div class="prob-label">최종 홈승</div><div class="prob-val home-color">47.6%</div></div>
+          <div class="prob-cell"><div class="prob-label">최종 원정승</div><div class="prob-val away-color">52.4%</div></div>
+        </div>
+        <div class="model-foot">과거모델 홈 50.0% · 원정 50.0% · 유효표본 0.0</div>
+      </div>
+
       <div class="section" style="background:#eff6ff;border:1px solid #bfdbfe;">
         <div class="section-title" style="color:#1d4ed8;">⚾ 득점 오버언더</div>
         <div class="over-list">
@@ -387,12 +466,12 @@ footer { background:#0f172a; color:#64748b; text-align:center; padding:24px; fon
             <span class="over-val" style="color:inherit">-</span>
           </div>
           <div class="over-row">
-            <span class="over-label">오버 8.5점 예측</span>
-            <span class="over-val" style="color:#0ea5e9">53.1%</span>
+            <span class="over-label">8.5점 보정</span>
+            <span class="over-val">- <b class="market-pick">PASS</b></span>
           </div>
           <div class="over-row">
-            <span class="over-label">오버 10.5점 예측</span>
-            <span class="over-val">28.2%</span>
+            <span class="over-label">10.5점 보정</span>
+            <span class="over-val">- <b class="market-pick">PASS</b></span>
           </div>
         </div>
       </div>
@@ -405,9 +484,9 @@ footer { background:#0f172a; color:#64748b; text-align:center; padding:24px; fon
     </div>
   </div>
 
-  <div class="pick-card" style="border-left:5px solid #94a3b8;">
+  <div class="pick-card pass-card" style="--accent:#64748b;">
     <div class="card-top">
-      <div class="grade-badge" style="background:#94a3b8;">⏭</div>
+      <div class="grade-badge" style="background:#64748b;">⏭ PASS</div>
       <div class="card-meta">07:40 &nbsp;|&nbsp; MLB</div>
     </div>
     <div class="teams">
@@ -415,7 +494,9 @@ footer { background:#0f172a; color:#64748b; text-align:center; padding:24px; fon
       <span class="vs">vs</span>
       <span class="team away">Athletics</span>
     </div>
-    
+    <div class="decision-box pass-box">
+          <div class="decision-icon">⏭</div><div><div class="decision-title">추천 없음 · PASS</div>
+          <div class="decision-desc">확률·표본·모델합의 기준 미달</div></div></div>
 
     <div class="sections-grid">
       <div class="section">
@@ -433,6 +514,15 @@ footer { background:#0f172a; color:#64748b; text-align:center; padding:24px; fon
         <div class="sub-info">예상스코어: <b>5-4</b> &nbsp;|&nbsp; FB예측: <b>1.0</b></div>
       </div>
 
+      <div class="section model-section">
+        <div class="section-title">🧠 V2 보정확률</div>
+        <div class="prob-row">
+          <div class="prob-cell"><div class="prob-label">최종 홈승</div><div class="prob-val home-color">55.4%</div></div>
+          <div class="prob-cell"><div class="prob-label">최종 원정승</div><div class="prob-val away-color">44.6%</div></div>
+        </div>
+        <div class="model-foot">과거모델 홈 50.0% · 원정 50.0% · 유효표본 0.0</div>
+      </div>
+
       <div class="section" style="background:#eff6ff;border:1px solid #bfdbfe;">
         <div class="section-title" style="color:#1d4ed8;">⚾ 득점 오버언더</div>
         <div class="over-list">
@@ -441,12 +531,12 @@ footer { background:#0f172a; color:#64748b; text-align:center; padding:24px; fon
             <span class="over-val" style="color:inherit">-</span>
           </div>
           <div class="over-row">
-            <span class="over-label">오버 8.5점 예측</span>
-            <span class="over-val" style="color:#0ea5e9">55.7%</span>
+            <span class="over-label">8.5점 보정</span>
+            <span class="over-val">- <b class="market-pick">PASS</b></span>
           </div>
           <div class="over-row">
-            <span class="over-label">오버 10.5점 예측</span>
-            <span class="over-val">30.6%</span>
+            <span class="over-label">10.5점 보정</span>
+            <span class="over-val">- <b class="market-pick">PASS</b></span>
           </div>
         </div>
       </div>
@@ -459,9 +549,9 @@ footer { background:#0f172a; color:#64748b; text-align:center; padding:24px; fon
     </div>
   </div>
 
-  <div class="pick-card" style="border-left:5px solid #94a3b8;">
+  <div class="pick-card pass-card" style="--accent:#64748b;">
     <div class="card-top">
-      <div class="grade-badge" style="background:#94a3b8;">⏭</div>
+      <div class="grade-badge" style="background:#64748b;">⏭ PASS</div>
       <div class="card-meta">07:40 &nbsp;|&nbsp; MLB</div>
     </div>
     <div class="teams">
@@ -469,7 +559,9 @@ footer { background:#0f172a; color:#64748b; text-align:center; padding:24px; fon
       <span class="vs">vs</span>
       <span class="team away">Los Angeles Dodgers</span>
     </div>
-    
+    <div class="decision-box pass-box">
+          <div class="decision-icon">⏭</div><div><div class="decision-title">추천 없음 · PASS</div>
+          <div class="decision-desc">확률·표본·모델합의 기준 미달</div></div></div>
 
     <div class="sections-grid">
       <div class="section">
@@ -487,6 +579,15 @@ footer { background:#0f172a; color:#64748b; text-align:center; padding:24px; fon
         <div class="sub-info">예상스코어: <b>4-6</b> &nbsp;|&nbsp; FB예측: <b>2.0</b></div>
       </div>
 
+      <div class="section model-section">
+        <div class="section-title">🧠 V2 보정확률</div>
+        <div class="prob-row">
+          <div class="prob-cell"><div class="prob-label">최종 홈승</div><div class="prob-val home-color">44.6%</div></div>
+          <div class="prob-cell"><div class="prob-label">최종 원정승</div><div class="prob-val away-color">55.4%</div></div>
+        </div>
+        <div class="model-foot">과거모델 홈 50.0% · 원정 50.0% · 유효표본 0.0</div>
+      </div>
+
       <div class="section" style="background:#eff6ff;border:1px solid #bfdbfe;">
         <div class="section-title" style="color:#1d4ed8;">⚾ 득점 오버언더</div>
         <div class="over-list">
@@ -495,12 +596,12 @@ footer { background:#0f172a; color:#64748b; text-align:center; padding:24px; fon
             <span class="over-val" style="color:inherit">-</span>
           </div>
           <div class="over-row">
-            <span class="over-label">오버 8.5점 예측</span>
-            <span class="over-val" style="color:inherit">42.1%</span>
+            <span class="over-label">8.5점 보정</span>
+            <span class="over-val">- <b class="market-pick">PASS</b></span>
           </div>
           <div class="over-row">
-            <span class="over-label">오버 10.5점 예측</span>
-            <span class="over-val">19.4%</span>
+            <span class="over-label">10.5점 보정</span>
+            <span class="over-val">- <b class="market-pick">PASS</b></span>
           </div>
         </div>
       </div>
@@ -513,9 +614,9 @@ footer { background:#0f172a; color:#64748b; text-align:center; padding:24px; fon
     </div>
   </div>
 
-  <div class="pick-card" style="border-left:5px solid #94a3b8;">
+  <div class="pick-card pass-card" style="--accent:#64748b;">
     <div class="card-top">
-      <div class="grade-badge" style="background:#94a3b8;">⏭</div>
+      <div class="grade-badge" style="background:#64748b;">⏭ PASS</div>
       <div class="card-meta">07:40 &nbsp;|&nbsp; MLB</div>
     </div>
     <div class="teams">
@@ -523,7 +624,9 @@ footer { background:#0f172a; color:#64748b; text-align:center; padding:24px; fon
       <span class="vs">vs</span>
       <span class="team away">Milwaukee Brewers</span>
     </div>
-    
+    <div class="decision-box pass-box">
+          <div class="decision-icon">⏭</div><div><div class="decision-title">추천 없음 · PASS</div>
+          <div class="decision-desc">확률·표본·모델합의 기준 미달</div></div></div>
 
     <div class="sections-grid">
       <div class="section">
@@ -541,6 +644,15 @@ footer { background:#0f172a; color:#64748b; text-align:center; padding:24px; fon
         <div class="sub-info">예상스코어: <b>3-5</b> &nbsp;|&nbsp; FB예측: <b>2.0</b></div>
       </div>
 
+      <div class="section model-section">
+        <div class="section-title">🧠 V2 보정확률</div>
+        <div class="prob-row">
+          <div class="prob-cell"><div class="prob-label">최종 홈승</div><div class="prob-val home-color">45.8%</div></div>
+          <div class="prob-cell"><div class="prob-label">최종 원정승</div><div class="prob-val away-color">54.2%</div></div>
+        </div>
+        <div class="model-foot">과거모델 홈 50.0% · 원정 50.0% · 유효표본 0.0</div>
+      </div>
+
       <div class="section" style="background:#eff6ff;border:1px solid #bfdbfe;">
         <div class="section-title" style="color:#1d4ed8;">⚾ 득점 오버언더</div>
         <div class="over-list">
@@ -549,12 +661,12 @@ footer { background:#0f172a; color:#64748b; text-align:center; padding:24px; fon
             <span class="over-val" style="color:inherit">-</span>
           </div>
           <div class="over-row">
-            <span class="over-label">오버 8.5점 예측</span>
-            <span class="over-val" style="color:inherit">40.7%</span>
+            <span class="over-label">8.5점 보정</span>
+            <span class="over-val">- <b class="market-pick">PASS</b></span>
           </div>
           <div class="over-row">
-            <span class="over-label">오버 10.5점 예측</span>
-            <span class="over-val">18.4%</span>
+            <span class="over-label">10.5점 보정</span>
+            <span class="over-val">- <b class="market-pick">PASS</b></span>
           </div>
         </div>
       </div>
@@ -567,9 +679,9 @@ footer { background:#0f172a; color:#64748b; text-align:center; padding:24px; fon
     </div>
   </div>
 
-  <div class="pick-card" style="border-left:5px solid #94a3b8;">
+  <div class="pick-card pass-card" style="--accent:#64748b;">
     <div class="card-top">
-      <div class="grade-badge" style="background:#94a3b8;">⏭</div>
+      <div class="grade-badge" style="background:#64748b;">⏭ PASS</div>
       <div class="card-meta">07:40 &nbsp;|&nbsp; MLB</div>
     </div>
     <div class="teams">
@@ -577,7 +689,9 @@ footer { background:#0f172a; color:#64748b; text-align:center; padding:24px; fon
       <span class="vs">vs</span>
       <span class="team away">Chicago White Sox</span>
     </div>
-    
+    <div class="decision-box pass-box">
+          <div class="decision-icon">⏭</div><div><div class="decision-title">추천 없음 · PASS</div>
+          <div class="decision-desc">확률·표본·모델합의 기준 미달</div></div></div>
 
     <div class="sections-grid">
       <div class="section">
@@ -595,6 +709,15 @@ footer { background:#0f172a; color:#64748b; text-align:center; padding:24px; fon
         <div class="sub-info">예상스코어: <b>4-3</b> &nbsp;|&nbsp; FB예측: <b>1.0</b></div>
       </div>
 
+      <div class="section model-section">
+        <div class="section-title">🧠 V2 보정확률</div>
+        <div class="prob-row">
+          <div class="prob-cell"><div class="prob-label">최종 홈승</div><div class="prob-val home-color">54.2%</div></div>
+          <div class="prob-cell"><div class="prob-label">최종 원정승</div><div class="prob-val away-color">45.8%</div></div>
+        </div>
+        <div class="model-foot">과거모델 홈 50.0% · 원정 50.0% · 유효표본 0.0</div>
+      </div>
+
       <div class="section" style="background:#eff6ff;border:1px solid #bfdbfe;">
         <div class="section-title" style="color:#1d4ed8;">⚾ 득점 오버언더</div>
         <div class="over-list">
@@ -603,12 +726,12 @@ footer { background:#0f172a; color:#64748b; text-align:center; padding:24px; fon
             <span class="over-val" style="color:inherit">-</span>
           </div>
           <div class="over-row">
-            <span class="over-label">오버 8.5점 예측</span>
-            <span class="over-val" style="color:inherit">29.7%</span>
+            <span class="over-label">8.5점 보정</span>
+            <span class="over-val">- <b class="market-pick">PASS</b></span>
           </div>
           <div class="over-row">
-            <span class="over-label">오버 10.5점 예측</span>
-            <span class="over-val">11.3%</span>
+            <span class="over-label">10.5점 보정</span>
+            <span class="over-val">- <b class="market-pick">PASS</b></span>
           </div>
         </div>
       </div>
